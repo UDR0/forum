@@ -70,22 +70,29 @@ header {
 
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
+    background-color: #1E6091; /* Couleur du fond du bouton */
     border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
-    position: relative;
     z-index: 1001;
+    border: 1px solid #34A0A4;
 }
 
-.burger-menu span {
-    width: 30px;
-    height: 3px;
-    background: #fff;
-    transition: 0.3s;
+/* Image du menu burger */
+.burger-menu img {
+    width: 30px; /* Ajuste la taille de l'icône */
+    height: auto;
 }
+
+/* Effet de survol pour le bouton */
+.burger-menu:hover {
+    background-color: #34A0A4; /* Changer la couleur au survol */
+}
+
 
 
 
@@ -93,6 +100,7 @@ header {
 
 /* ######################## NAVIGATION ######################## */
 .meta-ul {
+    display: none; /* Cacher par défaut */
     position: absolute;
     right: 0;
     padding: 0 1.6rem;
@@ -102,6 +110,11 @@ header {
     font-family: 'Montserrat', sans-serif;
     border-radius: 0 0 8px 8px;
     list-style: none;
+}
+
+/* Quand la classe active est ajoutée au menu, on le montre */
+.meta-ul.active {
+    display: block; /* Afficher le menu */
 }
 
 .meta-navigation {
@@ -207,29 +220,8 @@ section h2 {
 }
 
 /* ######################## Liste des régions ######################## */
-.regions {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Utilisation de Grid pour gérer les colonnes */
-    gap: 15px;
-    padding: 20px;
-    margin-top: 30px;
-}
 
-.region {
-    background-color: #f0f0f0;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
 
-.region:hover {
-    background-color: #1E6091;
-    color: white;
-}
 
 /* ######################## Footer ######################## */
 footer {

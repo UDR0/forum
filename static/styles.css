@@ -1,0 +1,250 @@
+/* Réinitialisation générale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles globaux */
+body {
+    background-color: #fff;
+    text-align: center;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1200px; /* Largeur max sur PC */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+
+
+
+
+/* ######################## Header ######################## */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #1E6091;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* Image du logo */
+.image_logo {
+    width: 40px; /* Ajuste selon le design */
+    height: auto;
+    border-radius: 20px;
+}
+
+/* Texte du logo */
+.text_logo {
+    /*display: none;  Masqué par défaut */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    padding-left: 10px;
+}
+
+/* "Trip" en bleu */
+.text_logo span {
+    color: #B5E48C;
+}
+
+
+
+
+
+/* ######################## MENU BURGER ######################## */
+.burger-menu {
+    background-color: #1E6091; /* Couleur du fond du bouton */
+    border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #34A0A4;
+}
+
+/* Image du menu burger */
+.burger-menu img {
+    width: 30px; /* Ajuste la taille de l'icône */
+    height: auto;
+}
+
+/* Effet de survol pour le bouton */
+.burger-menu:hover {
+    background-color: #34A0A4; /* Changer la couleur au survol */
+}
+
+
+
+
+
+
+/* ######################## NAVIGATION ######################## */
+.meta-ul {
+    display: none; /* Cacher par défaut */
+    position: absolute;
+    right: 0;
+    padding: 0 1.6rem;
+    width: 100%;
+    background-color: #1E6091;
+    z-index: 10;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 0 0 8px 8px;
+    list-style: none;
+}
+
+/* Quand la classe active est ajoutée au menu, on le montre */
+.meta-ul.active {
+    display: block; /* Afficher le menu */
+}
+
+.meta-navigation {
+    text-align: left;
+    border-bottom: 1px solid #d1d4d7;
+}
+
+.meta-a {
+    font-size: 1rem;
+    display: block;
+    padding: 1rem 0;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles pour les boutons "Se connecter" */
+.meta-navigation-btn-connexion {
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #d1d4d7;
+}
+
+/* Styles pour les boutons "Créer mon compte" */
+.meta-navigation-btn-creer-compte {
+    padding: 10px 0;
+    margin: 0 0 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.btn {
+    font-size: 1rem;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 20px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+/* Boutons hover effect */
+.btn:hover {
+    background-color: #76C893;
+}
+
+
+
+
+
+
+
+/* ######################## Contenu principal ######################## *
+
+/* Section */
+section {
+    text-align: center; /* Centrer le texte dans la section */
+}
+
+section h2 {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+
+/* ######################## Barre de recherche ######################## */
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #000;
+    border-radius: 25px;
+    padding: 3px 15px;
+    margin-top: 20px;
+    width: 80%; /* Ajuste la largeur pour ne pas toucher les bords */
+    max-width: 600px; /* Limite la largeur de la barre sur grand écran */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-radius: 15px;
+}
+
+.search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+}
+
+.search-icon img {
+    width: 25px;
+    height: 25px;
+}
+
+/* ######################## Liste des régions ######################## */
+
+
+
+/* ######################## Footer ######################## */
+footer {
+    background-color: #1E6091;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+
+
+
+/* ######################## Tablette ######################## */
+@media (max-width: 768px) {
+
+}
+
+/* ######################## Desktop ######################## */
+@media (min-width: 768px) {
+
+}

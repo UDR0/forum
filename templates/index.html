@@ -13,28 +13,53 @@
 
     <!-- Header -->
     <header>
-        <div class="logo">
-            <h1>Forum Voyage</h1>
-        </div>
-        <button id="menu-toggle">☰</button>
-        <nav id="menu" class="hidden">
-            <ul>
-                <li><a href="#">Accueil</a></li>
-                <li><a href="#">Destinations</a></li>
-                <li><a href="#">Conseils</a></li>
-                <li><a href="#">Connexion</a></li>
-            </ul>
-        </nav>
+        <!-- Logo -->
+        <a href="#" class="logo">
+            <img class="image_logo" src="static/img/fond_noir.png" alt="MyTripy">
+            <span class="text_logo">My<span>Trip</span>y</span>
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu.png" alt="">
+        </button>
+
     </header>
+
+    <!-- Navigation -->
+    <ul class="meta-ul">
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">MyTripy</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Destinations</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Favoris</a>
+        </li>
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="#">Se connecter</a>
+        </li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="#">Créer mon compte</a>
+        </li>
+    </ul>
 
 
     <!-- Contenu principal -->
-    <main>
-        <section>
-            <h2>Bienvenue sur le Forum</h2>
-            <p>Partagez vos expériences, trouvez des conseils et échangez avec d'autres passionnés de voyage !</p>
-        </section>
-    </main>
+    <section>
+        <!--<h2>Besoin de renseignement pour votre prochaine Destination ?</h2>-->
+
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher une destination..." id="search-input">
+            <span class="search-icon"><img src="static/img/chercher.png" alt="Icone recherche"></span>
+        </div>
+    </section>
 
 
     <!-- Pied de page -->

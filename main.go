@@ -35,7 +35,7 @@ func main() {
 	// Route pour afficher la page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Charger le template HTML depuis le répertoire "template"
-		tmpl, err := template.ParseFiles("./templates/index.html")
+		tmpl, err := template.ParseFiles("./templates/region.html")
 		if err != nil {
 			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
 			return

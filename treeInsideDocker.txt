@@ -1,0 +1,15 @@
+C:.
+├───Functions
+    └───forum.go
+├───static
+│   └───images
+│   └───script.js
+│   └───style.css
+├───templates
+│   └───region.tmpl
+├───Dockerfile
+├───go.mod
+├───go.sum
+├───main.go
+├───.dockerignore
+└───forum.db

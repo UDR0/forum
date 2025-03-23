@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	// import functions from forum.go => forum "forum/Functions"
+	// import functions from forum.go
+	//forum "forum/Functions"
 
 	"html/template"
 	"log"
@@ -13,6 +14,9 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+//C:\Users\sarah\Documents\Forum\forum\forum.db
+//C:\Users\sarah\Documents\Forum\forum\ProjectForum\main.go
 
 func getImageURLFromDB() string {
 	// Open the SQLite database located at /forum.db
@@ -53,7 +57,7 @@ func forumHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	//test to have acces to the functions from the forum.go file
-	// forum.SayHello()
+	//forum.SayHello()
 
 	// Serve static files from the "static" folder.
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

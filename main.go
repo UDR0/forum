@@ -1,14 +1,15 @@
-// file con l'immagine inizializzata direttamente all'inizio del file
 package main
 
 import (
 	"database/sql"
 	"fmt"
+
+	// import functions from forum.go => forum "forum/Functions"
+
 	"html/template"
+	"log"
 	"net/http"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -30,9 +31,6 @@ func getImageURLFromDB() string {
 		return ""
 	}
 
-	// Print the retrieved image URL to the console
-	//fmt.Printf("Image URL retrieved from database: %s\n", imageURL)
-
 	return imageURL
 }
 
@@ -53,34 +51,20 @@ func forumHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, data)
 }
 
-func openBrowser(url string) {
-	var err error
-	switch os := runtime.GOOS; os {
-	case "linux":
-		err = exec.Command("xdg-open", url).Start()
-	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-	case "darwin":
-		err = exec.Command("open", url).Start()
-	default:
-		err = fmt.Errorf("unsupported platform")
-	}
-	if err != nil {
-		fmt.Printf("Failed to open browser: %v\n", err)
-	}
-}
-
 func main() {
+	//test to have acces to the functions from the forum.go file
+	// forum.SayHello()
+
 	// Serve static files from the "static" folder.
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Route to serve the template.
 	http.HandleFunc("/", forumHandler)
 
-	// Lancer le serveur sur le port 8080
+	// Launch the server on port 8080
 	fmt.Println("Serveur lancé sur http://localhost:8080")
-	go openBrowser("http://localhost:8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Printf("Server failed to start: %v\n", err)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal("Erreur lors du lancement du serveur : ", err)
 	}
 }

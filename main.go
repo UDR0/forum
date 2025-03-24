@@ -1,33 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"html/template"
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-func getImageURLFromDB() string {
-	// Open the SQLite database located at /forum.db
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		fmt.Printf("Failed to open database: %v\n", err)
-		return ""
-	}
-	defer db.Close()
-
-	// Query the image_url for id_region = 8
-	var imageURL string
-	err = db.QueryRow("SELECT image_url FROM regions WHERE id_region = 8").Scan(&imageURL)
-	if err != nil {
-		fmt.Printf("Failed to query image_url: %v\n", err)
-		return ""
-	}
-
-	return imageURL
-}
 
 func renderTemplate(w http.ResponseWriter, tmpl string) {
 	tmplPath := fmt.Sprintf("templates/%s.html", tmpl)
@@ -42,6 +21,9 @@ func renderTemplate(w http.ResponseWriter, tmpl string) {
 }
 
 func main() {
+	//fmt.Println(forum.GetImageURLFromDB())
+	//forum.WriteImageIntoDB()
+
 	// Servir les fichiers statiques (CSS, JS, images)
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))

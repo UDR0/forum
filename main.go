@@ -37,6 +37,10 @@ func main() {
 		renderTemplate(w, "SeConnecter")
 	})
 
+	http.HandleFunc("/CreerCompte", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "CreerCompte")
+	})
+
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

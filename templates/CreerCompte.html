@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+
+<!-- Header -->
+<header>
+    <!-- Logo -->
+    <a href="#" class="logo">
+        <img class="image_logo" src="static/img/fond_noir.png" alt="MyTripy">
+        <span class="text_logo">My<span>Trip</span>y</span>
+    </a>
+
+    <!-- Menu Burger -->
+    <button class="burger-menu" id="burger">
+        <img src="static/img/menu.png" alt="">
+    </button>
+
+</header>
+
+<body>
+    <!-- Navigation -->
+    <ul class="meta-ul">
+        <li class="meta-navigation">
+            <a class="meta-a" href="/mytripy_non">MyTripy</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Destinations</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Favoris</a>
+        </li>
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/SeConnecter">Se connecter</a>
+        </li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="/CreerCompte">Créer mon compte</a>
+        </li>
+    </ul>
+
+    <!-- Conteneur Principale -->
+
+    <div class="ConteneurPrincipaleSeConnecter">
+        
+        <div class="photo">
+
+            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
+            
+            <button class="custom-button" id="uploadBtn" type="file">Sélectionner un fichier</button>
+            <input type="file" id="fileInput">
+
+        </div>
+        
+        <p>Pseudo</p>
+        <input type="text" id="Identifiant" placeholder="Votre identifiant">
+
+        <p>Mot de passe</p>
+        <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+
+        <p>Confirmer le mot de passe</p>
+        <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+
+        <button>SE CONNECTER</button>
+    </div>
+
+    <!-- Pied de page -->
+    <footer>
+        <p>&copy; 2025 Forum Voyage - Tous droits réservés.</p>
+    </footer>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

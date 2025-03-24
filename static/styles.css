@@ -600,20 +600,7 @@ section h2 {
     transition: background-color 0.3s;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    margin-top: 25px;
-    margin-left: auto;
-    margin-right: auto;
 }
-
-/* Boutons hover effect */
-.btn-SeConnecter:hover {
-    background-color: #76C893;
-}
-
-
-
-
 
 
 /* ######################## Footer ######################## */

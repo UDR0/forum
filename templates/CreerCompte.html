@@ -54,7 +54,8 @@
 
     <!-- Conteneur Principale -->
 
-    <div class="ConteneurPrincipaleSeConnecter">
+<section>
+    <div class="ConteneurCreerCompte">
         
         <div class="photo">
 
@@ -65,17 +66,31 @@
 
         </div>
         
-        <p>Pseudo</p>
-        <input type="text" id="Identifiant" placeholder="Votre identifiant">
+        <h4>Email</h4>
+        <div class="ConteneurEmail">
+            <input type="text" id="Email" placeholder="Votre Mail">
+            <img src="/static/img/utilisateur.png" alt="Icône email">
+        </div>
 
-        <p>Mot de passe</p>
-        <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+        <h4>Pseudo</h4>
+        <div class="ConteneurPseudo">
+            <input type="text" id="Pseudo" placeholder="Votre Pseudo">
+            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+        </div>
 
-        <p>Confirmer le mot de passe</p>
-        <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+        <h4>Mot de passe</h4>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
 
-        <button>SE CONNECTER</button>
+        <a class="btn-CreerCompte" href="#">Créer un compte</a>
     </div>
+</section>
 
 
 

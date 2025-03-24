@@ -525,13 +525,13 @@ section h2 {
     position: relative;
 }
 
-.ConteneurSeConnecter {
+.ConteneurSeConnecter, .ConteneurCreerCompte{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.ConteneurSeConnecter h4 {
+.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4{
     font-size: 15px;
     font-weight: bold;
     color: #000;
@@ -540,7 +540,7 @@ section h2 {
     text-align: left;
 }
 
-.ConteneurPseudo, .ConteneurMotDePasse {
+.ConteneurPseudo, .ConteneurMotDePasse, .ConteneurEmail {
     position: relative;
     border: 1px solid #000;
     border-radius: 5px;
@@ -555,7 +555,7 @@ section h2 {
     align-items: center;
 }
 
-.ConteneurPseudo input, .ConteneurMotDePasse input {
+.ConteneurPseudo input, .ConteneurMotDePasse input, .ConteneurEmail input {
     width: 100%;
     padding: 8px;
     border: none;
@@ -565,7 +565,7 @@ section h2 {
     padding-right: 40px;
 }
 
-.ConteneurPseudo img, .ConteneurMotDePasse img {
+.ConteneurPseudo img, .ConteneurMotDePasse img, .ConteneurEmail img{
     position: absolute;
     right: 10px;
     width: 20px;
@@ -588,13 +588,13 @@ section h2 {
     text-decoration: underline;
 }
 
-.btn-SeConnecter {
+.btn-SeConnecter, .btn-CreerCompte {
     font-size: 1rem;
     padding: 12px 20px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
+    margin-top: 25px;
     color: #fff;
     text-decoration: none;
     background-color: #34A0A4; /* Couleur de fond des boutons */
@@ -606,10 +606,38 @@ section h2 {
 }
 
 /* Boutons hover effect */
-.btn-SeConnecter:hover {
+.btn-SeConnecter:hover, .btn-CreerCompte:hover{
     background-color: #76C893;
 }
 
+/* ######################## Page : Créer un Compte ######################## */
+
+.photo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.photo input {
+    display: none;
+}
+
+.photo button {
+    background-color: #B5E48C;
+    border-radius: 100px;
+    border: 2px rgb(255, 255, 255) solid; 
+    font-weight: bold;
+    font-size: large;
+    color: white;
+}
+
+.photoProfil {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
 
 /* ######################## Footer ######################## */
 footer {

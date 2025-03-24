@@ -9,12 +9,11 @@ func SayHello() {
 	fmt.Println("Hello from forum.go!")
 }
 
-//////////TO DO LIST////////////////
-// get the infos from the database => GetImageURLFromDB()
-// write into the database => WriteImageIntoDB()
+// ////////TO DO LIST////////////////
+// get the infos from the database (ex => GetImageURLFromDB())
+// write into the database (ex => WriteImageIntoDB())
 // make sure all the tables in the database are right (don't want to)
 // write all the url to get to the images
-// write a read me file with all the infos about the commands for the docker...
 
 func GetImageURLFromDB() string {
 	// Open the SQLite database located at /forum.db

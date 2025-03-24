@@ -50,29 +50,47 @@
         </li>
     </ul>
 
+
+
     <!-- Conteneur Principale -->
-    <section>
-        <h3 class="titre-SeConnecter">Connecte-toi et explore le monde avec la communauté MyTripy</h3>
 
-        <div class="ConteneurSeConnecter">
-            <h4>Pseudo</h4>
-            <div class="ConteneurPseudo">
-                <input type="text" id="Pseudo" placeholder="Votre Pseudo">
-                <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-            </div>
-
-            <h4>Mot de passe</h4>
-            <div class="ConteneurMotDePasse">
-                <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
-                <img src="/static/img/cadenas.png" alt="Icône cadenas">
-            </div>
-
-            <!-- Lien pour le mot de passe oublié -->
-            <a href="/mot_de_passe_oublie" class="mot_de_passe_oublie">Mot de passe oublié ?</a>
+<section>
+    <div class="ConteneurCreerCompte">
+        
+        <div class="photo">
+            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
+            <div class="overlay" id="overlay"></div>
+            <img src="../static/img/camera.png" class="btnChangerPP" id="btnChangerPP">
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
         </div>
-            
-        <a class="btn-SeConnecter" href="#">Se connecter</a>
-    </section>
+        
+        <h4>Email</h4>
+        <div class="ConteneurEmail">
+            <input type="text" id="Email" placeholder="nom@email.com">
+            <img src="/static/img/email.png" alt="Icône email">
+        </div>
+
+        <h4>Pseudo</h4>
+        <div class="ConteneurPseudo">
+            <input type="text" id="Pseudo" placeholder="Votre Pseudo">
+            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+        </div>
+
+        <h4>Mot de passe</h4>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
+
+        <a class="btn-CreerCompte" href="#">Créer un compte</a>
+    </div>
+</section>
+
+
 
     <script src="static/script.js"></script>
 </body>

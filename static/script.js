@@ -18,3 +18,22 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
     });
 });
 
+
+const fileInput = document.getElementById("fileInput");
+        const photoProfil = document.getElementById("photoProfil");
+        const uploadIcon = document.getElementById("btnChangerPP");
+
+        uploadIcon.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoProfil.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });

@@ -25,12 +25,12 @@ func main() {
 
 	// Route pour la page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/mytripy_non", http.StatusFound)
+		http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 	})
 
 	// Routes pour les pages HTML
-	http.HandleFunc("/mytripy_non", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "mytripy_non")
+	http.HandleFunc("/mytripy-non", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mytripy-non")
 	})
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +39,10 @@ func main() {
 
 	http.HandleFunc("/CreerCompte", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "CreerCompte")
+	})
+
+	http.HandleFunc("/mot-de-passe-oublie", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mot-de-passe-oublie")
 	})
 
 	// Démarrer le serveur

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"html/template"
+	"net/http"
 )
 
 func main() {
@@ -14,9 +14,25 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Route pour afficher la page d'accueil
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
 		// Charger le template HTML depuis le répertoire "template"
 		tmpl, err := template.ParseFiles("./templates/index.html")
+		if err != nil {
+			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
+			return
+		}
+
+		// Exécuter le template et l'envoyer au client
+		err = tmpl.Execute(w, nil)
+		if err != nil {
+			http.Error(w, "Erreur lors de l'exécution du template", http.StatusInternalServerError)
+		}
+	})
+
+	// Route pour afficher la page se connecter
+	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
+		// Charger le template HTML depuis le répertoire "template"
+		tmpl, err := template.ParseFiles("templates/SeConnecter.html")
 		if err != nil {
 			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
 			return

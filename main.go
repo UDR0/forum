@@ -6,49 +6,40 @@ import (
 	"net/http"
 )
 
-func main() {
-	// Répertoire contenant les fichiers statiques
-	fs := http.FileServer(http.Dir("./static"))
+func renderTemplate(w http.ResponseWriter, tmpl string) {
+	tmplPath := fmt.Sprintf("templates/%s.html", tmpl)
+	t, err := template.ParseFiles(tmplPath)
+	if err != nil {
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := t.Execute(w, nil); err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
+}
 
-	// Serveur des fichiers statiques (CSS, JS)
+func main() {
+	// Servir les fichiers statiques (CSS, JS, images)
+	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	// Route pour afficher la page d'accueil
+	// Route pour la page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Charger le template HTML depuis le répertoire "template"
-		tmpl, err := template.ParseFiles("./templates/mytripy_non.html")
-		if err != nil {
-			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
-			return
-		}
-
-		// Exécuter le template et l'envoyer au client
-		err = tmpl.Execute(w, nil)
-		if err != nil {
-			http.Error(w, "Erreur lors de l'exécution du template", http.StatusInternalServerError)
-		}
+		http.Redirect(w, r, "/mytripy_non", http.StatusFound)
 	})
 
-	// Route pour afficher la page se connecter
+	// Routes pour les pages HTML
+	http.HandleFunc("/mytripy_non", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mytripy_non")
+	})
+
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
-		// Charger le template HTML depuis le répertoire "template"
-		tmpl, err := template.ParseFiles("templates/SeConnecter.html")
-		if err != nil {
-			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
-			return
-		}
-
-		// Exécuter le template et l'envoyer au client
-		err = tmpl.Execute(w, nil)
-		if err != nil {
-			http.Error(w, "Erreur lors de l'exécution du template", http.StatusInternalServerError)
-		}
+		renderTemplate(w, "SeConnecter")
 	})
 
-	// Lancer le serveur sur le port 8080
+	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		fmt.Println("Erreur lors du lancement du serveur :", err)
 	}
 }

@@ -30,7 +30,7 @@
     <!-- Navigation -->
     <ul class="meta-ul">
         <li class="meta-navigation">
-            <a class="meta-a" href="/mytripy_non">MyTripy</a>
+            <a class="meta-a" href="/mytripy-non">MyTripy</a>
         </li>
 
         <li class="meta-navigation">
@@ -50,47 +50,20 @@
         </li>
     </ul>
 
-
-
     <!-- Conteneur Principale -->
+    <section>
+        <h3 class="titre-mot-de-passe-oublie">Mot de passe oublié ?</h3>
 
-<section>
-    <div class="ConteneurCreerCompte">
-        
-        <div class="photo">
-            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
-            <div class="overlay" id="overlay"></div>
-            <img src="../static/img/camera.png" class="btnChangerPP" id="btnChangerPP">
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        <div class="ConteneurMotDePasseOublie">
+            <h4>Votre Email</h4>
+            <div class="ConteneurEmail">
+                <input type="password" id="Email" placeholder="nom@email.com">
+                <img src="/static/img/email.png" alt="Icône email">
+            </div>
         </div>
-        
-        <h4>Email</h4>
-        <div class="ConteneurEmail">
-            <input type="text" id="Email" placeholder="nom@email.com">
-            <img src="/static/img/email.png" alt="Icône email">
-        </div>
-
-        <h4>Pseudo</h4>
-        <div class="ConteneurPseudo">
-            <input type="text" id="Pseudo" placeholder="Votre Pseudo">
-            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-        </div>
-
-        <h4>Mot de passe</h4>
-        <div class="ConteneurMotDePasse">
-            <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
-            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-        </div>
-        <div class="ConteneurMotDePasse">
-            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe">
-            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-        </div>
-
-        <a class="btn-CreerCompte" href="#">Créer un compte</a>
-    </div>
-</section>
-
-
+            
+        <a class="btn-recevoir-lien" href="#">Recevoir le lien</a>
+    </section>
 
     <script src="static/script.js"></script>
 </body>

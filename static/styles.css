@@ -181,10 +181,10 @@ section {
 
 section h2 {
     display: none;
-    font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
     font-size: 18px;
 }
+
 
 
 /* ######################## Barre de recherche ######################## */
@@ -200,7 +200,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     background-color: #fff;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 .search-bar input {
@@ -453,7 +453,7 @@ section h2 {
     height: 300px;
     height: auto;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .description img {
@@ -511,61 +511,109 @@ section h2 {
 
 
 /* ######################## Page : Se Connecter ######################## */
-.ConteneurPrincipaleSeConnecter {
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10%;
-    margin-bottom: 10%;
-    padding: 5%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-    background-color: #BFDDF3;
-    border-radius: 25px;
-    gap: 15px;
-    font-family: 'Inter', sans-serif;
-}
-
-.ConteneurPrincipaleSeConnecter p{
-    font-weight: bold;
-    text-align: left;
-    font-size: medium;
-    margin-left: 8%;
-    align-self: flex-start;
-}
-
-.ConteneurPrincipaleSeConnecter input{
+.titre-SeConnecter {
     width: 90%;
-    height: auto;
-    padding: 5%;
-
-    border-radius: 15px;
-    border: none;
-    font-size: 90%; 
+    font-size: 23px;
+    /*text-transform: uppercase;*/
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    position: relative;
 }
 
-.ConteneurPrincipaleSeConnecter button{
-    width: 70%;
-    height: auto;
-    padding: 3%;
-    margin-top: 3%;
+.ConteneurSeConnecter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    background-color: #B5E48C;
-    border-radius: 100px;
-    border: 2px rgb(255, 255, 255) solid; 
+.ConteneurSeConnecter h4 {
+    font-size: 15px;
     font-weight: bold;
-    font-size: large;
-    color: white;
-    transition: 0.3s;
+    color: #000;
+    margin-top: 25px;
+    width: 90%;
+    text-align: left;
 }
 
-.ConteneurPrincipaleSeConnecter button:hover{
-    background-color:#34A0A4;
-    cursor: pointer;
+.ConteneurPseudo, .ConteneurMotDePasse {
+    position: relative;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px 5px;
+    margin-top: 5px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
 }
+
+.ConteneurPseudo input, .ConteneurMotDePasse input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    border-radius: 5px;
+    padding-right: 40px;
+}
+
+.ConteneurPseudo img, .ConteneurMotDePasse img {
+    position: absolute;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.mot-de-passe-oublie {
+    display: block;
+    text-align: left;
+    width: 90%;
+    margin-top: 15px;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.mot-de-passe-oublie:hover {
+    text-decoration: underline;
+}
+
+.btn-SeConnecter {
+    font-size: 1rem;
+    padding: 12px 20px;
+    width: 90%;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Boutons hover effect */
+.btn-SeConnecter:hover {
+    background-color: #76C893;
+}
+
+
+
+
 
 
 /* ######################## Footer ######################## */

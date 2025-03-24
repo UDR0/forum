@@ -18,3 +18,20 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
     });
 });
 
+
+// Ecouter les evenements sur le bputton pour choisir sa PP
+document.getElementById("uploadBtn").addEventListener("click", function() {
+    document.getElementById("fileInput").click();
+});
+
+// Remplace la PP
+document.getElementById("fileInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("photoProfil").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});

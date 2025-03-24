@@ -567,6 +567,35 @@ section h2 {
     cursor: pointer;
 }
 
+/* ######################## Page : Créer un Compte ######################## */
+
+.photo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.photo input {
+    display: none;
+}
+
+.photo button {
+    background-color: #B5E48C;
+    border-radius: 100px;
+    border: 2px rgb(255, 255, 255) solid; 
+    font-weight: bold;
+    font-size: large;
+    color: white;
+}
+
+.photoProfil {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
 
 /* ######################## Footer ######################## */
 footer {

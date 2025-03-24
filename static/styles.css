@@ -32,7 +32,7 @@ header {
     width: 100%;
     padding: 10px 20px;
     background-color: #1E6091;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Logo */
@@ -264,6 +264,40 @@ section h2 {
 
 
 
+
+
+/* ######################## MAP France ######################## */
+.map-france {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+.image-map {
+    width: 100%;
+    height: auto;
+}
+
+.image-map path {
+    fill: #1E6091;
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: fill 0.3s;
+    cursor: pointer;
+}
+
+.image-map path:hover {
+    fill: #34A0A4;
+}
+
+
+
+
+
+
+
+
 /* ######################## Liste des régions ######################## */
 .regions-container {
     display: flex;
@@ -319,6 +353,8 @@ section h2 {
 
 
 
+
+
 /* ######################## Région Populaire ######################## */
 .popular-regions-container {
     display: grid;
@@ -337,7 +373,7 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: left;
-    margin-top: 25%;
+    margin-top: 0;
     position: relative;
 }
 

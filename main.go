@@ -3,20 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
-
-	// import functions from forum.go
-	//forum "forum/Functions"
-
 	"html/template"
-	"log"
 	"net/http"
-	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-//C:\Users\sarah\Documents\Forum\forum\forum.db
-//C:\Users\sarah\Documents\Forum\forum\ProjectForum\main.go
 
 func getImageURLFromDB() string {
 	// Open the SQLite database located at /forum.db
@@ -38,37 +29,40 @@ func getImageURLFromDB() string {
 	return imageURL
 }
 
-func forumHandler(w http.ResponseWriter, r *http.Request) {
-	tmplPath := filepath.Join("templates", "region.tmpl")
-	tmpl, err := template.ParseFiles(tmplPath)
+func renderTemplate(w http.ResponseWriter, tmpl string) {
+	tmplPath := fmt.Sprintf("templates/%s.html", tmpl)
+	t, err := template.ParseFiles(tmplPath)
 	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	data := struct {
-		ImageURL string
-	}{
-		ImageURL: getImageURLFromDB(),
+	if err := t.Execute(w, nil); err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
 	}
-
-	tmpl.Execute(w, data)
 }
 
 func main() {
-	//test to have acces to the functions from the forum.go file
-	//forum.SayHello()
+	// Servir les fichiers statiques (CSS, JS, images)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	// Serve static files from the "static" folder.
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	// Route pour la page d'accueil
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/mytripy_non", http.StatusFound)
+	})
 
-	// Route to serve the template.
-	http.HandleFunc("/", forumHandler)
+	// Routes pour les pages HTML
+	http.HandleFunc("/mytripy_non", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mytripy_non")
+	})
 
-	// Launch the server on port 8080
+	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "SeConnecter")
+	})
+
+	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal("Erreur lors du lancement du serveur : ", err)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Println("Erreur lors du lancement du serveur :", err)
 	}
 }

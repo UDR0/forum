@@ -612,11 +612,21 @@ section h2 {
 
 /* ######################## Page : Créer un Compte ######################## */
 
+.overlay {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5); /* Noir avec opacité */
+    border-radius: 50%;
+}
+
 .photo {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    margin-top: 6%;
     gap: 10px;
 }
 
@@ -633,10 +643,19 @@ section h2 {
     color: white;
 }
 
+.btnChangerPP {
+    width: 50px;
+    cursor: pointer;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .photoProfil {
     width: 150px;
     height: 150px;
     border-radius: 50%;
+    border: 1px solid black;
 }
 
 /* ######################## Footer ######################## */

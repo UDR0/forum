@@ -19,19 +19,21 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
 });
 
 
-// Ecouter les evenements sur le bputton pour choisir sa PP
-document.getElementById("uploadBtn").addEventListener("click", function() {
-    document.getElementById("fileInput").click();
-});
+const fileInput = document.getElementById("fileInput");
+        const photoProfil = document.getElementById("photoProfil");
+        const uploadIcon = document.getElementById("btnChangerPP");
 
-// Remplace la PP
-document.getElementById("fileInput").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById("photoProfil").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
+        uploadIcon.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoProfil.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });

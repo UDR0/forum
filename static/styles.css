@@ -19,8 +19,9 @@ body {
 }
 
 
+/* ######################## Polices ######################## */
 
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 
 /* ######################## Header ######################## */
@@ -32,7 +33,6 @@ header {
     width: 100%;
     padding: 10px 20px;
     background-color: #1E6091;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
 }
 
 /* Logo */
@@ -52,7 +52,7 @@ header {
 /* Texte du logo */
 .text_logo {
     /*display: none;  Masqué par défaut */
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 24px;
     font-weight: bold;
     text-transform: uppercase;
@@ -101,7 +101,6 @@ header {
 
 /* ######################## NAVIGATION ######################## */
 .meta-ul {
-    font-family: "Open Sans", sans-serif;
     display: none; /* Cacher par défaut */
     position: absolute;
     right: 0;
@@ -155,7 +154,7 @@ header {
     color: #fff;
     text-decoration: none;
     background-color: #34A0A4; /* Couleur de fond des boutons */
-    border-radius: 25px;
+    border-radius: 20px;
     display: block;
     transition: background-color 0.3s;
 }
@@ -176,11 +175,9 @@ header {
 /* Section */
 section {
     text-align: center; /* Centrer le texte dans la section */
-    font-family: "Open Sans", sans-serif;
 }
 
 section h2 {
-    display: none;
     font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
     font-size: 18px;
@@ -189,18 +186,17 @@ section h2 {
 
 /* ######################## Barre de recherche ######################## */
 .search-bar {
-    position: relative; /* Permet de positionner l’icône en absolu */
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border: 1px solid #000;
     border-radius: 25px;
-    padding: 5px 15px;
-    margin-top: 35px;
-    width: 90%;
+    padding: 3px 15px;
+    margin-top: 20px;
+    width: 80%; /* Ajuste la largeur pour ne pas toucher les bords */
+    max-width: 600px; /* Limite la largeur de la barre sur grand écran */
     margin-left: auto;
     margin-right: auto;
-    background-color: #fff;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
 }
 
 .search-bar input {
@@ -209,309 +205,81 @@ section h2 {
     border: none;
     outline: none;
     font-size: 16px;
-    border-radius: 25px;
-    padding-right: 50px; /* Ajoute un espace pour ne pas que le texte touche le bouton */
+    border-radius: 15px;
 }
 
-/* Change la couleur du texte de la barre de recherche */
-.search-bar input::placeholder {
-    color: #A0A0A0;
-}
-
-/* Bouton de recherche rond */
 .search-icon {
-    position: absolute;
-    right: 0; /* Positionne l'icône à droite */
-    top: 50%;
-    transform: translateY(-50%); /* Centre verticalement */
-    width: 49px; /* Taille du bouton */
-    height: 49px;
-    border-radius: 50%; /* Rond */
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    background-color: #1E6091;
-    cursor: pointer;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
+    padding-left: 10px;
 }
 
 .search-icon img {
-    width: 25px; /* Ajuste la taille de l’icône */
+    width: 25px;
     height: 25px;
 }
 
-/* Effet au survol */
-.search-icon:hover {
-    background-color: #34A0A4; /* Change la couleur au survol */
-}
-
-
-
-    
-
-
-/* Image du menu burger */
-.burger-menu img {
-    width: 30px; /* Ajuste la taille de l'icône */
-    height: auto;
-}
-
-/* Effet de survol pour le bouton */
-.burger-menu:hover {
-    background-color: #34A0A4; /* Changer la couleur au survol */
-}
-
-
-
 /* ######################## Liste des régions ######################## */
-.regions-container {
-    display: flex;
-    flex-wrap: wrap; /* Permet de passer à la ligne suivante lorsque l'espace est insuffisant */
-    margin-top: 35px;
-    gap: 15px; /* Espacement entre les éléments */
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.region {
-    background-color: #76C893;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    position: relative;
-    overflow: hidden;
-}
-
-.region img {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-    transition: opacity 0.3s ease; /* Ajoute un effet au survol */
-}
-
-.region p {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: #fff;
-    opacity: 0; /* Par défaut, on cache le texte */
-    transition: opacity 0.3s ease; /* effet au survol */
-}
-
-/* Lorsque l'on survole la région, le texte devient visible */
-.region:hover p {
-    opacity: 1; /* Le texte apparait */
-}
-
-/* Effet de transparence de l'image lors du survol */
-.region:hover img {
-    opacity: 0; /* L'image disparait */
-}
 
 
 
-
-/* ######################## Région Populaire ######################## */
-.popular-regions-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 35px;
-    gap: 15px; /* Espacement entre les éléments */
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Titre des régions populaires */
-.titre-popular-region {
-    font-size: 25px;
-    /*text-transform: uppercase;*/
-    font-weight: 800;
-    color: #000;
-    text-align: left;
-    margin-top: 25%;
-    position: relative;
-}
-
-/* Ligne sous le titre 
-.titre-popular-region::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 20%;
-    height: 3px;
-    background-color: #1E6091;
-    border-radius: 25px;
-}*/
-
-/* Style pour chaque région */
-.popular-region {
-    width: 100%;
-    height: 220px;
-    position: relative;
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Nom de la région */
-.region-name {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 77%;
-    width: 96%;
-    height: 20%;
-    background-color: #fff;
-    color: #000;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    border-radius: 20px;
-    z-index: 2;
-}
-
-/* Image de chaque région */
-.popular-region img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.coeur-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
-    padding: 9px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.coeur {
-    width: 20px;
-    height: 20px;
-}
-
-.coeur-container.active {
-    background-color: #fff;
-}
-
-
-
-
-
-
-/* ######################## Description Site ######################## */
-.description-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 35px;
-    gap: 15px; /* Espacement entre les éléments */
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.titre-description {
-    font-size: 25px;
-    /*text-transform: uppercase;*/
-    font-weight: 800;
-    color: #000;
-    text-align: center;
+/* ######################## Page : Se Connecter ######################## */
+.ConteneurPrincipaleSeConnecter {
+    margin-left: 10%;
+    margin-right: 10%;
     margin-top: 10%;
-    margin-bottom: 3%;
-    position: relative;
-}
+    margin-bottom: 10%;
+    padding: 5%;
 
-.description {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-    height: 300px;
-    height: auto;
+    align-items: center;
+    flex-direction: column;
+
+    background-color: #BFDDF3;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    gap: 15px;
+    font-family: 'Inter', sans-serif;
 }
 
-.description img {
-    width: 45%;
+.ConteneurPrincipaleSeConnecter p{
+    font-weight: bold;
+    text-align: left;
+    font-size: medium;
+    margin-left: 8%;
+    align-self: flex-start;
+}
+
+.ConteneurPrincipaleSeConnecter input{
+    width: 90%;
     height: auto;
-    margin-bottom: 15px;
-}
+    padding: 5%;
 
-.description h4 {
-    width: 80%;
-    font-size: 22px;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.description p {
-    width: 80%;
-    font-size: 16px;
-    color: #333;
-}
-
-.titre-2-description {
-    font-size: 25px;
-    /*text-transform: uppercase;*/
-    font-weight: 800;
-    color: #000;
-    text-align: center;
-    margin-top: 3%;
-    position: relative;
-}
-
-.description-btn-destination {
-    font-size: 1rem;
-    padding: 12px 12px;
-    max-width: 300px;
-    color: #fff;
-    text-decoration: none;
-    background-color: #76C893;
-    border-radius: 25px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    transition: background-color 0.3s;
+    border-radius: 15px;
     border: none;
+    font-size: 90%; 
+}
+
+.ConteneurPrincipaleSeConnecter button{
+    width: 70%;
+    height: auto;
+    padding: 3%;
+    margin-top: 3%;
+
+    background-color: #B5E48C;
+    border-radius: 100px;
+    border: 2px rgb(255, 255, 255) solid; 
+    font-weight: bold;
+    font-size: large;
+    color: white;
+    transition: 0.3s;
+}
+
+.ConteneurPrincipaleSeConnecter button:hover{
+    background-color:#34A0A4;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
-/* Boutons hover effect */
-.description-btn-destination:hover {
-    background-color: #34A0A4;
-}
-
-
-
-
-
-
 
 
 /* ######################## Footer ######################## */
@@ -531,11 +299,11 @@ footer p {
 
 
 /* ######################## Tablette ######################## */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
 
 }
 
 /* ######################## Desktop ######################## */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
 
 }

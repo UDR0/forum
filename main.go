@@ -14,9 +14,9 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Route pour afficher la page d'accueil
-	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Charger le template HTML depuis le répertoire "template"
-		tmpl, err := template.ParseFiles("./templates/index.html")
+		tmpl, err := template.ParseFiles("./templates/mytripy_non.html")
 		if err != nil {
 			http.Error(w, "Erreur lors du chargement du template", http.StatusInternalServerError)
 			return

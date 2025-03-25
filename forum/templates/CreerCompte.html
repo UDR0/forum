@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="#" class="logo">
+            <img class="image_logo" src="static/img/fond_noir.png" alt="MyTripy">
+            <span class="text_logo">My<span>Trip</span>y</span>
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu.png" alt="">
+        </button>
+    </header>
+
+    <!-- Navigation -->
+    <ul class="meta-ul">
+        <li class="meta-navigation">
+            <a class="meta-a" href="/mytripy_non">MyTripy</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Destinations</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="#">Favoris</a>
+        </li>
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/SeConnecter">Se connecter</a>
+        </li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="/CreerCompte">Créer mon compte</a>
+        </li>
+    </ul>
+
+    <!-- Conteneur Principale -->
+    <section>
+        <div class="ConteneurCreerCompte">
+            <form id="creerCompteForm" action="/CreerCompte" method="post" onsubmit="return validateForm()">
+                <div class="photo">
+                    <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
+                    <div class="overlay" id="overlay"></div>
+                    <img src="../static/img/camera.png" class="btnChangerPP" id="btnChangerPP">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                </div>
+                
+                <h4>Email</h4>
+                <div class="ConteneurEmail">
+                    <input type="text" id="email" name="email" placeholder="nom@email.com" required>
+                    <img src="/static/img/email.png" alt="Icône email">
+                </div>
+
+                <h4>Pseudo</h4>
+                <div class="ConteneurPseudo">
+                    <input type="text" id="pseudo" name="pseudo" placeholder="Votre Pseudo" required>
+                    <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                </div>
+
+                <h4>Mot de passe</h4>
+                <div class="ConteneurMotDePasse">
+                    <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Votre mot de passe" required>
+                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                </div>
+                <div class="ConteneurMotDePasse">
+                    <input type="password" id="confirme_mot_de_passe" name="confirme_mot_de_passe" placeholder="Confirmer votre mot de passe" required>
+                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                </div>
+
+                <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
+
+                <button type="submit" class="btn-CreerCompte">Créer un compte</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="static/script.js"></script>
+    <script>
+        function validateForm() {
+            var email = document.getElementById("email").value;
+            var errorContainer = document.getElementById("errorContainer");
+
+            // Vérification du format de l'email
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                errorContainer.innerText = "L'adresse email est invalide.";
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -356,7 +356,7 @@ section h2 {
 
 
 /* ######################## Région Populaire ######################## */
-.popular-regions-container {
+.popular-regions-container, .favorisProfil {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 35px;
@@ -390,7 +390,7 @@ section h2 {
 }*/
 
 /* Style pour chaque région */
-.popular-region {
+.popular-region, .favorisProfil {
     width: 100%;
     height: 220px;
     position: relative;
@@ -654,8 +654,9 @@ section h2 {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5); /* Noir avec opacité */
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .photo {
@@ -697,15 +698,55 @@ section h2 {
 
 /* ######################## Footer ######################## */
 footer {
-    background-color: #1E6091;
+    margin-top: 10%;
+    background-color: #1F5A89;
     color: white;
-    padding: 20px;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
     text-align: center;
-    margin-top: 40px;
+}
+
+.conteneurFooter {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.conteneurFooter div {
+    flex: 1;
+    padding: 2px;
+    
+}
+
+footer h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 
 footer p {
-    font-size: 14px;
+    margin: 10px 0;
+    font-size: 10px;
+}
+
+.nosReseaux img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.nosReseaux div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.mentions {
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 10px;
 }
 
 

@@ -45,6 +45,10 @@ func main() {
 		renderTemplate(w, "mot-de-passe-oublie")
 	})
 
+	http.HandleFunc("/profil", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "profil")
+	})
+
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

@@ -560,6 +560,13 @@ section h2 {
     align-items: center;
 }
 
+.ConteneurCreerCompte form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4 {
     font-size: 15px;
     font-weight: bold;
@@ -641,7 +648,6 @@ section h2 {
 }
 
 /* ######################## Page : Créer un Compte ######################## */
-
 .overlay {
     position: absolute;
     width: 150px;

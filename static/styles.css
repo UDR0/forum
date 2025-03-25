@@ -31,7 +31,7 @@ header {
     align-items: center;
     width: 100%;
     padding: 10px 20px;
-    background-color: #1E6091;
+    background-color: #fff;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4);
 }
 
@@ -45,24 +45,31 @@ header {
 /* Image du logo */
 .image_logo {
     width: 40px; /* Ajuste selon le design */
-    height: auto;
-    border-radius: 20px;
+    display: block;
+    margin: auto;
 }
 
 /* Texte du logo */
 .text_logo {
     /*display: none;  Masqué par défaut */
-    font-family: "Open Sans", sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #fff;
-    padding-left: 10px;
+    /* font-family: "Open Sans", sans-serif; */
+    font-family: "Pacifico";
+    font-size: 20px;
+    /* text-transform: uppercase; */
+    color: #1E6091;
+    padding-left: 5px;
 }
 
 /* "Trip" en bleu */
 .text_logo span {
-    color: #B5E48C;
+    color: #76C893;
+}
+
+/* Image du texte "MyTripy" */
+.mytripy {
+    width: 170px; /* Ajuste la taille */
+    height: auto;
+    padding-left: 5px;
 }
 
 
@@ -71,7 +78,7 @@ header {
 
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
-    background-color: #1E6091; /* Couleur du fond du bouton */
+    background-color: transparent; /* Couleur du fond du bouton */
     border: none;
     padding: 5px; /* Taille du bouton */
     border-radius: 50%; /* Rendre le bouton rond */
@@ -80,21 +87,22 @@ header {
     align-items: center;
     cursor: pointer;
     z-index: 1001;
-    border: 1px solid #34A0A4;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
 }
 
 /* Image du menu burger */
 .burger-menu img {
-    width: 30px; /* Ajuste la taille de l'icône */
-    height: auto;
+    width: 22px;
+    height: 22px;
 }
 
 /* Effet de survol pour le bouton */
 .burger-menu:hover {
-    background-color: #34A0A4; /* Changer la couleur au survol */
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
 }
-
-
 
 
 
@@ -194,8 +202,8 @@ section h2 {
     align-items: center;
     border: 1px solid #000;
     border-radius: 25px;
-    padding: 5px 15px;
-    margin-top: 35px;
+    padding: 5px 5px;
+    margin-top: 10%;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -205,7 +213,7 @@ section h2 {
 
 .search-bar input {
     width: 100%;
-    padding: 10px;
+    padding: 7px;
     border: none;
     outline: none;
     font-size: 16px;
@@ -224,42 +232,27 @@ section h2 {
     right: 0; /* Positionne l'icône à droite */
     top: 50%;
     transform: translateY(-50%); /* Centre verticalement */
-    width: 49px; /* Taille du bouton */
-    height: 49px;
+    width: 42px; /* Taille du bouton */
+    height: 42px;
     border-radius: 50%; /* Rond */
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
-    background-color: #1E6091;
+    background-color: #64d6df;
     cursor: pointer;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
 }
 
 .search-icon img {
-    width: 25px; /* Ajuste la taille de l’icône */
-    height: 25px;
+    width: 22px; /* Ajuste la taille de l’icône */
+    height: 22px;
 }
 
 /* Effet au survol */
 .search-icon:hover {
-    background-color: #34A0A4; /* Change la couleur au survol */
-}
-
-
-
-    
-
-
-/* Image du menu burger */
-.burger-menu img {
-    width: 30px; /* Ajuste la taille de l'icône */
-    height: auto;
-}
-
-/* Effet de survol pour le bouton */
-.burger-menu:hover {
-    background-color: #34A0A4; /* Changer la couleur au survol */
+    background-color: transparent; /* Change la couleur au survol */
+    border: 1px solid #64d6df;
 }
 
 
@@ -288,7 +281,7 @@ section h2 {
 }
 
 .image-map path:hover {
-    fill: #34A0A4;
+    fill: #64d6df;
 }
 
 

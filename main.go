@@ -63,6 +63,7 @@ package main
 
 import (
 	"fmt"
+	forum "forum/Functions"
 	"html/template"
 	"net/http"
 )
@@ -86,24 +87,36 @@ func main() {
 
 	// Route pour la page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/mytripy_non", http.StatusFound)
+		http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 	})
 
 	// Routes pour les pages HTML
-	http.HandleFunc("/mytripy_non", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "mytripy_non")
+	http.HandleFunc("/mytripy-non", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mytripy-non")
 	})
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "SeConnecter")
 	})
 
-	http.HandleFunc("/CreerCompte", func(w http.ResponseWriter, r *http.Request) {
+	/*http.HandleFunc("/CreerCompte", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "CreerCompte")
+	})*/
+
+	http.HandleFunc("/CreerCompte", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			forum.CreateUser(w, r)
+		} else {
+			renderTemplate(w, "CreerCompte")
+		}
 	})
 
-	http.HandleFunc("/mot_de_passe_oublie", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "mot_de_passe_oublie")
+	http.HandleFunc("/mot-de-passe-oublie", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mot-de-passe-oublie")
+	})
+
+	http.HandleFunc("/profil", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "profil")
 	})
 
 	// Démarrer le serveur

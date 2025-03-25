@@ -31,8 +31,8 @@ header {
     align-items: center;
     width: 100%;
     padding: 10px 20px;
-    background-color: #1E6091;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
+    background-color: #fff;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Logo */
@@ -45,24 +45,31 @@ header {
 /* Image du logo */
 .image_logo {
     width: 40px; /* Ajuste selon le design */
-    height: auto;
-    border-radius: 20px;
+    display: block;
+    margin: auto;
 }
 
 /* Texte du logo */
 .text_logo {
     /*display: none;  Masqué par défaut */
-    font-family: "Open Sans", sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #fff;
-    padding-left: 10px;
+    /* font-family: "Open Sans", sans-serif; */
+    font-family: "Pacifico";
+    font-size: 20px;
+    /* text-transform: uppercase; */
+    color: #1E6091;
+    padding-left: 5px;
 }
 
 /* "Trip" en bleu */
 .text_logo span {
-    color: #B5E48C;
+    color: #76C893;
+}
+
+/* Image du texte "MyTripy" */
+.mytripy {
+    width: 170px; /* Ajuste la taille */
+    height: auto;
+    padding-left: 5px;
 }
 
 
@@ -71,7 +78,7 @@ header {
 
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
-    background-color: #1E6091; /* Couleur du fond du bouton */
+    background-color: transparent; /* Couleur du fond du bouton */
     border: none;
     padding: 5px; /* Taille du bouton */
     border-radius: 50%; /* Rendre le bouton rond */
@@ -80,21 +87,22 @@ header {
     align-items: center;
     cursor: pointer;
     z-index: 1001;
-    border: 1px solid #34A0A4;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
 }
 
 /* Image du menu burger */
 .burger-menu img {
-    width: 30px; /* Ajuste la taille de l'icône */
-    height: auto;
+    width: 22px;
+    height: 22px;
 }
 
 /* Effet de survol pour le bouton */
 .burger-menu:hover {
-    background-color: #34A0A4; /* Changer la couleur au survol */
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
 }
-
-
 
 
 
@@ -194,8 +202,8 @@ section h2 {
     align-items: center;
     border: 1px solid #000;
     border-radius: 25px;
-    padding: 5px 15px;
-    margin-top: 35px;
+    padding: 5px 5px;
+    margin-top: 10%;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -205,7 +213,7 @@ section h2 {
 
 .search-bar input {
     width: 100%;
-    padding: 10px;
+    padding: 7px;
     border: none;
     outline: none;
     font-size: 16px;
@@ -224,43 +232,62 @@ section h2 {
     right: 0; /* Positionne l'icône à droite */
     top: 50%;
     transform: translateY(-50%); /* Centre verticalement */
-    width: 49px; /* Taille du bouton */
-    height: 49px;
+    width: 42px; /* Taille du bouton */
+    height: 42px;
     border-radius: 50%; /* Rond */
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
-    background-color: #1E6091;
+    background-color: #64d6df;
     cursor: pointer;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
 }
 
 .search-icon img {
-    width: 25px; /* Ajuste la taille de l’icône */
-    height: 25px;
+    width: 22px; /* Ajuste la taille de l’icône */
+    height: 22px;
 }
 
 /* Effet au survol */
 .search-icon:hover {
-    background-color: #34A0A4; /* Change la couleur au survol */
+    background-color: transparent; /* Change la couleur au survol */
+    border: 1px solid #64d6df;
 }
 
 
 
-    
 
 
-/* Image du menu burger */
-.burger-menu img {
-    width: 30px; /* Ajuste la taille de l'icône */
+/* ######################## MAP France ######################## */
+.map-france {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+.image-map {
+    width: 100%;
     height: auto;
 }
 
-/* Effet de survol pour le bouton */
-.burger-menu:hover {
-    background-color: #34A0A4; /* Changer la couleur au survol */
+.image-map path {
+    fill: #1E6091;
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: fill 0.3s;
+    cursor: pointer;
 }
+
+.image-map path:hover {
+    fill: #64d6df;
+}
+
+
+
+
+
 
 
 
@@ -319,8 +346,10 @@ section h2 {
 
 
 
+
+
 /* ######################## Région Populaire ######################## */
-.popular-regions-container {
+.popular-regions-container, .favorisProfil {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 35px;
@@ -337,7 +366,7 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: left;
-    margin-top: 25%;
+    margin-top: 0;
     position: relative;
 }
 
@@ -354,7 +383,7 @@ section h2 {
 }*/
 
 /* Style pour chaque région */
-.popular-region {
+.popular-region, .favorisProfil {
     width: 100%;
     height: 220px;
     position: relative;
@@ -618,8 +647,9 @@ section h2 {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5); /* Noir avec opacité */
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .photo {
@@ -661,15 +691,55 @@ section h2 {
 
 /* ######################## Footer ######################## */
 footer {
-    background-color: #1E6091;
+    margin-top: 10%;
+    background-color: #1F5A89;
     color: white;
-    padding: 20px;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
     text-align: center;
-    margin-top: 40px;
+}
+
+.conteneurFooter {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.conteneurFooter div {
+    flex: 1;
+    padding: 2px;
+    
+}
+
+footer h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 
 footer p {
-    font-size: 14px;
+    margin: 10px 0;
+    font-size: 10px;
+}
+
+.nosReseaux img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.nosReseaux div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.mentions {
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 10px;
 }
 
 

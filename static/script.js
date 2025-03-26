@@ -19,21 +19,44 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
 });
 
 
-const fileInput = document.getElementById("fileInput");
-        const photoProfil = document.getElementById("photoProfil");
-        const uploadIcon = document.getElementById("btnChangerPP");
 
-        uploadIcon.addEventListener("click", () => {
-            fileInput.click();
-        });
+function openPopup() {
+    document.getElementById("popup").style.display = "block";
+}
 
-        fileInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    photoProfil.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+document.addEventListener("DOMContentLoaded", function () {
+    // Sélectionne toutes les images du popup
+    const avatars = document.querySelectorAll(".imgAvatar img");
+    // Sélectionne l'image de profil
+    const photoProfil = document.getElementById("photoProfil");
+
+    avatars.forEach(avatar => {
+        avatar.addEventListener("click", function () {
+            document.getElementById("popup").style.display = "none";
+            // Remplace la source de l'image de profil par celle de l'avatar cliqué
+            photoProfil.src = this.src;
         });
+    });
+    
+});
+
+document.addEventListener("click", function (event) {
+    const popup = document.getElementById("popup");
+    const openPopupBtn = document.getElementById("photoProfil");
+    if (popup.style.display === "block" &&
+        !popup.contains(event.target) &&
+        event.target !== openPopupBtn
+    ) {
+        popup.style.display = "none";
+    }
+});
+
+function openPopup() {
+    document.getElementById("popup").style.display = "block";
+    event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
+}
+
+// Ajoute un écouteur de clic sur ton bouton pour ouvrir la popup
+document.getElementById("photoProfil").addEventListener("click", function (event) {
+    openPopup();
+});

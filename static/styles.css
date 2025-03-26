@@ -601,7 +601,7 @@ section h2 {
     height: 20px;
 }
 
-.mot-de-passe-oublie {
+.mot-de-passe-oublie{
     display: block;
     text-align: left;
     width: 90%;
@@ -613,7 +613,7 @@ section h2 {
     transition: color 0.3s;
 }
 
-.mot-de-passe-oublie:hover {
+.mot-de-passe-oublie:hover{
     text-decoration: underline;
 }
 
@@ -642,44 +642,28 @@ section h2 {
 
 /* ######################## Page : Créer un Compte ######################## */
 
-.overlay {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
 .photo {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 6%;
     gap: 10px;
 }
 
-.photo input {
-    display: none;
+.changerAvatar {
+    display: block;
+    text-align: center;
+    width: 90%;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s;
 }
 
-.photo button {
-    background-color: #B5E48C;
-    border-radius: 100px;
-    border: 2px rgb(255, 255, 255) solid; 
-    font-weight: bold;
-    font-size: large;
-    color: white;
-}
-
-.btnChangerPP {
-    width: 50px;
-    cursor: pointer;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
+.changerAvatar:hover {
+    text-decoration: underline;
 }
 
 .photoProfil {
@@ -687,6 +671,73 @@ section h2 {
     height: 150px;
     border-radius: 50%;
     border: 1px solid black;
+}
+
+/* Style du bouton */
+.open-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.open-btn:hover {
+    background-color: #0056b3;
+}
+
+.fondAvatar {
+    top:0px;
+    left:0px;
+    width: 100%;
+    position: fixed;
+    z-index: -1;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #1E6091;
+    border: 1px, black solid;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 80%;
+    z-index: 1000;
+}
+
+.popup h1 {
+    color:white;
+    font-weight: bolder;
+    margin-bottom: 10%;
+}
+
+.imgAvatar img {
+    height: 80px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Bouton de fermeture */
+.close-btn {
+    margin-top: 10%;
+    background: rgba(255, 255, 255, 0.24);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-btn:hover {
+    background: darkred;
 }
 
 /* ######################## Footer ######################## */
@@ -741,7 +792,6 @@ footer p {
     padding-top: 10px;
     font-size: 10px;
 }
-
 
 
 

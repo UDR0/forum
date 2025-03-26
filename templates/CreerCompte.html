@@ -61,12 +61,30 @@
     <div class="ConteneurCreerCompte">
         
         <div class="photo">
-            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
-            <div class="overlay" id="overlay"></div>
-            <img src="../static/img/camera.png" class="btnChangerPP" id="btnChangerPP">
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <img src="../static/img/avatar/avatarFemme1.png" class="photoProfil" id="photoProfil">
+            <a href="#" class="changerAvatar" onclick="openPopup()">Changer d'Avatar</a>
         </div>
-        
+
+<!-- Pop-up -->
+<div id="popup" class="popup">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h1>Choissiez votre Avatar</h1>
+    <div class="imgAvatar">
+        <div class="femme">
+            <img src="../static/img/avatar/avatarFemme1.png">
+            <img src="../static/img/avatar/avatarFemme2.png">
+            <img src="../static/img/avatar/avatarFemme3.png">
+            <img src="../static/img/avatar/avatarFemme4.png">
+        </div>
+        <div class="homme">
+            <img src="../static/img/avatar/avatarHomme1.png">
+            <img src="../static/img/avatar/avatarHomme2.png">
+            <img src="../static/img/avatar/avatarHomme3.png">
+            <img src="../static/img/avatar/avatarHomme4.png">
+        </div>
+    </div>
+</div>
+
         <h4>Email</h4>
         <div class="ConteneurEmail">
             <input type="text" id="Email" placeholder="nom@email.com">

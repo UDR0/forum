@@ -3,60 +3,20 @@ package forum
 import (
 	"database/sql"
 	"fmt"
+	"html/template"
 	"net/http"
 	"regexp"
-	"text/template"
-
-	"golang.org/x/crypto/bcrypt"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ////////TO DO LIST////////////////
 // get the infos from the database (ex => GetImageURLFromDB())
 // write into the database (ex => WriteImageIntoDB())
-// make sure all the tables in the database are right //
+// make sure all the tables in the database are right (don't want to)
 // write all the url to get to the images
-
-func GetImageURLFromDB() string {
-	// Open the SQLite database located at /forum.db
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		fmt.Printf("Failed to open database: %v\n", err)
-		return ""
-	}
-	defer db.Close()
-
-	// Query the image_url for id_region = 8
-	var imageURL string
-	err = db.QueryRow("SELECT image_url FROM regions WHERE id_region = 8").Scan(&imageURL)
-	if err != nil {
-		fmt.Printf("Failed to query image_url: %v\n", err)
-		return ""
-	}
-
-	return imageURL
-}
-
-func WriteImageIntoDB() {
-	// Open the SQLite database
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		fmt.Println("Error opening database:", err)
-		return
-	}
-	defer db.Close()
-
-	// Write (INSERT) data into the database
-	query := `SELECT * FROM regions; UPDATE regions SET image_url = 'peoedj' WHERE id_region = 1;`
-	_, err = db.Exec(query)
-	if err != nil {
-		fmt.Println("Error executing query:", err)
-		return
-	}
-
-	fmt.Println("Data successfully inserted into the database!")
-}
 
 func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	t, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", tmpl))
@@ -75,51 +35,31 @@ func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	}
 }
 
-func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
-	var emailExists, pseudoExists bool
-	var id int
-
-	err := db.QueryRow("SELECT rowid FROM user WHERE MAIL = ?", email).Scan(&id)
-	if err == nil {
-		emailExists = true
-	} else if err != sql.ErrNoRows {
-		return false, false, err
+func CheckUserExists(db *sql.DB, query string, value string) (bool, error) {
+	var elemCount int
+	err := db.QueryRow(query, value).Scan(&elemCount)
+	if err != nil {
+		return false, fmt.Errorf("error checking existence: %v", err)
 	}
-
-	err = db.QueryRow("SELECT rowid FROM user WHERE PSEUDO = ?", pseudo).Scan(&id)
-	if err == nil {
-		pseudoExists = true
-	} else if err != sql.ErrNoRows {
-		return false, false, err
-	}
-
-	return emailExists, pseudoExists, nil
+	return elemCount > 0, nil
 }
 
 func isValidPassword(password string) bool {
-	var (
-		hasMinLen  = false
-		hasUpper   = false
-		hasLower   = false
-		hasNumber  = false
-		hasSpecial = false
-	)
-	if len(password) >= 6 {
-		hasMinLen = true
-	}
+	var hasUpper, hasLower, hasNumber, hasSpecial bool
+
 	for _, char := range password {
-		switch {
-		case 'A' <= char && char <= 'Z':
+		if 'A' <= char && char <= 'Z' {
 			hasUpper = true
-		case 'a' <= char && char <= 'z':
+		} else if 'a' <= char && char <= 'z' {
 			hasLower = true
-		case '0' <= char && char <= '9':
+		} else if '0' <= char && char <= '9' {
 			hasNumber = true
-		case regexp.MustCompile(`[!@#~$%^&*()_+|<>?:{}]`).MatchString(string(char)):
+		} else if regexp.MustCompile(`[!@#~$%^&*()_+|<>?:{}]`).MatchString(string(char)) {
 			hasSpecial = true
 		}
 	}
-	return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial
+
+	return hasUpper && hasLower && hasNumber && hasSpecial && len(password) >= 6
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -146,7 +86,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !isValidPassword(motDePasse) {
-		renderError(w, "CreerCompte", "Le mot de passe doit contenir au minimum\nune majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.")
+		renderError(w, "CreerCompte", "Le mot de passe doit contenir au minimum<br>une majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.")
 		return
 	}
 
@@ -157,15 +97,23 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	emailExists, pseudoExists, err := CheckUserExists(db, email, pseudo)
+	pseudoExists, err := CheckUserExists(db, `SELECT COUNT(*) FROM User WHERE USERNAME = ?`, pseudo)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la vérification des utilisateurs existants.")
 		return
 	}
+
+	emailExists, err := CheckUserExists(db, `SELECT COUNT(*) FROM User WHERE EMAIL = ?`, email)
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur lors de la vérification des utilisateurs existants.")
+		return
+	}
+
 	if emailExists {
 		renderError(w, "CreerCompte", "L'email est déjà utilisé.")
 		return
 	}
+
 	if pseudoExists {
 		renderError(w, "CreerCompte", "Le pseudo est déjà utilisé.")
 		return
@@ -185,32 +133,79 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Utilisez une URL de photo par défaut
 	urlPhoto := "static/img/photoProfil.png"
-	biographie := ""
 
-	_, err = db.Exec("INSERT INTO user (PSEUDO, MOT_DE_PASSE, MAIL, URL_PHOTO, BIOGRAPHIE) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, urlPhoto, biographie)
+	_, err = db.Exec("INSERT INTO user (USERNAME, PASSWORD, EMAIL, PHOTO_URL) VALUES (?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, urlPhoto)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
 		return
 	}
 
+	//Changer cette ligne par la page qui est renvoyée en cas de succès de création de compte
 	fmt.Fprintln(w, "Compte créé avec succès")
 }
 
-/*    HOW TO SHOW THE IMAGE ON THE REGION.TMPL FILE BUT I NEED TO CHANGE THE NAME IN THE DATABASE
-func forumHandler(w http.ResponseWriter, r *http.Request) {
-	tmplPath := filepath.Join("templates", "region.tmpl")
-	tmpl, err := template.ParseFiles(tmplPath)
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
+func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
+	var hashedPassword string
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 		return
 	}
 
-	data := struct {
-		ImageURL string
-	}{
-		ImageURL: getImageURLFromDB(),
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "SeConnecter", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	err = db.QueryRow("SELECT PASSWORD FROM User WHERE USERNAME = ?", username).Scan(&hashedPassword)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			renderError(w, "SeConnecter", "Mot de passe ou identifiants introuvables")
+		} else {
+			http.Error(w, "Erreur interne lors de la vérification des identifiants : "+err.Error(), http.StatusInternalServerError)
+		}
+		return
 	}
 
-	tmpl.Execute(w, data)
+	// Compare the provided password with the hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		renderError(w, "SeConnecter", "Mot de passe ou identifiants introuvables")
+		return
+	}
+
+	//Changer cette ligne par la page qui est renvoyée au site avec sa connection
+	fmt.Fprintln(w, "Compte existe")
 }
-*/
+
+func AddMessage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	nameChat := r.FormValue("nameChat")
+	nameDep := r.FormValue("nameDep")
+	chatType := r.FormValue("chatType")
+
+	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
+	chatDateTime := time.Now()
+
+	_, err = db.Exec("INSERT INTO user (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
+		return
+	}
+
+}

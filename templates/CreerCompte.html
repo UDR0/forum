@@ -97,21 +97,6 @@
     </section>
 
     <script src="static/script.js"></script>
-    <script>
-        function validateForm() {
-            var email = document.getElementById("email").value;
-            var errorContainer = document.getElementById("errorContainer");
-
-            // Vérification du format de l'email
-            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailPattern.test(email)) {
-                errorContainer.innerText = "L'adresse email est invalide.";
-                return false;
-            }
-
-            return true;
-        }
-    </script>
 
     
 </body>

@@ -110,6 +110,8 @@ header {
 /* ######################## NAVIGATION ######################## */
 .meta-ul {
     font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    top: 3.7rem;
     display: none; /* Cacher par défaut */
     position: absolute;
     right: 0;
@@ -117,7 +119,6 @@ header {
     width: 100%;
     background-color: #1E6091;
     z-index: 10;
-    font-family: 'Montserrat', sans-serif;
     border-radius: 0 0 8px 8px;
     list-style: none;
 }
@@ -187,11 +188,49 @@ section {
     font-family: "Open Sans", sans-serif;
 }
 
-section h2 {
-    display: none;
-    text-transform: uppercase;
-    font-size: 18px;
+.fond-titre {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-height: 170px;
+    object-fit: cover;
+    z-index: -1; /* Place l'image en arrière-plan */
 }
+
+section h2 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #fff;
+    margin-top: 10%;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre floue */
+    /*transform: rotate(-4deg);  Rotation de -3 degrés */
+    /*display: inline-block;  Pour éviter que la rotation affecte le flux du texte */
+    /*padding: 5px 20px;  Espacement autour du texte */
+    /*border: 3px solid #000;  Contour autour du texte (épaisseur et couleur) */
+    /*border-radius: 8px;  Bordures arrondies, ajustez si nécessaire */
+    /* background-color: #fff; Fond blanc (optionnel, mais souvent utilisé pour un meilleur contraste) */
+}
+
+section p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+    /* text-transform: uppercase; */
+    margin-top: 10%;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 
 
 
@@ -203,7 +242,7 @@ section h2 {
     border: 1px solid #000;
     border-radius: 25px;
     padding: 5px 5px;
-    margin-top: 10%;
+    margin-top: 5%;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -352,7 +391,7 @@ section h2 {
 .popular-regions-container, .favoris-regions-container {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 35px;
+    margin-top: 15%;
     gap: 15px; /* Espacement entre les éléments */
     width: 90%;
     margin-left: auto;
@@ -711,11 +750,11 @@ section h2 {
 
     background: #1E6091;
     border: 1px, black solid;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    width: 80%;
-    z-index: 100000;
+    width: 90%;
+    z-index: 1000;
 }
 
 .popup h1 {
@@ -899,7 +938,3 @@ footer p {
 
 }
 
-/* ######################## Desktop ######################## */
-@media (min-width: 1024px) {
-
-}

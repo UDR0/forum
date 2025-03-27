@@ -5,61 +5,15 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
-    "strings"
+	"strings"
 	"text/template"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// ////////TO DO LIST////////////////
-// get the infos from the database (ex => GetImageURLFromDB())
-// write into the database (ex => WriteImageIntoDB())
-// make sure all the tables in the database are right //
-// write all the url to get to the images
-
-/*
-func GetImageURLFromDB() string {
-	// Open the SQLite database located at /forum.db
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		fmt.Printf("Failed to open database: %v\n", err)
-		return ""
-	}
-	defer db.Close()
-
-	// Query the image_url for id_region = 8
-	var imageURL string
-	err = db.QueryRow("SELECT image_url FROM regions WHERE id_region = 8").Scan(&imageURL)
-	if err != nil {
-		fmt.Printf("Failed to query image_url: %v\n", err)
-		return ""
-	}
-
-	return imageURL
-}
-
-func WriteImageIntoDB() {
-	// Open the SQLite database
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		fmt.Println("Error opening database:", err)
-		return
-	}
-	defer db.Close()
-
-	// Write (INSERT) data into the database
-	query := `SELECT * FROM regions; UPDATE regions SET image_url = 'peoedj' WHERE id_region = 1;`
-	_, err = db.Exec(query)
-	if err != nil {
-		fmt.Println("Error executing query:", err)
-		return
-	}
-
-	fmt.Println("Data successfully inserted into the database!")
-}
-*/
 func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	t, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", tmpl))
 	if err != nil {
@@ -81,14 +35,14 @@ func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
 	var emailExists, pseudoExists bool
 	var id int
 
-	err := db.QueryRow("SELECT rowid FROM user WHERE MAIL = ?", email).Scan(&id)
+	err := db.QueryRow("SELECT rowid FROM User WHERE EMAIL = ?", email).Scan(&id)
 	if err == nil {
 		emailExists = true
 	} else if err != sql.ErrNoRows {
 		return false, false, err
 	}
 
-	err = db.QueryRow("SELECT rowid FROM user WHERE PSEUDO = ?", pseudo).Scan(&id)
+	err = db.QueryRow("SELECT rowid FROM User WHERE USERNAME = ?", pseudo).Scan(&id)
 	if err == nil {
 		pseudoExists = true
 	} else if err != sql.ErrNoRows {
@@ -195,7 +149,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	biographie := ""
 
-	_, err = db.Exec("INSERT INTO user (PSEUDO, MOT_DE_PASSE, MAIL, URL_PHOTO, BIOGRAPHIE) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, photoURL, biographie)
+	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, photoURL, biographie)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
 		return
@@ -204,21 +158,142 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Compte créé avec succès")
 }
 
-/*    HOW TO SHOW THE IMAGE ON THE REGION.TMPL FILE BUT I NEED TO CHANGE THE NAME IN THE DATABASE
-func forumHandler(w http.ResponseWriter, r *http.Request) {
-	tmplPath := filepath.Join("templates", "region.tmpl")
-	tmpl, err := template.ParseFiles(tmplPath)
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
+func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
+	var hashedPassword string
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 		return
 	}
 
-	data := struct {
-		ImageURL string
-	}{
-		ImageURL: getImageURLFromDB(),
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "SeConnecter", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	err = db.QueryRow("SELECT PASSWORD FROM User WHERE USERNAME = ?", username).Scan(&hashedPassword)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			renderError(w, "SeConnecter", "Mot de passe ou identifiants introuvables")
+		} else {
+			http.Error(w, "Erreur interne lors de la vérification des identifiants : "+err.Error(), http.StatusInternalServerError)
+		}
+		return
 	}
 
-	tmpl.Execute(w, data)
+	// Compare the provided password with the hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		renderError(w, "SeConnecter", "Mot de passe ou identifiants introuvables")
+		return
+	}
+
+	//Changer cette ligne par la page qui est renvoyée au site avec sa connection + renvoyer true au js pour display les truc cachés
+	//fmt.Fprintln(w, "Compte existe")
+	http.Redirect(w, r, "/", http.StatusFound)
 }
-*/
+
+func AddChat(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
+		return
+	}
+	defer db.Close()
+
+	nameChat := r.FormValue("nameChat")
+	nameDep := r.FormValue("nameDep")
+	chatType := r.FormValue("chatType")
+
+	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
+	chatDateTime := time.Now()
+
+	_, err = db.Exec("INSERT INTO Chat (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
+		return
+	}
+
+}
+
+// func AddMessage(w http.ResponseWriter, r *http.Request) {
+// 	if r.Method != http.MethodPost {
+// 		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+
+// 	db, err := sql.Open("sqlite3", "./forum.db")
+// 	if err != nil {
+// 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
+// 		return
+// 	}
+// 	defer db.Close()
+
+// 	nameChat := r.FormValue("nameChat")
+// 	username := r.FormValue("username")
+// 	msg := r.FormValue("msg")
+
+// 	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
+// 	datetime := time.Now()
+
+// 	_, err = db.Exec("INSERT INTO Message (CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT) VALUES (?, ?, ?, ?)", nameChat, username, datetime, msg)
+// 	if err != nil {
+// 		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
+// 		return
+// 	}
+
+// }
+
+// /// this gets all the infos from the table Message poi posso fare la stessa cosa per elencare le chat
+
+// func GetMessages(db *sql.DB) ([]struct {
+// 	ID       int
+// 	ChatName string
+// 	Username string
+// 	Datetime time.Time
+// 	Text     string
+// }, error) {
+// 	rows, err := db.Query("SELECT MESSAGE_ID, CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT FROM Message")
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error querying messages: %v", err)
+// 	}
+// 	defer rows.Close()
+
+// 	var messages []struct {
+// 		ID       int
+// 		ChatName string
+// 		Username string
+// 		Datetime time.Time
+// 		Text     string
+// 	}
+
+// 	for rows.Next() {
+// 		var message struct {
+// 			ID       int
+// 			ChatName string
+// 			Username string
+// 			Datetime time.Time
+// 			Text     string
+// 		}
+
+// 		if err := rows.Scan(&message.ID, &message.ChatName, &message.Username, &message.Datetime, &message.Text); err != nil {
+// 			return nil, fmt.Errorf("error scanning message row: %v", err)
+// 		}
+// 		messages = append(messages, message)
+// 	}
+
+// 	if err := rows.Err(); err != nil {
+// 		return nil, fmt.Errorf("error with rows: %v", err)
+// 	}
+
+// 	return messages, nil
+// }

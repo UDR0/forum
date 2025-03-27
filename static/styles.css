@@ -349,7 +349,7 @@ section h2 {
 
 
 /* ######################## Région Populaire ######################## */
-.popular-regions-container, .favorisProfil {
+.popular-regions-container, .favoris-regions-container {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 35px;
@@ -360,7 +360,7 @@ section h2 {
 }
 
 /* Titre des régions populaires */
-.titre-popular-region {
+.titre-popular-region, .titre-favoris-region {
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
@@ -383,7 +383,7 @@ section h2 {
 }*/
 
 /* Style pour chaque région */
-.popular-region, .favorisProfil {
+.popular-region, .favoris-region {
     width: 100%;
     height: 220px;
     position: relative;
@@ -413,7 +413,7 @@ section h2 {
 }
 
 /* Image de chaque région */
-.popular-region img {
+.popular-region img, .favoris-region img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -617,7 +617,7 @@ section h2 {
     text-decoration: underline;
 }
 
-.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien {
+.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien, .btnMofifierProfil {
     font-size: 1rem;
     padding: 12px 20px;
     width: 90%;
@@ -636,7 +636,7 @@ section h2 {
 }
 
 /* Boutons hover effect */
-.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover {
+.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover, .btnMofifierProfil:hover {
     background-color: #76C893;
 }
 
@@ -651,18 +651,23 @@ section h2 {
     gap: 10px;
 }
 
-.changerAvatar {
+.changerAvatar, .btnMofifierProfil {
     display: block;
+
+    margin-left: auto;
+    margin-right: auto;
+
     text-align: center;
     width: 90%;
     color: #026d90;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 400;
+    font-weight: normal;
     transition: color 0.3s;
+    cursor: pointer;
 }
 
-.changerAvatar:hover {
+.changerAvatar:hover, .btnMofifierProfil:hover {
     text-decoration: underline;
 }
 
@@ -710,7 +715,7 @@ section h2 {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     width: 80%;
-    z-index: 1000;
+    z-index: 100000;
 }
 
 .popup h1 {
@@ -739,6 +744,100 @@ section h2 {
 .close-btn:hover {
     background: darkred;
 }
+
+/* ######################## Page : Profil ######################## */
+
+.floue {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(1px);
+    width: 100%;
+    height: 200%;
+    top:0;
+    z-index: 10000;
+}
+
+.infoUtilisateur {
+    display: flex;
+    flex-direction: row;
+
+    margin-top: 7%;
+}
+
+.infotext {
+    margin-left: 5%;
+    margin-right: 5%;
+    font-family: "Open Sans", sans-serif;
+}
+
+.infotext h1{
+    font-size: 40px;
+    text-align: left;
+    font-weight: bolder;
+}
+
+.infotext p{
+    font-size: 15px;
+    text-align: justify;
+    font-weight: medium;
+}
+
+.infoUtilisateur img {
+    width: 35%;
+    margin-left: 5%;
+
+    border-radius: 10000px;
+}
+
+.btnMofifierProfil {
+    font-size: 0.7rem;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 7%;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 7px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-family: "Open Sans", sans-serif;
+}
+
+.popupProfil {
+    display: none;
+    position: fixed;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    
+    width: 80%;
+    z-index: 10002;
+}
+
+.popupProfil h4 {
+    margin-top: 10px;
+}
+
+.btnMofifierProfil:hover {
+    background-color: #76C893;
+}
+
+
+.favoris-regions-container {
+    font-family: "Open Sans", sans-serif;
+}
+
 
 /* ######################## Footer ######################## */
 footer {

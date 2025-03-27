@@ -15,14 +15,15 @@
     <!-- Header -->
     <header>
         <!-- Logo -->
-        <a href="mytripy-non.html" class="logo">
-            <img class="image_logo" src="static/img/fond_noir.png" alt="MyTripy">
-            <span class="text_logo">My<span>Trip</span>y</span>
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu.png" alt="">
+            <img src="static/img/menu-black.png" alt="menu">
         </button>
 
     </header>
@@ -40,17 +41,95 @@
         <li class="meta-navigation">
             <a class="meta-a" href="#">Favoris</a>
         </li>
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/profil">Mon compte</a>
+        </li>
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/SeConnecter">Se connecter</a>
+        </li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="/CreerCompte">Créer mon compte</a>
+        </li>
     </ul>
 
 
     <!-- Contenu principal -->
+
+    <div id ="floue" class="floue"></div>
+
     <div class="infoUtilisateur">
         <img src="../static/img/photoProfil.png">
-        <h1>Pseudo</h1>
-        <p>Biographie</p>
+        <div class="infotext">
+            <h1>Pseudo</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.
+            </p>
+        </div>
     </div>
 
-    <div class="favorisProfil">
+    <a class="btnMofifierProfil" onclick="openPopupProfil()">MODIFIER VOTRE PROFIL</a>
+
+    <div id ="popupProfil"  class="popupProfil">
+        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
+        <a class="changerAvatar" onclick="openPopup()">Changer d'Avatar</a>
+
+
+        <h4>Email</h4>
+        <div class="ConteneurEmail">
+            <input type="text" id="Email" placeholder="nom@email.com">
+            <img src="/static/img/email.png" alt="Icône email">
+        </div>
+
+        <h4>Pseudo</h4>
+        <div class="ConteneurPseudo">
+            <input type="text" id="Pseudo" placeholder="Votre Pseudo">
+            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+        </div>
+
+        <h4>Biographie</h4>
+        <div class="ConteneurPseudo">
+            <input type="text" id="Pseudo" placeholder="Entrer une Biographie">
+            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+        </div>
+
+        <h4>Mot de passe</h4>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
+        <div class="ConteneurMotDePasse">
+            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe">
+            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+        </div>
+
+        <a class="btnMofifierProfil" onclick="closePopupProfil()">VALIDER</a>
+    </div>
+
+
+            <!-- Pop-up -->
+<div id="popup" class="popup">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h1>Choissiez votre Avatar</h1>
+    <div class="imgAvatar">
+        <div class="femme">
+            <img src="../static/img/avatar/avatarFemme1.png">
+            <img src="../static/img/avatar/avatarFemme2.png">
+            <img src="../static/img/avatar/avatarFemme3.png">
+            <img src="../static/img/avatar/avatarFemme4.png">
+        </div>
+        <div class="homme">
+            <img src="../static/img/avatar/avatarHomme1.png">
+            <img src="../static/img/avatar/avatarHomme2.png">
+            <img src="../static/img/avatar/avatarHomme3.png">
+            <img src="../static/img/avatar/avatarHomme4.png">
+        </div>
+    </div>
+</div>
+
+    <div class="favoris-regions-container">
+        <h3 class="titre-favoris-region">Régions Favorites</h3>
         <div class="favoris-region">
             <div class="region-name">Auvergne-Rhône-Alpes</div>
             <div class="coeur-container">
@@ -60,6 +139,50 @@
         </div>
     </div>
 
+    <div class="favoris-regions-container">
+        <h3 class="titre-favoris-region">Discussions Favorites</h3>
+        <div class="favoris-region">
+            <div class="region-name">Auvergne-Rhône-Alpes</div>
+            <div class="coeur-container">
+                <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+            </div>
+            <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer>
+        <div class="conteneurFooter">
+            <div class="coordonés">
+                <h4>Coordonées</h4>
+                <p>Pl. Sophie Laffitte Immeuble AGORA, <br>06560 Valbonne</p>  
+                <p>mytripy@ynov.com</p>
+                <p>08 00 60 06 33</p>
+            </div>
+            <div class="navigation">
+                <h4>Navigation</h4>
+                <p>Acceuil</p>
+                <p>Destinations</p>
+                <p>Favoris</p>
+            </div>
+            <div class="nosReseaux">
+                <h4>Nos Réseaux</h4>
+                <div class="instagram">
+                    <img src="../static/img/instagram.png">
+                    <p>@mytripy</p>
+                </div>
+                <div class="facebook">
+                    <img src="../static/img/facebook.png">
+                    <p>@mytripy</p>
+                </div>
+                <div class="twitter">
+                    <img src="../static/img/twitter.png">
+                    <p>@mytripy</p>
+                </div>
+            </div>
+        </div>
+        <h4 class="mentions">Contacts  |  Mentions Légales  |  Modération  |  Politique de Confidentialité  |  Cookies </h4>
+    </footer>
 
     <script src="static/script.js"></script>
 </body>

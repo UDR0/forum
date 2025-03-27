@@ -19,16 +19,12 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
 });
 
 
-
-function openPopup() {
-    document.getElementById("popup").style.display = "block";
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     // Sélectionne toutes les images du popup
     const avatars = document.querySelectorAll(".imgAvatar img");
     // Sélectionne l'image de profil
     const photoProfil = document.getElementById("photoProfil");
+    
 
     avatars.forEach(avatar => {
         avatar.addEventListener("click", function () {
@@ -60,3 +56,18 @@ function openPopup() {
 document.getElementById("photoProfil").addEventListener("click", function (event) {
     openPopup();
 });
+
+
+// ------------------- Profil ---------------------------//
+
+function openPopupProfil() {
+    document.getElementById("popupProfil").style.display = "block";
+    document.getElementById("floue").style.display = "block";
+    event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
+}
+
+function closePopupProfil() {
+    document.getElementById("popupProfil").style.display = "none";
+    document.getElementById("floue").style.display = "none";
+    event.stopPropagation();
+}

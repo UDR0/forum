@@ -30,9 +30,7 @@ func main() {
 	})
 
 	// Routes pour les pages HTML
-	http.HandleFunc("/mytripy-non", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "mytripy-non")
-	})
+	http.HandleFunc("/mytripy-non", forum.MyTripyNonHandler)
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {

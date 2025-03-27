@@ -183,28 +183,17 @@
         <!-- Régions populaires -->
         <div class="popular-regions-container">
             <h3 class="titre-popular-region">Régions populaires</h3>
+            {{range .}}
             <div class="popular-region">
-                <div class="region-name">Auvergne-Rhône-Alpes</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
-            </div>
-            <div class="popular-region">
-                <div class="region-name">Bretagne</div>
+                <div class="region-name">{{.RegionName}}</div>
                 <div class="coeur-container">
                     <img src="static/img/coeur.png" alt="Like" class="coeur">
                 </div>
-                <img src="static/img/vieux-port.png" alt="Bretagne">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}">
             </div>
-            <div class="popular-region">
-                <div class="region-name">Provence-Alpes-Côte d’Azur</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur">
-            </div>
+            {{end}}
         </div>
+        
 
         <!-- Description Site -->
         <div class="description-container">

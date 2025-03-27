@@ -6,17 +6,10 @@ import (
 	"html/template"
 	"net/http"
 	"regexp"
-	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
 )
-
-///////////// TO DO LIST ///////////////////
-// ask for the chat page
-// ask for the messages page
-// ask for the profile page to give all the liked chats
-// make the function that gives the departement/region with the most chats
 
 func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	t, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", tmpl))
@@ -184,103 +177,57 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/SeConnecter", http.StatusFound)
 }
 
-func AddChat(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
-		return
-	}
-
-	db, err := sql.Open("sqlite3", "./forum.db")
+func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
+	// Connect to the database
+	db, err := sql.Open("sqlite3", "./forum.db") // Adjust connection details
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
+		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	nameChat := r.FormValue("nameChat")
-	nameDep := r.FormValue("nameDep")
-	chatType := r.FormValue("chatType")
+	// SQL query to get popular regions
+	query := `
+        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL
+        FROM Region r
+        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
+        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
+        GROUP BY r.REGION_NAME, r.REGION_IMG_URL
+        ORDER BY CHAT_COUNT DESC
+        LIMIT 3;
+    `
 
-	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
-	chatDateTime := time.Now()
-
-	_, err = db.Exec("INSERT INTO Chat (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
+	// Execute the query
+	rows, err := db.Query(query)
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
+		http.Error(w, "Erreur lors de l'exécution de la requête.", http.StatusInternalServerError)
 		return
-	}
-
-}
-
-func AddMessage(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
-		return
-	}
-
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
-		return
-	}
-	defer db.Close()
-
-	nameChat := r.FormValue("nameChat")
-	username := r.FormValue("username")
-	msg := r.FormValue("msg")
-
-	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
-	datetime := time.Now()
-
-	_, err = db.Exec("INSERT INTO Message (CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT) VALUES (?, ?, ?, ?)", nameChat, username, datetime, msg)
-	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
-		return
-	}
-
-}
-
-/// this gets all the infos from the table Message poi posso fare la stessa cosa per elencare le chat
-
-func GetMessages(db *sql.DB) ([]struct {
-	ID       int
-	ChatName string
-	Username string
-	Datetime time.Time
-	Text     string
-}, error) {
-	rows, err := db.Query("SELECT MESSAGE_ID, CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT FROM Message")
-	if err != nil {
-		return nil, fmt.Errorf("error querying messages: %v", err)
 	}
 	defer rows.Close()
 
-	var messages []struct {
-		ID       int
-		ChatName string
-		Username string
-		Datetime time.Time
-		Text     string
+	// Populate the RegionChat slice
+	type RegionChat struct {
+		RegionName string
+		ChatCount  int
+		RegionImg  string
 	}
-
+	var regions []RegionChat
 	for rows.Next() {
-		var message struct {
-			ID       int
-			ChatName string
-			Username string
-			Datetime time.Time
-			Text     string
+		var region RegionChat
+		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg); err != nil {
+			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
+			return
 		}
-
-		if err := rows.Scan(&message.ID, &message.ChatName, &message.Username, &message.Datetime, &message.Text); err != nil {
-			return nil, fmt.Errorf("error scanning message row: %v", err)
-		}
-		messages = append(messages, message)
+		regions = append(regions, region)
 	}
 
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error with rows: %v", err)
+	// Render the template with the data
+	tmpl, err := template.ParseFiles("templates/mytripy-non.html")
+	if err != nil {
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
 	}
-
-	return messages, nil
+	if err := tmpl.Execute(w, regions); err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
 }

@@ -1,0 +1,808 @@
+/* Réinitialisation générale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles globaux */
+body {
+    background-color: #fff;
+    text-align: center;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1200px; /* Largeur max sur PC */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+
+
+
+
+/* ######################## Header ######################## */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* Image du logo */
+.image_logo {
+    width: 40px; /* Ajuste selon le design */
+    display: block;
+    margin: auto;
+}
+
+/* Texte du logo */
+.text_logo {
+    /*display: none;  Masqué par défaut */
+    /* font-family: "Open Sans", sans-serif; */
+    font-family: "Pacifico";
+    font-size: 20px;
+    /* text-transform: uppercase; */
+    color: #1E6091;
+    padding-left: 5px;
+}
+
+/* "Trip" en bleu */
+.text_logo span {
+    color: #76C893;
+}
+
+/* Image du texte "MyTripy" */
+.mytripy {
+    width: 170px; /* Ajuste la taille */
+    height: auto;
+    padding-left: 5px;
+}
+
+
+
+
+
+/* ######################## MENU BURGER ######################## */
+.burger-menu {
+    background-color: transparent; /* Couleur du fond du bouton */
+    border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
+}
+
+/* Image du menu burger */
+.burger-menu img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Effet de survol pour le bouton */
+.burger-menu:hover {
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
+}
+
+
+
+
+/* ######################## NAVIGATION ######################## */
+.meta-ul {
+    font-family: "Open Sans", sans-serif;
+    display: none; /* Cacher par défaut */
+    position: absolute;
+    right: 0;
+    padding: 0 1.6rem;
+    width: 100%;
+    background-color: #1E6091;
+    z-index: 10;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 0 0 8px 8px;
+    list-style: none;
+}
+
+/* Quand la classe active est ajoutée au menu, on le montre */
+.meta-ul.active {
+    display: block; /* Afficher le menu */
+}
+
+.meta-navigation {
+    text-align: left;
+    border-bottom: 1px solid #d1d4d7;
+}
+
+.meta-a {
+    font-size: 1rem;
+    display: block;
+    padding: 1rem 0;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles pour les boutons "Se connecter" */
+.meta-navigation-btn-connexion {
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #d1d4d7;
+}
+
+/* Styles pour les boutons "Créer mon compte" */
+.meta-navigation-btn-creer-compte {
+    padding: 10px 0;
+    margin: 0 0 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.btn {
+    font-size: 1rem;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+/* Boutons hover effect */
+.btn:hover {
+    background-color: #76C893;
+}
+
+
+
+
+
+
+
+/* ######################## Contenu principal ######################## *
+
+/* Section */
+section {
+    text-align: center; /* Centrer le texte dans la section */
+    font-family: "Open Sans", sans-serif;
+}
+
+section h2 {
+    display: none;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+
+
+/* ######################## Barre de recherche ######################## */
+.search-bar {
+    position: relative; /* Permet de positionner l’icône en absolu */
+    display: flex;
+    align-items: center;
+    border: 1px solid #000;
+    border-radius: 25px;
+    padding: 5px 5px;
+    margin-top: 10%;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-radius: 25px;
+    padding-right: 50px; /* Ajoute un espace pour ne pas que le texte touche le bouton */
+}
+
+/* Change la couleur du texte de la barre de recherche */
+.search-bar input::placeholder {
+    color: #A0A0A0;
+}
+
+/* Bouton de recherche rond */
+.search-icon {
+    position: absolute;
+    right: 0; /* Positionne l'icône à droite */
+    top: 50%;
+    transform: translateY(-50%); /* Centre verticalement */
+    width: 42px; /* Taille du bouton */
+    height: 42px;
+    border-radius: 50%; /* Rond */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #64d6df;
+    cursor: pointer;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .4);
+}
+
+.search-icon img {
+    width: 22px; /* Ajuste la taille de l’icône */
+    height: 22px;
+}
+
+/* Effet au survol */
+.search-icon:hover {
+    background-color: transparent; /* Change la couleur au survol */
+    border: 1px solid #64d6df;
+}
+
+
+
+
+
+/* ######################## MAP France ######################## */
+.map-france {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+.image-map {
+    width: 100%;
+    height: auto;
+}
+
+.image-map path {
+    fill: #1E6091;
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: fill 0.3s;
+    cursor: pointer;
+}
+
+.image-map path:hover {
+    fill: #64d6df;
+}
+
+
+
+
+
+
+
+
+/* ######################## Liste des régions ######################## */
+.regions-container {
+    display: flex;
+    flex-wrap: wrap; /* Permet de passer à la ligne suivante lorsque l'espace est insuffisant */
+    margin-top: 35px;
+    gap: 15px; /* Espacement entre les éléments */
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.region {
+    background-color: #76C893;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.region img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    transition: opacity 0.3s ease; /* Ajoute un effet au survol */
+}
+
+.region p {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #fff;
+    opacity: 0; /* Par défaut, on cache le texte */
+    transition: opacity 0.3s ease; /* effet au survol */
+}
+
+/* Lorsque l'on survole la région, le texte devient visible */
+.region:hover p {
+    opacity: 1; /* Le texte apparait */
+}
+
+/* Effet de transparence de l'image lors du survol */
+.region:hover img {
+    opacity: 0; /* L'image disparait */
+}
+
+
+
+
+
+
+/* ######################## Région Populaire ######################## */
+.popular-regions-container, .favorisProfil {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 35px;
+    gap: 15px; /* Espacement entre les éléments */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Titre des régions populaires */
+.titre-popular-region {
+    font-size: 25px;
+    /*text-transform: uppercase;*/
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 0;
+    position: relative;
+}
+
+/* Ligne sous le titre 
+.titre-popular-region::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 20%;
+    height: 3px;
+    background-color: #1E6091;
+    border-radius: 25px;
+}*/
+
+/* Style pour chaque région */
+.popular-region, .favorisProfil {
+    width: 100%;
+    height: 220px;
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Nom de la région */
+.region-name {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 77%;
+    width: 96%;
+    height: 20%;
+    background-color: #fff;
+    color: #000;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 20px;
+    z-index: 2;
+}
+
+/* Image de chaque région */
+.popular-region img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.coeur-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    padding: 9px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.coeur {
+    width: 20px;
+    height: 20px;
+}
+
+.coeur-container.active {
+    background-color: #fff;
+}
+
+
+
+
+
+
+/* ######################## Description Site ######################## */
+.description-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 35px;
+    gap: 15px; /* Espacement entre les éléments */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.titre-description {
+    font-size: 25px;
+    /*text-transform: uppercase;*/
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 3%;
+    position: relative;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    height: 300px;
+    height: auto;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.description img {
+    width: 45%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.description h4 {
+    width: 80%;
+    font-size: 22px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.description p {
+    width: 80%;
+    font-size: 16px;
+    color: #333;
+}
+
+.titre-2-description {
+    font-size: 25px;
+    /*text-transform: uppercase;*/
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 3%;
+    position: relative;
+}
+
+.description-btn-destination {
+    font-size: 1rem;
+    padding: 12px 12px;
+    max-width: 300px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #76C893;
+    border-radius: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Boutons hover effect */
+.description-btn-destination:hover {
+    background-color: #34A0A4;
+}
+
+
+
+
+/* ######################## Page : Se Connecter ######################## */
+.titre-SeConnecter, .titre-mot-de-passe-oublie {
+    width: 90%;
+    font-size: 23px;
+    /*text-transform: uppercase;*/
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    position: relative;
+}
+
+.ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 25px;
+    width: 90%;
+    text-align: left;
+}
+
+.ConteneurPseudo, .ConteneurMotDePasse, .ConteneurEmail {
+    position: relative;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px 5px;
+    margin-top: 5px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+}
+
+.ConteneurPseudo input, .ConteneurMotDePasse input, .ConteneurEmail input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    border-radius: 5px;
+    padding-right: 40px;
+}
+
+.ConteneurPseudo img, .ConteneurMotDePasse img, .ConteneurEmail img{
+    position: absolute;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.mot-de-passe-oublie {
+    display: block;
+    text-align: left;
+    width: 90%;
+    margin-top: 15px;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.mot-de-passe-oublie:hover {
+    text-decoration: underline;
+}
+
+.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien {
+    font-size: 1rem;
+    padding: 12px 20px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Boutons hover effect */
+.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover {
+    background-color: #76C893;
+}
+
+/* ######################## Page : Créer un Compte ######################## */
+
+.photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6%;
+    gap: 10px;
+}
+
+.changerAvatar {
+    display: block;
+    text-align: center;
+    width: 90%;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.changerAvatar:hover {
+    text-decoration: underline;
+}
+
+.photoProfil {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+/* Style du bouton */
+.open-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.open-btn:hover {
+    background-color: #0056b3;
+}
+
+.fondAvatar {
+    top:0px;
+    left:0px;
+    width: 100%;
+    position: fixed;
+    z-index: -1;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #1E6091;
+    border: 1px, black solid;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 80%;
+    z-index: 1000;
+}
+
+.popup h1 {
+    color:white;
+    font-weight: bolder;
+    margin-bottom: 10%;
+}
+
+.imgAvatar img {
+    height: 80px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Bouton de fermeture */
+.close-btn {
+    margin-top: 10%;
+    background: rgba(255, 255, 255, 0.24);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-btn:hover {
+    background: darkred;
+}
+
+
+/* ######################## Footer ######################## */
+footer {
+    margin-top: 10%;
+    background-color: #1F5A89;
+    color: white;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.conteneurFooter {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.conteneurFooter div {
+    flex: 1;
+    padding: 2px;
+    
+}
+
+footer h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    margin: 10px 0;
+    font-size: 10px;
+}
+
+.nosReseaux img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.nosReseaux div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.mentions {
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 10px;
+}
+
+
+
+
+/* ######################## Tablette ######################## */
+@media (max-width: 768px) {
+
+}
+
+/* ######################## Desktop ######################## */
+@media (min-width: 1024px) {
+
+}

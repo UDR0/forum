@@ -12,11 +12,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// ////////TO DO LIST////////////////
-// get the infos from the database (ex => GetImageURLFromDB())
-// write into the database (ex => WriteImageIntoDB())
-// make sure all the tables in the database are right (don't want to)
-// write all the url to get to the images
+///////////// TO DO LIST ///////////////////
+// ask for the chat page
+// ask for the messages page
+// ask for the profile page to give all the liked chats
+// make the function that gives the departement/region with the most chats
 
 func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	t, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", tmpl))
@@ -140,8 +140,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Changer cette ligne par la page qui est renvoyée en cas de succès de création de compte
-	fmt.Fprintln(w, "Compte créé avec succès")
+	// Réorienter vers la page SeConnecter mais faut le reorienter vers la page de base avec sa connection
+	http.Redirect(w, r, "/SeConnecter", http.StatusFound)
+
 }
 
 func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
@@ -178,11 +179,12 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Changer cette ligne par la page qui est renvoyée au site avec sa connection
-	fmt.Fprintln(w, "Compte existe")
+	//Changer cette ligne par la page qui est renvoyée au site avec sa connection + renvoyer true au js pour display les truc cachés
+	//fmt.Fprintln(w, "Compte existe")
+	http.Redirect(w, r, "/SeConnecter", http.StatusFound)
 }
 
-func AddMessage(w http.ResponseWriter, r *http.Request) {
+func AddChat(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 		return
@@ -190,7 +192,7 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
 		return
 	}
 	defer db.Close()
@@ -202,10 +204,83 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
 	chatDateTime := time.Now()
 
-	_, err = db.Exec("INSERT INTO user (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
+	_, err = db.Exec("INSERT INTO Chat (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
+		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
 		return
 	}
 
+}
+
+func AddMessage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
+		return
+	}
+	defer db.Close()
+
+	nameChat := r.FormValue("nameChat")
+	username := r.FormValue("username")
+	msg := r.FormValue("msg")
+
+	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
+	datetime := time.Now()
+
+	_, err = db.Exec("INSERT INTO Message (CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT) VALUES (?, ?, ?, ?)", nameChat, username, datetime, msg)
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
+		return
+	}
+
+}
+
+/// this gets all the infos from the table Message poi posso fare la stessa cosa per elencare le chat
+
+func GetMessages(db *sql.DB) ([]struct {
+	ID       int
+	ChatName string
+	Username string
+	Datetime time.Time
+	Text     string
+}, error) {
+	rows, err := db.Query("SELECT MESSAGE_ID, CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT FROM Message")
+	if err != nil {
+		return nil, fmt.Errorf("error querying messages: %v", err)
+	}
+	defer rows.Close()
+
+	var messages []struct {
+		ID       int
+		ChatName string
+		Username string
+		Datetime time.Time
+		Text     string
+	}
+
+	for rows.Next() {
+		var message struct {
+			ID       int
+			ChatName string
+			Username string
+			Datetime time.Time
+			Text     string
+		}
+
+		if err := rows.Scan(&message.ID, &message.ChatName, &message.Username, &message.Datetime, &message.Text); err != nil {
+			return nil, fmt.Errorf("error scanning message row: %v", err)
+		}
+		messages = append(messages, message)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error with rows: %v", err)
+	}
+
+	return messages, nil
 }

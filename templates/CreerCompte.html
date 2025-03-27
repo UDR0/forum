@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
     <title>MyTripy</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/style-desktop.css" media="screen and (min-width: 1024px)">
 </head>
 <body>
 
@@ -27,67 +28,64 @@
             <img src="static/img/menu-black.png" alt="menu">
         </button>
 
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="#">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="#">Favoris</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
+
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
+        </ul>
+
     </header>
-
-
-    <!-- Navigation -->
-    <ul class="meta-ul">
-        <li class="meta-navigation">
-            <a class="meta-a" href="/mytripy_non">MyTripy</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="#">Destinations</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="#">Favoris</a>
-        </li>
-
-        <li class="meta-navigation-btn-connexion">
-            <a class="btn" href="/profil">Mon Compte</a>
-        </li>
-
-        <li class="meta-navigation-btn-connexion">
-            <a class="btn" href="/SeConnecter">Se connecter</a>
-        </li>
-
-        <li class="meta-navigation-btn-creer-compte">
-            <a class="btn" href="/CreerCompte">Créer mon compte</a>
-        </li>
-    </ul>
-
 
 
     <!-- Conteneur Principale -->
 
-<section>
-    <div class="ConteneurCreerCompte">
-        
-        <div class="photo">
-            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
-            <a href="#" class="changerAvatar" onclick="openPopup()">Changer d'Avatar</a>
-        </div>
+    <section>
+        <div class="ConteneurCreerCompte">
+            <div class="photo">
+                <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
+                <a href="#" class="changerAvatar" onclick="openPopup()">Changer d'Avatar</a>
+            </div>
 
-<!-- Pop-up -->
-<div id="popup" class="popup">
-    <img src="../static/img/fondAvatar.png" class="fondAvatar">
-    <h1>Choissiez votre Avatar</h1>
-    <div class="imgAvatar">
-        <div class="femme">
-            <img src="../static/img/avatar/avatarFemme1.png">
-            <img src="../static/img/avatar/avatarFemme2.png">
-            <img src="../static/img/avatar/avatarFemme3.png">
-            <img src="../static/img/avatar/avatarFemme4.png">
+        <!-- Pop-up -->
+        <div id="popup" class="popup">
+            <img src="../static/img/fondAvatar.png" class="fondAvatar">
+            <h1>Choissiez votre Avatar</h1>
+            <div class="imgAvatar">
+                <div class="femme">
+                    <img src="../static/img/avatar/avatarFemme1.png">
+                    <img src="../static/img/avatar/avatarFemme2.png">
+                    <img src="../static/img/avatar/avatarFemme3.png">
+                    <img src="../static/img/avatar/avatarFemme4.png">
+                </div>
+                <div class="homme">
+                    <img src="../static/img/avatar/avatarHomme1.png">
+                    <img src="../static/img/avatar/avatarHomme2.png">
+                    <img src="../static/img/avatar/avatarHomme3.png">
+                    <img src="../static/img/avatar/avatarHomme4.png">
+                </div>
+            </div>
         </div>
-        <div class="homme">
-            <img src="../static/img/avatar/avatarHomme1.png">
-            <img src="../static/img/avatar/avatarHomme2.png">
-            <img src="../static/img/avatar/avatarHomme3.png">
-            <img src="../static/img/avatar/avatarHomme4.png">
-        </div>
-    </div>
-</div>
 
         <h4>Email</h4>
         <div class="ConteneurEmail">

@@ -49,6 +49,10 @@ func main() {
 		renderTemplate(w, "profil")
 	})
 
+	http.HandleFunc("/destinations", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "destinations")
+	})
+
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

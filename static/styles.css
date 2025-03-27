@@ -349,7 +349,7 @@ section h2 {
 
 
 /* ######################## Région Populaire ######################## */
-.popular-regions-container, .favoris-regions-container {
+.popular-regions-container, .favoris-regions-container, .all-regions-container {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 35px;
@@ -357,6 +357,7 @@ section h2 {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    cursor: pointer;
 }
 
 /* Titre des régions populaires */
@@ -383,13 +384,22 @@ section h2 {
 }*/
 
 /* Style pour chaque région */
-.popular-region, .favoris-region {
+.popular-region, .favoris-region, .all-region {
     width: 100%;
     height: 220px;
     position: relative;
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s;
+    transition: width 0.3s;
+    transition: height 0.3s;
+}
+
+.popular-region:hover, .favoris-region:hover, .all-region:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+    width: 101%;
+    height: 230px;
 }
 
 /* Nom de la région */
@@ -413,7 +423,7 @@ section h2 {
 }
 
 /* Image de chaque région */
-.popular-region img, .favoris-region img {
+.popular-region img, .favoris-region img, .all-region img {
     width: 100%;
     height: 100%;
     object-fit: cover;

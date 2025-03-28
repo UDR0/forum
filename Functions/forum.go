@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -235,12 +236,55 @@ func MyTripyNonPage(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("templates/mytripy-non.html")
 	if err != nil {
+		renderError(w, "mytripy-non", "Erreur lors du chargement du template")
+		//http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := t.Execute(w, data); err != nil {
+		//renderError(w, "mytripy-non", "Erreur lors dl'exécution du template")
+		//http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func ProfilPage(w http.ResponseWriter, r *http.Request) {
+	session, _ := Store.Get(r, "session-name")
+	username, ok := session.Values["username"].(string)
+
+	if !ok {
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	var pseudo, urlPhoto string
+	err = db.QueryRow("SELECT USERNAME, PHOTO_URL FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des informations utilisateur : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		Pseudo   string
+		PhotoURL string
+	}{
+		Pseudo:   pseudo,
+		PhotoURL: urlPhoto,
+	}
+
+	t, err := template.ParseFiles("templates/profil.html")
+	if err != nil {
 		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = t.Execute(w, data)
-	if err != nil {
+	if err := t.Execute(w, data); err != nil {
 		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -281,4 +325,108 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
+	// Connect to the database
+	db, err := sql.Open("sqlite3", "./forum.db") // Adjust connection details
+	if err != nil {
+		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// SQL query to get popular regions
+	query := `
+        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL
+        FROM Region r
+        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
+        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
+        GROUP BY r.REGION_NAME, r.REGION_IMG_URL
+        ORDER BY CHAT_COUNT DESC
+        LIMIT 3;
+    `
+
+	// Execute the query
+	rows, err := db.Query(query)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution de la requête.", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	// Populate the RegionChat slice
+	type RegionChat struct {
+		RegionName string
+		ChatCount  int
+		RegionImg  string
+	}
+	var regions []RegionChat
+	for rows.Next() {
+		var region RegionChat
+		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg); err != nil {
+			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
+			return
+		}
+		regions = append(regions, region)
+	}
+
+	// Render the template with the data
+	tmpl, err := template.ParseFiles("templates/mytripy-non.html")
+	if err != nil {
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.Execute(w, regions); err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func SearchSuggestionsHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q") // prend la requete qui suit le 'q' dans l'URL
+	if query == "" {
+		http.Error(w, "Query parameter 'q' is required", http.StatusBadRequest)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	// requete sql aui donne les regions et departements qui contiennent la requete de l'utilisateur
+	sqlQuery := `
+    SELECT D.DEPARTMENT_NAME, R.REGION_NAME
+    FROM Department D
+    JOIN Region R ON D.REGION_NAME = R.REGION_NAME
+    WHERE D.DEPARTMENT_NAME LIKE ? OR R.REGION_NAME LIKE ?
+    LIMIT 7;
+    `
+
+	rows, err := db.Query(sqlQuery, "%"+query+"%", "%"+query+"%") // Exécute la requête SQL avec le terme à chercher parmi les departements et regions
+	if err != nil {
+		http.Error(w, "Error querying database: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type Suggestion struct {
+		DepartmentName string `json:"department_name"`
+		RegionName     string `json:"region_name"`
+	}
+	var suggestions []Suggestion // Crée un tableau pour stocker les suggestions
+
+	for rows.Next() { // Parcourt les lignes renvoyées par la requête SQL
+		var suggestion Suggestion
+		if err := rows.Scan(&suggestion.DepartmentName, &suggestion.RegionName); err != nil { // Récupère les données des colonnes dans la structure suggestion
+			http.Error(w, "Error scanning rows: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		suggestions = append(suggestions, suggestion) // Ajoute la suggestion au tableau
+	}
+
+	w.Header().Set("Content-Type", "application/json") // Avertit que la reponse est en JSON
+	json.NewEncoder(w).Encode(suggestions)             // Encode la reponse en JSON
 }

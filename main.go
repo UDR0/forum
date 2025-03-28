@@ -60,6 +60,8 @@ func main() {
 		renderTemplate(w, "profil", nil)
 	})
 
+	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
+
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
 

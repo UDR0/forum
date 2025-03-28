@@ -71,3 +71,47 @@ function closePopupProfil() {
     document.getElementById("floue").style.display = "none";
     event.stopPropagation();
 }
+
+// ------------------- SEARCH ---------------------------//
+
+document.getElementById('search-input').addEventListener('input', function () {
+    
+    const query = this.value;  // recupère la valeur de la requete
+    const autocomBox = document.getElementById('autocom-box'); // recupère la boite de suggestions avec l'id 'autocom-box'
+    
+    
+    if (query.length < 2) { // permet de donner les suggestions seulement si la requete a plus de 2 lettres 
+        autocomBox.innerHTML = ''; 
+        autocomBox.classList.remove('active'); 
+        return; 
+    }
+
+    
+    fetch(`/search-suggestions?q=${encodeURIComponent(query)}`) // Encode la requête pour l'utiliser dans l'URL
+        .then(response => response.json()) // Convertit la réponse en JSON
+        .then(data => { 
+            autocomBox.innerHTML = ''; // Réinitialise la boite de suggestions avant d'ajouter les nouvelles
+            
+            data.forEach(suggestion => {
+                // Crée un nouvel élément <li> pour chaque suggestion
+                const li = document.createElement('li'); 
+                // Met les texte des options sous la forme de => "Department, Region"
+                li.textContent = `${suggestion.department_name}, ${suggestion.region_name}`;
+                
+                li.addEventListener('click', () => {
+                    // quand une options est choisie
+                    document.getElementById('search-input').value = li.textContent; // met l'option choisie dans la bar de recherche
+                    autocomBox.innerHTML = ''; // efface toutes les options après qu'une d'entre elles est choisie
+                    autocomBox.classList.remove('active'); 
+                });
+                
+                // ajoute a la liste des options
+                autocomBox.appendChild(li);
+            });
+
+            // rend visible les options
+            autocomBox.classList.add('active');
+        })
+        
+        .catch(error => console.error('Error fetching suggestions:', error)); // message d'erreur dans la console en cas d'erreur 
+});

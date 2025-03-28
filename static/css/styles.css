@@ -110,6 +110,8 @@ header {
 /* ######################## NAVIGATION ######################## */
 .meta-ul {
     font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    top: 3.7rem;
     display: none; /* Cacher par défaut */
     position: absolute;
     right: 0;
@@ -117,7 +119,6 @@ header {
     width: 100%;
     background-color: #1E6091;
     z-index: 10;
-    font-family: 'Montserrat', sans-serif;
     border-radius: 0 0 8px 8px;
     list-style: none;
 }
@@ -187,11 +188,48 @@ section {
     font-family: "Open Sans", sans-serif;
 }
 
-section h2 {
-    display: none;
-    text-transform: uppercase;
-    font-size: 18px;
+.fond-titre {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-height: 170px;
+    object-fit: cover;
+    z-index: -1; /* Place l'image en arrière-plan */
 }
+
+section h2 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #fff;
+    margin-top: 10%;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre floue */
+    /*transform: rotate(-4deg);  Rotation de -3 degrés */
+    /*display: inline-block;  Pour éviter que la rotation affecte le flux du texte */
+    /*padding: 5px 20px;  Espacement autour du texte */
+    /*border: 3px solid #000;  Contour autour du texte (épaisseur et couleur) */
+    /*border-radius: 8px;  Bordures arrondies, ajustez si nécessaire */
+    /* background-color: #fff; Fond blanc (optionnel, mais souvent utilisé pour un meilleur contraste) */
+}
+
+/* section p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+    margin-top: 10%;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+} */
+
+
 
 
 
@@ -203,7 +241,7 @@ section h2 {
     border: 1px solid #000;
     border-radius: 25px;
     padding: 5px 5px;
-    margin-top: 10%;
+    margin-top: 5%;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -349,10 +387,10 @@ section h2 {
 
 
 /* ######################## Région Populaire ######################## */
-.popular-regions-container, .favorisProfil {
+.popular-regions-container, .favorites-regions-container{
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 35px;
+    margin-top: 15%;
     gap: 15px; /* Espacement entre les éléments */
     width: 90%;
     margin-left: auto;
@@ -360,7 +398,7 @@ section h2 {
 }
 
 /* Titre des régions populaires */
-.titre-popular-region {
+.titre-popular-region, .titre-favorite-region {
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
@@ -383,13 +421,20 @@ section h2 {
 }*/
 
 /* Style pour chaque région */
-.popular-region, .favorisProfil {
+.popular-region, .favorite-region {
     width: 100%;
     height: 220px;
     position: relative;
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* Effet de survol */
+.popular-region:hover, .favorite-region:hover {
+    transform: scale(1.02);
 }
 
 /* Nom de la région */
@@ -413,7 +458,7 @@ section h2 {
 }
 
 /* Image de chaque région */
-.popular-region img {
+.popular-region img, .favorite-region img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -554,18 +599,27 @@ section h2 {
     position: relative;
 }
 
-.ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie{
+.ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie, .ConteneurProfil {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4 {
+.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4, .ConteneurProfil h4 {
     font-size: 15px;
     font-weight: bold;
     color: #000;
-    margin-top: 25px;
+    margin-top: 10px;
     width: 90%;
+    text-align: left;
+}
+
+.ConteneurProfil p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    width: 90%;
+    margin-top: 5px;
     text-align: left;
 }
 
@@ -602,6 +656,7 @@ section h2 {
 }
 
 .mot-de-passe-oublie {
+    font-family: "Open Sans", sans-serif;
     display: block;
     text-align: left;
     width: 90%;
@@ -611,9 +666,10 @@ section h2 {
     font-size: 14px;
     font-weight: 400;
     transition: color 0.3s;
+    cursor: pointer;
 }
 
-.mot-de-passe-oublie:hover {
+.mot-de-passe-oublie:hover ,.btn-modifier-profil:hover {
     text-decoration: underline;
 }
 
@@ -642,51 +698,157 @@ section h2 {
 
 /* ######################## Page : Créer un Compte ######################## */
 
-.overlay {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
 .photo {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 6%;
     gap: 10px;
 }
 
-.photo input {
-    display: none;
-}
-
-.photo button {
-    background-color: #B5E48C;
-    border-radius: 100px;
-    border: 2px rgb(255, 255, 255) solid; 
-    font-weight: bold;
-    font-size: large;
-    color: white;
-}
-
-.btnChangerPP {
-    width: 50px;
+.changerAvatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 90%;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: normal;
+    transition: color 0.3s;
     cursor: pointer;
+}
+
+.changerAvatar:hover {
+    text-decoration: underline;
+}
+
+.photoProfil {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.fondAvatar {
+    top:0px;
+    left:0px;
+    width: 100%;
+    position: fixed;
+    z-index: -1;
+}
+
+.popup {
+    display: none;
     position: absolute;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #1E6091;
+    border: 1px, black solid;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 90%;
+    z-index: 10000000;
+}
+
+.popup h1 {
+    color:white;
+    font-weight: bolder;
+    margin-bottom: 5%;
+}
+
+.imgAvatar img {
+    height: 80px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+
+
+
+
+
+
+/* ######################## Page : Profil ######################## */
+.btn-modifier-pseudo {
+    font-family: "Open Sans", sans-serif;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.btn-modifier-bio {
+    font-family: "Open Sans", sans-serif;
+    display: block;
+    text-align: left;
+    width: 90%;
+    margin-top: 5px;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.btn-deconnexion {
+    font-size: 1rem;
+    padding: 12px 20px;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
+    color: #fff;
+    text-decoration: none;
+    background-color: #d02222; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Boutons hover effect */
+.btn-deconnexion:hover {
+    background-color: #ff0000;
+}
+
+
+
+/* ######################## Page : Fils de Discussion ######################## */
+
+.filPrincipal {
+    color: white;
+    background-color: #34A0A4;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.photoProfil {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 1px solid black;
+.filPrincipal h3 {
+    color: white !important;
+    font-size: large;
+}
+
+.filPrincipal p {
+    color: white !important;
+    font-size: small;
 }
 
 /* ######################## Footer ######################## */
@@ -744,13 +906,8 @@ footer p {
 
 
 
-
 /* ######################## Tablette ######################## */
 @media (max-width: 768px) {
 
 }
 
-/* ######################## Desktop ######################## */
-@media (min-width: 1024px) {
-
-}

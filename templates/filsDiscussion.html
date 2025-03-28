@@ -7,6 +7,7 @@
     <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
     <meta name="author" content="Matias, Sara, Samuel, William">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
     <title>MyTripy</title>
     <link rel="stylesheet" href="static/css/styles.css">
     <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
@@ -56,57 +57,27 @@
 
     </header>
 
+    
+
 
     <!-- Contenu principal -->
     <section>
-        <div class="photo">
-            <img src="{{.PhotoURL}}" class="photoProfil" id="photoProfil" onclick="openPopup()">
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher une destination..." id="search-input">
+            <button class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
         </div>
 
-        <h3 class="titre-bio">{{.Pseudo}}</h3>
-        <a class="btn-modifier-pseudo">Modifier votre Pseudo</a>
+        <h1>PROVENCE ALPES COTE D'AZUR</h1>
 
-        <div class="ConteneurProfil">
-            <h4>Bio</h4>
-            <p>{{.Biography}}</p>
-
-            <!-- modifier profil -->
-            <a class="btn-modifier-bio">Modifier votre Bio</a>
+        <div class="filPrincipal">
+            <h3>PROVENCE ALPES COTE D'AZUR</h3>
+            <p><strong>PRINCIPALE</strong></p>
+            <p>264 Messages</p>
         </div>
 
-        <!-- Pop-up -->
-        <div id="popup" class="popup">
-            <img src="../static/img/fondAvatar.png" class="fondAvatar">
-            <h1>Choissiez votre Avatar</h1>
-            <div class="imgAvatar">
-                <div class="femme">
-                    <img src="../static/img/avatar/avatarFemme1.png">
-                    <img src="../static/img/avatar/avatarFemme2.png">
-                    <img src="../static/img/avatar/avatarFemme3.png">
-                    <img src="../static/img/avatar/avatarFemme4.png">
-                </div>
-                <div class="homme">
-                    <img src="../static/img/avatar/avatarHomme1.png">
-                    <img src="../static/img/avatar/avatarHomme2.png">
-                    <img src="../static/img/avatar/avatarHomme3.png">
-                    <img src="../static/img/avatar/avatarHomme4.png">
-                </div>
-            </div>
-        </div>
+    </section>
 
-        <!-- Régions Favorites -->
-        <div class="favorites-regions-container">
-            <h3 class="titre-favorite-region">Régions favorites</h3>
-            <div class="favorite-region">
-                <div class="region-name">Auvergne-Rhône-Alpes</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
-            </div>
-        </div>
-
-        <a class="btn-deconnexion" href="/logout">Déconnexion</a>
 
     <!-- Pied de page -->
     <footer>

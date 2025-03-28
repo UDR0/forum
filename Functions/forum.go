@@ -159,7 +159,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintln(w, "Compte créé avec succès")
+	// Créer une nouvelle session et stocker le nom d'utilisateur
+	session, _ := Store.Get(r, "session-name")
+	session.Values["username"] = pseudo
+	session.Save(r, w)
+
+	// Rediriger vers la page mytripy-non après la création du compte
+	http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 }
 
 func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {

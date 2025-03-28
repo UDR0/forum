@@ -19,55 +19,62 @@ document.querySelectorAll('.coeur-container').forEach(coeur => {
 });
 
 
+// Gestion des avatars dans le pop-up de profil
 document.addEventListener("DOMContentLoaded", function () {
-    // Sélectionne toutes les images du popup
     const avatars = document.querySelectorAll(".imgAvatar img");
-    // Sélectionne l'image de profil
     const photoProfil = document.getElementById("photoProfil");
-    
 
     avatars.forEach(avatar => {
         avatar.addEventListener("click", function () {
-            document.getElementById("popup").style.display = "none";
-            // Remplace la source de l'image de profil par celle de l'avatar cliqué
+            // Change l'image de profil
             photoProfil.src = this.src;
+            closePopupProfil(); // Ferme le pop-up de profil après sélection
         });
     });
-    
 });
 
-document.addEventListener("click", function (event) {
-    const popup = document.getElementById("popup");
-    const openPopupBtn = document.getElementById("photoProfil");
-    if (popup.style.display === "block" &&
-        !popup.contains(event.target) &&
-        event.target !== openPopupBtn
-    ) {
-        popup.style.display = "none";
-    }
-});
-
-function openPopup() {
-    document.getElementById("popup").style.display = "block";
-    event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
-}
-
-// Ajoute un écouteur de clic sur ton bouton pour ouvrir la popup
-document.getElementById("photoProfil").addEventListener("click", function (event) {
-    openPopup();
-});
-
-
-// ------------------- Profil ---------------------------//
-
+// Ouvrir le pop-up pour modifier la photo de profil
 function openPopupProfil() {
-    document.getElementById("popupProfil").style.display = "block";
-    document.getElementById("floue").style.display = "block";
-    event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
+    document.getElementById("overlay-profil").style.display = "block";
+    document.getElementById("popup-profil").style.display = "block";
 }
 
+// Fermer le pop-up de la photo de profil
 function closePopupProfil() {
-    document.getElementById("popupProfil").style.display = "none";
-    document.getElementById("floue").style.display = "none";
-    event.stopPropagation();
+    document.getElementById("overlay-profil").style.display = "none";
+    document.getElementById("popup-profil").style.display = "none";
 }
+
+// Fermer le pop-up en cliquant sur l'overlay
+document.getElementById("overlay-profil").onclick = closePopupProfil;
+
+
+
+
+// Ouvrir le pop-up avec overlay sombre
+function openPopupModif() {
+    document.getElementById("overlay-modif").style.display = "block";
+    document.getElementById("nouveauPseudo").value = document.getElementById("pseudo").innerText;
+    document.getElementById("nouvelleBio").value = document.getElementById("bio").innerText;
+    document.getElementById("popup-modif").style.display = "block";
+}
+
+// Fermer le pop-up et l'overlay
+function closePopupModif() {
+    document.getElementById("overlay-modif").style.display = "none";
+    document.getElementById("popup-modif").style.display = "none";
+}
+
+// Sauvegarder les modifications
+function sauverModifications() {
+    const nouveauPseudo = document.getElementById("nouveauPseudo").value;
+    const nouvelleBio = document.getElementById("nouvelleBio").value;
+
+    document.getElementById("pseudo").innerText = nouveauPseudo;
+    document.getElementById("bio").innerText = nouvelleBio;
+
+    closePopupModif();
+}
+
+// Fermer le pop-up en cliquant sur l'overlay
+document.getElementById("overlay-modif").onclick = closePopupModif;

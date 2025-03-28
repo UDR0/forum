@@ -56,44 +56,22 @@
 
     </header>
 
-
     <!-- Contenu principal -->
     <section>
         <div class="photo">
-            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopup()">
+            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
         </div>
 
-        <h3 class="titre-bio">Pseudo</h3>
-        <a class="btn-modifier-pseudo">Modifier votre Pseudo</a>
+        <!-- Pseudo et Bio -->
+        <p id="pseudo">PseudoUtilisateur</p>
+        <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
 
         <div class="ConteneurProfil">
             <h4>Bio</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.</p>
-
-            <!-- modifier profil -->
-            <a class="btn-modifier-bio">Modifier votre Bio</a>
+            <p id="bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.</p>
         </div>
 
-        <!-- Pop-up -->
-        <div id="popup" class="popup">
-            <img src="../static/img/fondAvatar.png" class="fondAvatar">
-            <h1>Choissiez votre Avatar</h1>
-            <div class="imgAvatar">
-                <div class="femme">
-                    <img src="../static/img/avatar/avatarFemme1.png">
-                    <img src="../static/img/avatar/avatarFemme2.png">
-                    <img src="../static/img/avatar/avatarFemme3.png">
-                    <img src="../static/img/avatar/avatarFemme4.png">
-                </div>
-                <div class="homme">
-                    <img src="../static/img/avatar/avatarHomme1.png">
-                    <img src="../static/img/avatar/avatarHomme2.png">
-                    <img src="../static/img/avatar/avatarHomme3.png">
-                    <img src="../static/img/avatar/avatarHomme4.png">
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Régions Favorites -->
         <div class="favorites-regions-container">
             <h3 class="titre-favorite-region">Régions favorites</h3>
@@ -107,6 +85,56 @@
         </div>
 
         <a class="btn-deconnexion" href="#">Déconnexion</a>
+
+    </section>
+
+
+
+
+<!-- Overlay sombre -->
+<div id="overlay-profil" class="overlay"></div>
+
+<!-- Pop-up pour modifier la photo de profil -->
+<div id="popup-profil" class="popup">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h1>Choisissez votre Avatar</h1>
+    <div class="imgAvatar">
+        <div class="femme">
+            <img src="../static/img/avatar/avatarFemme1.png">
+            <img src="../static/img/avatar/avatarFemme2.png">
+            <img src="../static/img/avatar/avatarFemme3.png">
+            <img src="../static/img/avatar/avatarFemme4.png">
+        </div>
+        <div class="homme">
+            <img src="../static/img/avatar/avatarHomme1.png">
+            <img src="../static/img/avatar/avatarHomme2.png">
+            <img src="../static/img/avatar/avatarHomme3.png">
+            <img src="../static/img/avatar/avatarHomme4.png">
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Overlay sombre pour le pop-up de modification -->
+<div id="overlay-modif" class="overlay"></div>
+
+<!-- Fenêtre pop-up de modification -->
+<div id="popup-modif" class="popup-modif">
+    <div class="popup-modif-content">
+        <span class="close" onclick="closePopupModif()">&times;</span>
+        <h3>Modifier Profil</h3>
+        <label for="nouveauPseudo">Pseudo :</label>
+        <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
+
+        <label for="nouvelleBio">Bio :</label>
+        <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
+
+        <button onclick="sauverModifications()">Sauvegarder</button>
+    </div>
+</div>
+
 
 
 

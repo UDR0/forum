@@ -673,7 +673,7 @@ section h2 {
     text-decoration: underline;
 }
 
-.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien, .btnMofifierProfil {
+.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien {
     font-size: 1rem;
     padding: 12px 20px;
     width: 90%;
@@ -692,7 +692,7 @@ section h2 {
 }
 
 /* Boutons hover effect */
-.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover, .btnMofifierProfil:hover {
+.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover {
     background-color: #76C893;
 }
 
@@ -805,6 +805,31 @@ section h2 {
     transition: color 0.3s;
     cursor: pointer;
 }
+
+.btn-deconnexion {
+    font-size: 1rem;
+    padding: 12px 20px;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
+    color: #fff;
+    text-decoration: none;
+    background-color: #d02222; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Boutons hover effect */
+.btn-deconnexion:hover {
+    background-color: #ff0000;
+}
+
+
 
 /* ######################## Page : Fils de Discussion ######################## */
 

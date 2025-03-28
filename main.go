@@ -62,6 +62,8 @@ func main() {
 
 	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
 
+	http.HandleFunc("/logout", forum.Logout)
+
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
 

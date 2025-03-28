@@ -34,7 +34,7 @@ func main() {
 	})
 
 	// Routes pour les pages HTML
-	http.HandleFunc("/mytripy-non", forum.MyTripyNonPage)
+	http.HandleFunc("/mytripy-non", forum.MyTripyNonHandler)
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
@@ -67,6 +67,8 @@ func main() {
 	})
 
 	http.HandleFunc("/logout", forum.Logout)
+
+	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
 
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))

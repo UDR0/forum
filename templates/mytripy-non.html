@@ -71,9 +71,11 @@
 
         <!-- Barre de recherche -->
         <div class="search-bar">
+
             <input type="text" placeholder="Rechercher une destination..." id="search-input">
             <button class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
         </div>
+        <ul id="autocom-box" class="autocomplete-box"></ul>
 
         <!-- MAP France -->
         <div class="map-france" id="map">
@@ -195,27 +197,15 @@
         <!-- Régions populaires -->
         <div class="popular-regions-container">
             <h3 class="titre-popular-region">Régions populaires</h3>
+            {{range .Regions}}
             <div class="popular-region">
-                <div class="region-name">Auvergne-Rhône-Alpes</div>
+                <div class="region-name">{{.RegionName}}</div>
                 <div class="coeur-container">
                     <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
                 </div>
-                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}">
             </div>
-            <div class="popular-region">
-                <div class="region-name">Bretagne</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Bretagne">
-            </div>
-            <div class="popular-region">
-                <div class="region-name">Provence-Alpes-Côte d’Azur</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur">
-            </div>
+            {{end}}
         </div>
 
         <!-- Description Site -->

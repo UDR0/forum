@@ -263,19 +263,21 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	var pseudo, urlPhoto string
-	err = db.QueryRow("SELECT USERNAME, PHOTO_URL FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto)
+	var pseudo, urlPhoto, biography string
+	err = db.QueryRow("SELECT USERNAME, PHOTO_URL, BIOGRAPHY FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto, &biography)
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération des informations utilisateur : "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	data := struct {
-		Pseudo   string
-		PhotoURL string
+		Pseudo    string
+		PhotoURL  string
+		Biography string
 	}{
-		Pseudo:   pseudo,
-		PhotoURL: urlPhoto,
+		Pseudo:    pseudo,
+		PhotoURL:  urlPhoto,
+		Biography: biography,
 	}
 
 	t, err := template.ParseFiles("templates/profil.html")

@@ -60,15 +60,15 @@
     <!-- Contenu principal -->
     <section>
         <div class="photo">
-            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopup()">
+            <img src="{{.PhotoURL}}" class="photoProfil" id="photoProfil" onclick="openPopup()">
         </div>
 
-        <h3 class="titre-bio">Pseudo</h3>
+        <h3 class="titre-bio">{{.Pseudo}}</h3>
         <a class="btn-modifier-pseudo">Modifier votre Pseudo</a>
 
         <div class="ConteneurProfil">
             <h4>Bio</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.</p>
+            <p>{{.Biography}}</p>
 
             <!-- modifier profil -->
             <a class="btn-modifier-bio">Modifier votre Bio</a>

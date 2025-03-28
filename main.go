@@ -56,11 +56,15 @@ func main() {
 		renderTemplate(w, "mot-de-passe-oublie", nil)
 	})
 
-	http.HandleFunc("/profil", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "profil", nil)
+	http.HandleFunc("/profil", forum.ProfilPage)
+
+	http.HandleFunc("/destinations", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "destinations", nil)
 	})
 
-	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
+	http.HandleFunc("/filsDiscussion", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "filsDiscussion", nil)
+	})
 
 	http.HandleFunc("/logout", forum.Logout)
 

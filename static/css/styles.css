@@ -218,17 +218,16 @@ section h2 {
     /* background-color: #fff; Fond blanc (optionnel, mais souvent utilisé pour un meilleur contraste) */
 }
 
-section p {
+/* section p {
     font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 22px;
     font-weight: 600;
     color: #000;
-    /* text-transform: uppercase; */
     margin-top: 10%;
     max-width: 90%;
     margin-left: auto;
     margin-right: auto;
-}
+} */
 
 
 
@@ -388,7 +387,7 @@ section p {
 
 
 /* ######################## Région Populaire ######################## */
-.popular-regions-container, .favoris-regions-container, .all-regions-container {
+.popular-regions-container, .favorites-regions-container{
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 15%;
@@ -396,11 +395,10 @@ section p {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    cursor: pointer;
 }
 
 /* Titre des régions populaires */
-.titre-popular-region, .titre-favoris-region {
+.titre-popular-region, .titre-favorite-region {
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
@@ -423,22 +421,20 @@ section p {
 }*/
 
 /* Style pour chaque région */
-.popular-region, .favoris-region, .all-region {
+.popular-region, .favorite-region {
     width: 100%;
     height: 220px;
     position: relative;
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s;
-    transition: width 0.3s;
-    transition: height 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
-.popular-region:hover, .favoris-region:hover, .all-region:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
-    width: 101%;
-    height: 230px;
+/* Effet de survol */
+.popular-region:hover, .favorite-region:hover {
+    transform: scale(1.02);
 }
 
 /* Nom de la région */
@@ -462,7 +458,7 @@ section p {
 }
 
 /* Image de chaque région */
-.popular-region img, .favoris-region img, .all-region img {
+.popular-region img, .favorite-region img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -603,18 +599,27 @@ section p {
     position: relative;
 }
 
-.ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie{
+.ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie, .ConteneurProfil {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4 {
+.ConteneurSeConnecter h4, .ConteneurCreerCompte h4, .ConteneurEmail h4, .ConteneurMotDePasseOublie h4, .ConteneurProfil h4 {
     font-size: 15px;
     font-weight: bold;
     color: #000;
-    margin-top: 25px;
+    margin-top: 10px;
     width: 90%;
+    text-align: left;
+}
+
+.ConteneurProfil p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    width: 90%;
+    margin-top: 5px;
     text-align: left;
 }
 
@@ -650,7 +655,8 @@ section p {
     height: 20px;
 }
 
-.mot-de-passe-oublie{
+.mot-de-passe-oublie {
+    font-family: "Open Sans", sans-serif;
     display: block;
     text-align: left;
     width: 90%;
@@ -660,13 +666,14 @@ section p {
     font-size: 14px;
     font-weight: 400;
     transition: color 0.3s;
+    cursor: pointer;
 }
 
-.mot-de-passe-oublie:hover{
+.mot-de-passe-oublie:hover ,.btn-modifier-profil:hover {
     text-decoration: underline;
 }
 
-.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien, .btnMofifierProfil {
+.btn-SeConnecter, .btn-CreerCompte, .btn-recevoir-lien {
     font-size: 1rem;
     padding: 12px 20px;
     width: 90%;
@@ -685,7 +692,7 @@ section p {
 }
 
 /* Boutons hover effect */
-.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover, .btnMofifierProfil:hover {
+.btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover {
     background-color: #76C893;
 }
 
@@ -700,12 +707,10 @@ section p {
     gap: 10px;
 }
 
-.changerAvatar, .btnMofifierProfil {
+.changerAvatar {
     display: block;
-
     margin-left: auto;
     margin-right: auto;
-
     text-align: center;
     width: 90%;
     color: #026d90;
@@ -716,30 +721,16 @@ section p {
     cursor: pointer;
 }
 
-.changerAvatar:hover, .btnMofifierProfil:hover {
+.changerAvatar:hover {
     text-decoration: underline;
 }
 
 .photoProfil {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     border: 1px solid black;
-}
-
-/* Style du bouton */
-.open-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
     cursor: pointer;
-    border-radius: 5px;
-}
-
-.open-btn:hover {
-    background-color: #0056b3;
 }
 
 .fondAvatar {
@@ -752,7 +743,7 @@ section p {
 
 .popup {
     display: none;
-    position: fixed;
+    position: absolute;
     
     top: 50%;
     left: 50%;
@@ -764,13 +755,13 @@ section p {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     width: 90%;
-    z-index: 10000000000;
+    z-index: 10000000;
 }
 
 .popup h1 {
     color:white;
     font-weight: bolder;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
 }
 
 .imgAvatar img {
@@ -779,114 +770,86 @@ section p {
     z-index: 1001;
 }
 
-/* Bouton de fermeture */
-.close-btn {
-    margin-top: 10%;
-    background: rgba(255, 255, 255, 0.24);
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
 
-.close-btn:hover {
-    background: darkred;
-}
+
+
+
+
 
 /* ######################## Page : Profil ######################## */
-
-.floue {
-    display: none;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(1px);
-    width: 100%;
-    height: 200%;
-    top:0;
-    z-index: 10000;
-}
-
-.infoUtilisateur {
-    display: flex;
-    flex-direction: row;
-
-    margin-top: 7%;
-}
-
-.infotext {
-    margin-left: 5%;
-    margin-right: 5%;
+.btn-modifier-pseudo {
     font-family: "Open Sans", sans-serif;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    transition: color 0.3s;
+    cursor: pointer;
 }
 
-.infotext h1{
-    font-size: 40px;
+.btn-modifier-bio {
+    font-family: "Open Sans", sans-serif;
+    display: block;
     text-align: left;
-    font-weight: bolder;
+    width: 90%;
+    margin-top: 5px;
+    color: #026d90;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    transition: color 0.3s;
+    cursor: pointer;
 }
 
-.infotext p{
-    font-size: 15px;
-    text-align: justify;
-    font-weight: medium;
-}
-
-.infoUtilisateur img {
-    width: 35%;
-    margin-left: 5%;
-
-    border-radius: 10000px;
-}
-
-.btnMofifierProfil {
-    font-size: 0.7rem;
+.btn-deconnexion {
+    font-size: 1rem;
+    padding: 12px 20px;
     width: 40%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 7%;
+    margin-top: 15%;
     color: #fff;
     text-decoration: none;
-    background-color: #34A0A4; /* Couleur de fond des boutons */
-    border-radius: 7px;
+    background-color: #d02222; /* Couleur de fond des boutons */
+    border-radius: 25px;
     display: block;
     transition: background-color 0.3s;
     border: none;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-family: "Open Sans", sans-serif;
 }
 
-.popupProfil {
-    display: none;
-    position: fixed;
-    
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Boutons hover effect */
+.btn-deconnexion:hover {
+    background-color: #ff0000;
+}
 
-    background: #ffffff;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    
+
+
+/* ######################## Page : Fils de Discussion ######################## */
+
+.filPrincipal {
+    color: white;
+    background-color: #34A0A4;
     width: 80%;
-    z-index: 10002;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.popupProfil h4 {
-    margin-top: 10px;
+.filPrincipal h3 {
+    color: white !important;
+    font-size: large;
 }
 
-.btnMofifierProfil:hover {
-    background-color: #76C893;
+.filPrincipal p {
+    color: white !important;
+    font-size: small;
 }
-
-
-.favoris-regions-container {
-    font-family: "Open Sans", sans-serif;
-}
-
 
 /* ######################## Footer ######################## */
 footer {
@@ -947,3 +910,4 @@ footer p {
 @media (max-width: 768px) {
 
 }
+

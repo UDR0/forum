@@ -43,13 +43,19 @@
             <a class="meta-a" href="#">Favoris</a>
         </li>
 
-        <li class="meta-navigation-btn-connexion">
-            <a class="btn" href="/SeConnecter">Se connecter</a>
-        </li>
+        {{if .IsAuthenticated}}
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+        {{else}}
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
 
-        <li class="meta-navigation-btn-creer-compte">
-            <a class="btn" href="/CreerCompte">Créer mon compte</a>
-        </li>
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
+        {{end}}
     </ul>
 
 

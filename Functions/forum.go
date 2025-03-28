@@ -9,10 +9,13 @@ import (
 	"text/template"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
-
+	"github.com/gorilla/sessions" //go get github.com/gorilla/sessions
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
+
+// Exporter le magasin de sessions
+var Store = sessions.NewCookieStore([]byte("votre-clé-secrète"))
 
 func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	t, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", tmpl))
@@ -192,9 +195,54 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Changer cette ligne par la page qui est renvoyée au site avec sa connection + renvoyer true au js pour display les truc cachés
-	//fmt.Fprintln(w, "Compte existe")
+	// Créer une nouvelle session et stocker le nom d'utilisateur
+	session, _ := Store.Get(r, "session-name")
+	session.Values["username"] = username
+	session.Save(r, w)
+
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func MyTripyNonPage(w http.ResponseWriter, r *http.Request) {
+	session, _ := Store.Get(r, "session-name")
+	username, ok := session.Values["username"].(string)
+	var pseudo, urlPhoto string
+
+	if ok {
+		db, err := sql.Open("sqlite3", "./forum.db")
+		if err != nil {
+			http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+			return
+		}
+		defer db.Close()
+
+		err = db.QueryRow("SELECT USERNAME, PHOTO_URL FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto)
+		if err != nil {
+			http.Error(w, "Erreur lors de la récupération des informations utilisateur : "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	data := struct {
+		IsAuthenticated bool
+		Pseudo          string
+		URLPhoto        string
+	}{
+		IsAuthenticated: ok,
+		Pseudo:          pseudo,
+		URLPhoto:        urlPhoto,
+	}
+
+	t, err := template.ParseFiles("templates/mytripy-non.html")
+	if err != nil {
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = t.Execute(w, data)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func AddChat(w http.ResponseWriter, r *http.Request) {
@@ -205,7 +253,7 @@ func AddChat(w http.ResponseWriter, r *http.Request) {
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
+		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") // Changez le nom de la page HTML
 		return
 	}
 	defer db.Close()
@@ -214,86 +262,23 @@ func AddChat(w http.ResponseWriter, r *http.Request) {
 	nameDep := r.FormValue("nameDep")
 	chatType := r.FormValue("chatType")
 
-	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
 	chatDateTime := time.Now()
 
 	_, err = db.Exec("INSERT INTO Chat (CHAT_NAME, DEPARTMENT_NAME, CHAT_DATETIME, CHAT_TYPE) VALUES (?, ?, ?, ?)", nameChat, nameDep, chatDateTime, chatType)
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
+		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") // Changez le nom de la page HTML
 		return
 	}
-
 }
 
-// func AddMessage(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != http.MethodPost {
-// 		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-
-// 	db, err := sql.Open("sqlite3", "./forum.db")
-// 	if err != nil {
-// 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.") /////////////////// change the name page html
-// 		return
-// 	}
-// 	defer db.Close()
-
-// 	nameChat := r.FormValue("nameChat")
-// 	username := r.FormValue("username")
-// 	msg := r.FormValue("msg")
-
-// 	////////////////////////////questo non so se è meglio metterlo nello js e poi prenderlo da li o inizializzarlo direttamente qua
-// 	datetime := time.Now()
-
-// 	_, err = db.Exec("INSERT INTO Message (CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT) VALUES (?, ?, ?, ?)", nameChat, username, datetime, msg)
-// 	if err != nil {
-// 		renderError(w, "CreerCompte", "Erreur lors de l'ajout du message.") /////////////////// change the name page html
-// 		return
-// 	}
-
-// }
-
-// /// this gets all the infos from the table Message poi posso fare la stessa cosa per elencare le chat
-
-// func GetMessages(db *sql.DB) ([]struct {
-// 	ID       int
-// 	ChatName string
-// 	Username string
-// 	Datetime time.Time
-// 	Text     string
-// }, error) {
-// 	rows, err := db.Query("SELECT MESSAGE_ID, CHAT_NAME, USERNAME, MESSAGE_DATETIME, MESSAGE_TEXT FROM Message")
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error querying messages: %v", err)
-// 	}
-// 	defer rows.Close()
-
-// 	var messages []struct {
-// 		ID       int
-// 		ChatName string
-// 		Username string
-// 		Datetime time.Time
-// 		Text     string
-// 	}
-
-// 	for rows.Next() {
-// 		var message struct {
-// 			ID       int
-// 			ChatName string
-// 			Username string
-// 			Datetime time.Time
-// 			Text     string
-// 		}
-
-// 		if err := rows.Scan(&message.ID, &message.ChatName, &message.Username, &message.Datetime, &message.Text); err != nil {
-// 			return nil, fmt.Errorf("error scanning message row: %v", err)
-// 		}
-// 		messages = append(messages, message)
-// 	}
-
-// 	if err := rows.Err(); err != nil {
-// 		return nil, fmt.Errorf("error with rows: %v", err)
-// 	}
-
-// 	return messages, nil
-// }
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session, _ := Store.Get(r, "session-name")
+		_, ok := session.Values["username"].(string)
+		if !ok {
+			http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}

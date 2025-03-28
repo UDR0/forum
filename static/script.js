@@ -57,3 +57,17 @@ function openPopup() {
 document.getElementById("photoProfil").addEventListener("click", function(event) {
     openPopup();
 });
+
+// ------------------- Profil ---------------------------//
+
+function openPopupProfil() {
+    document.getElementById("popupProfil").style.display = "block";
+    document.getElementById("floue").style.display = "block";
+    event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
+}
+
+function closePopupProfil() {
+    document.getElementById("popupProfil").style.display = "none";
+    document.getElementById("floue").style.display = "none";
+    event.stopPropagation();
+}

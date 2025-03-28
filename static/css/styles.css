@@ -831,6 +831,89 @@ section h2 {
 
 
 
+
+
+
+/* ######################## Page : Destinations ######################## */
+.destinations {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 15%;
+    gap: 15px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.destination-region {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 100px;
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-align: left;
+}
+
+.destination-image {
+    width: 40%;
+    height: 150px;
+}
+
+.destination-details {
+    flex: 1;
+}
+
+.destination-region-name {
+    font-size: 16px;
+    font-weight: bold;
+    width: 70%;
+}
+
+.destination-description {
+    margin-top: 0px;
+    font-size: 12px;
+    color: #777;
+}
+
+.destination-coeur-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    padding: 9px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.destination-coeur {
+    width: 17px;
+    height: 17px;
+}
+
+.destination-coeur-container.active {
+    background-color: #fff;
+}
+
+
+
+
+
+
+
+
+
 /* ######################## Page : Fils de Discussion ######################## */
 
 .filPrincipal {

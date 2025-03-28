@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <title>MyTripy</title>
     <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/style-desktop.css" media="screen and (min-width: 1024px)">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
 </head>
 <body>
 
@@ -58,98 +58,53 @@
 
 
     <!-- Contenu principal -->
-
-    <div id ="floue" class="floue"></div>
-
-    <div class="infoUtilisateur">
-        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
-        <div class="infotext">
-            <h1>Pseudo</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.
-            </p>
-        </div>
-    </div>
-
-    <a class="btnMofifierProfil" onclick="openPopupProfil()">MODIFIER VOTRE PROFIL</a>
-
-    <div id ="popupProfil"  class="popupProfil">
-        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil">
-        <a class="changerAvatar" onclick="openPopup()">Changer d'Avatar</a>
-
-
-        <h4>Email</h4>
-        <div class="ConteneurEmail">
-            <input type="text" id="Email" placeholder="nom@email.com">
-            <img src="/static/img/email.png" alt="Icône email">
+    <section>
+        <div class="photo">
+            <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopup()">
         </div>
 
-        <h4>Pseudo</h4>
-        <div class="ConteneurPseudo">
-            <input type="text" id="Pseudo" placeholder="Votre Pseudo">
-            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+        <h3 class="titre-bio">Pseudo</h3>
+        <a class="btn-modifier-pseudo">Modifier votre Pseudo</a>
+
+        <div class="ConteneurProfil">
+            <h4>Bio</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tristique, leo at volutpat auctor, ipsum nisi tincidunt nisl, et pharetra nulla nunc ac felis. Ut euismod maximus purus.</p>
+
+            <!-- modifier profil -->
+            <a class="btn-modifier-bio">Modifier votre Bio</a>
         </div>
 
-        <h4>Biographie</h4>
-        <div class="ConteneurPseudo">
-            <input type="text" id="Biographie" placeholder="Entrer une Biographie">
-            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-        </div>
-
-        <h4>Mot de passe</h4>
-        <div class="ConteneurMotDePasse">
-            <input type="password" id="MotDePasse" placeholder="Votre mot de passe">
-            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-        </div>
-        <div class="ConteneurMotDePasse">
-            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe">
-            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-        </div>
-
-        <a class="btnMofifierProfil" onclick="closePopupProfil()">VALIDER</a>
-    </div>
-
-
-            <!-- Pop-up -->
-<div id="popup" class="popup">
-    <img src="../static/img/fondAvatar.png" class="fondAvatar">
-    <h1>Choissiez votre Avatar</h1>
-    <div class="imgAvatar">
-        <div class="femme">
-            <img src="../static/img/avatar/avatarFemme1.png">
-            <img src="../static/img/avatar/avatarFemme2.png">
-            <img src="../static/img/avatar/avatarFemme3.png">
-            <img src="../static/img/avatar/avatarFemme4.png">
-        </div>
-        <div class="homme">
-            <img src="../static/img/avatar/avatarHomme1.png">
-            <img src="../static/img/avatar/avatarHomme2.png">
-            <img src="../static/img/avatar/avatarHomme3.png">
-            <img src="../static/img/avatar/avatarHomme4.png">
-        </div>
-    </div>
-</div>
-
-    <div class="favoris-regions-container">
-        <h3 class="titre-favoris-region">Régions Favorites</h3>
-        <div class="favoris-region">
-            <div class="region-name">Auvergne-Rhône-Alpes</div>
-            <div class="coeur-container">
-                <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+        <!-- Pop-up -->
+        <div id="popup" class="popup">
+            <img src="../static/img/fondAvatar.png" class="fondAvatar">
+            <h1>Choissiez votre Avatar</h1>
+            <div class="imgAvatar">
+                <div class="femme">
+                    <img src="../static/img/avatar/avatarFemme1.png">
+                    <img src="../static/img/avatar/avatarFemme2.png">
+                    <img src="../static/img/avatar/avatarFemme3.png">
+                    <img src="../static/img/avatar/avatarFemme4.png">
+                </div>
+                <div class="homme">
+                    <img src="../static/img/avatar/avatarHomme1.png">
+                    <img src="../static/img/avatar/avatarHomme2.png">
+                    <img src="../static/img/avatar/avatarHomme3.png">
+                    <img src="../static/img/avatar/avatarHomme4.png">
+                </div>
             </div>
-            <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
         </div>
-    </div>
 
-    <div class="favoris-regions-container">
-        <h3 class="titre-favoris-region">Discussions Favorites</h3>
-        <div class="favoris-region">
-            <div class="region-name">Auvergne-Rhône-Alpes</div>
-            <div class="coeur-container">
-                <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+        <!-- Régions Favorites -->
+        <div class="favorites-regions-container">
+            <h3 class="titre-favorite-region">Régions favorites</h3>
+            <div class="favorite-region">
+                <div class="region-name">Auvergne-Rhône-Alpes</div>
+                <div class="coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+                </div>
+                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
             </div>
-            <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
         </div>
-    </div>
 
     <!-- Pied de page -->
     <footer>

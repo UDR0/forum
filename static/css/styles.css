@@ -721,8 +721,8 @@ section p {
 }
 
 .photoProfil {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     border: 1px solid black;
 }
@@ -752,7 +752,7 @@ section p {
 
 .popup {
     display: none;
-    position: fixed;
+    position: absolute;
     
     top: 50%;
     left: 50%;
@@ -764,7 +764,7 @@ section p {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     width: 90%;
-    z-index: 1000;
+    z-index: 1000000000;
 }
 
 .popup h1 {
@@ -804,13 +804,13 @@ section p {
     width: 100%;
     height: 200%;
     top:0;
-    z-index: 10000;
+    z-index: 4000;
 }
 
 .infoUtilisateur {
     display: flex;
     flex-direction: row;
-
+    margin-left: 5%;
     margin-top: 7%;
 }
 
@@ -830,13 +830,6 @@ section p {
     font-size: 15px;
     text-align: justify;
     font-weight: medium;
-}
-
-.infoUtilisateur img {
-    width: 35%;
-    margin-left: 5%;
-
-    border-radius: 10000px;
 }
 
 .btnMofifierProfil {
@@ -869,9 +862,11 @@ section p {
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
+    font-family: "Open Sans", sans-serif;
+
     
     width: 80%;
-    z-index: 10002;
+    z-index: 50000;
 }
 
 .popupProfil h4 {
@@ -887,6 +882,25 @@ section p {
     font-family: "Open Sans", sans-serif;
 }
 
+/* ######################## Page : Fils de Discussion ######################## */
+
+.filPrincipal {
+    color: white;
+    background-color: #34A0A4;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filPrincipal h3 {
+    color: white !important;
+    font-size: large;
+}
+
+.filPrincipal p {
+    color: white !important;
+    font-size: small;
+}
 
 /* ######################## Footer ######################## */
 footer {

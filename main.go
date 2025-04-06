@@ -57,6 +57,10 @@ func main() {
 		renderTemplate(w, "filsDiscussion")
 	})
 
+	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "contact")
+	})
+
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

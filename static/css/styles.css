@@ -188,7 +188,7 @@ section {
     font-family: "Open Sans", sans-serif;
 }
 
-.fond-titre {
+/* .fond-titre {
     position: absolute;
     top: 7%;
     left: 50%;
@@ -196,8 +196,8 @@ section {
     width: 100%;
     max-height: 170px;
     object-fit: cover;
-    z-index: -1; /* Place l'image en arrière-plan */
-}
+    z-index: -1; Place l'image en arrière-plan
+} */
 
 section h2 {
     font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
@@ -241,7 +241,7 @@ section h2 {
     border: 1px solid #000;
     border-radius: 25px;
     padding: 5px 5px;
-    margin-top: 5%;
+    margin-top: 9%;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -297,12 +297,138 @@ section h2 {
 
 
 
+.image-container {
+    display: flex;
+    flex-direction: column; /* Empile les blocs verticalement */
+    align-items: center;
+}
+
+.image-voyage-container, .image-travail-container {
+    width: 100%;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative; /* Assurer que les éléments positionnés sont relatifs à ce conteneur */
+}
+
+.image-voyage {
+    width: 90%;
+    height: 30vh; /* Utilisation de 50% de la hauteur de la fenêtre pour l'image */
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.image-travail {
+    margin-top: 3%;
+    width: 90%;
+    height: 40vh;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.image-voyage-container h1 {
+    width: 75%;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-3deg);
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-align: center;
+    background-color: #64d6df;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.image-travail-container h1 {
+    width: 55%;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-3deg);
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-align: center;
+    background-color: #64d6df;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.image-travail-container p {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+.btn-link-voyage {
+    font-size: 1rem;
+    padding: 12px 12px;
+    max-width: auto;
+    position: absolute;
+    top: 65%; /* Positionner le bouton sous l'image */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+    background-color: #64d6df;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
+}
+
+.btn-link-travail {
+    font-size: 1rem;
+    padding: 12px 12px;
+    max-width: auto;
+    position: absolute;
+    top: 80%; /* Positionner le bouton sous l'image */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+    background-color: #64d6df;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
+}
+
+/* Boutons hover effect */
+.btn-link-voyage:hover , .btn-link-travail:hover {
+    background-color: #fff;
+    border: 1px solid #64d6df;
+}
+
+
+
+
+
+
 /* ######################## MAP France ######################## */
 .map-france {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10%;
+    margin-bottom: 10%;
 }
 
 .image-map {
@@ -399,6 +525,7 @@ section h2 {
 
 /* Titre des régions populaires */
 .titre-popular-region, .titre-favorite-region {
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
@@ -428,14 +555,14 @@ section h2 {
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
     cursor: pointer;
 }
 
-/* Effet de survol */
+/* Effet de survol
 .popular-region:hover, .favorite-region:hover {
     transform: scale(1.02);
-}
+} */
 
 /* Nom de la région */
 .region-name {
@@ -527,7 +654,7 @@ section h2 {
     height: 300px;
     height: auto;
     border-radius: 25px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .description img {

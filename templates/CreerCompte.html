@@ -70,7 +70,7 @@
         <div class="ConteneurCreerCompte">
             <form id="creerCompteForm" action="/CreerCompte" method="post" onsubmit="return validateForm()">
                 <div class="photo">
-                    <img src="../static/img/avatar/avatarFemme1.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
+                    <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
                     <a href="#" class="changerAvatar" onclick="openPopupProfil()">Changer d'Avatar</a>
                 </div>
 
@@ -99,7 +99,7 @@
                 </div>
 
                 <!-- Champ caché pour stocker l'URL de l'avatar choisi -->
-                <input type="hidden" id="photo_url" name="photo_url" value="../static/img/avatar/avatarFemme1.png">
+                <input type="hidden" id="photo_url" name="photo_url" value="../static/img/photoProfil.png">
 
                 <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
 

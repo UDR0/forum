@@ -2,3 +2,4 @@ pb:
 -les boutons qui ne saffichent pas apres la connection doit se faire sur toutes les pages
 -the images on the first page are not right lenght
 -prendere la biographia e lo pseudo e salvarlo/modificarlo nella db
+-l'image donné a la creation de conte n'est pas pris en compte

@@ -5,6 +5,18 @@ import (
 	forum "forum/Functions"
 	"html/template"
 	"net/http"
+
+	"github.com/gorilla/sessions"  // go get github.com/gorilla/sessions
+	"github.com/gorilla/websocket" // go get github.com/gorilla/websocket
+)
+
+var (
+	store    = sessions.NewCookieStore([]byte("something-very-secret"))
+	upgrader = websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
 )
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
@@ -39,6 +51,10 @@ func main() {
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			forum.CheckCredentialsForConnection(w, r)
+			session, _ := store.Get(r, "session")
+			session.Values["user"] = r.FormValue("username")
+			session.Save(r, w)
+			http.Redirect(w, r, "/profil", http.StatusFound)
 		} else {
 			renderTemplate(w, "SeConnecter", nil)
 		}
@@ -66,13 +82,20 @@ func main() {
 		renderTemplate(w, "filsDiscussion", nil)
 	})
 
-	http.HandleFunc("/logout", forum.Logout)
+	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, "session")
+		session.Options.MaxAge = -1
+		session.Save(r, w)
+		forum.Logout(w, r)
+	})
 
 	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
 
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
 
+	// Route pour la gestion des WebSockets
+	http.HandleFunc("/ws", handleConnections)
 	/*   CONTACT FILE
 	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "contact")
@@ -83,5 +106,37 @@ func main() {
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		fmt.Println("Erreur lors du lancement du serveur :", err)
+	}
+}
+
+func handleConnections(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session")
+	user := session.Values["user"]
+	if user == nil {
+		http.Error(w, "Utilisateur non connecté", http.StatusUnauthorized)
+		return
+	}
+
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		fmt.Println("Erreur lors de la mise à niveau de la connexion :", err)
+		return
+	}
+	defer ws.Close()
+
+	for {
+		var msg map[string]interface{}
+		err := ws.ReadJSON(&msg)
+		if err != nil {
+			fmt.Println("Erreur lors de la lecture du message :", err)
+			break
+		}
+		fmt.Printf("Message reçu de %v : %v\n", user, msg)
+
+		err = ws.WriteJSON(msg)
+		if err != nil {
+			fmt.Println("Erreur lors de l'écriture du message :", err)
+			break
+		}
 	}
 }

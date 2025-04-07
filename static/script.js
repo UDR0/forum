@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// ------------------- Profil ---------------------------//
+
 // Ouvrir le pop-up pour modifier la photo de profil
 function openPopupProfil() {
     document.getElementById("overlay-profil").style.display = "block";
@@ -134,3 +136,40 @@ document.getElementById("overlay-modif").onclick = closePopupModif;
         console.error("Element with ID 'search-input' not found.");
     }
     */
+
+// ------------------- WebSocket ---------------------------//
+
+let ws;
+
+function connectWebSocket() {
+    ws = new WebSocket('ws://localhost:8080/ws');
+
+    ws.onopen = () => {
+        console.log('Connecté au serveur WebSocket');
+    };
+
+    ws.onmessage = (event) => {
+        const messages = document.getElementById('messages');
+        const message = document.createElement('li');
+        message.textContent = event.data;
+        messages.appendChild(message);
+    };
+
+    ws.onclose = (event) => {
+        if (event.wasClean) {
+            console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
+        } else {
+            console.error('Connection died');
+        }
+    };
+
+    ws.onerror = (error) => {
+        console.error(`WebSocket error: ${error}`);
+    };
+}
+
+window.onload = () => {
+    if (window.location.pathname === '/profil') {
+        connectWebSocket();
+    }
+};

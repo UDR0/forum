@@ -76,11 +76,11 @@ function closePopupProfil() {
 
 document.getElementById('search-input').addEventListener('input', function () {
     
-    const query = this.value;  // recupère la valeur de la requete
-    const autocomBox = document.getElementById('autocom-box'); // recupère la boite de suggestions avec l'id 'autocom-box'
+    const query = this.value;  // récupère la valeur de la requête
+    const autocomBox = document.getElementById('autocom-box'); // récupère la boite de suggestions avec l'id 'autocom-box'
     
     
-    if (query.length < 2) { // permet de donner les suggestions seulement si la requete a plus de 2 lettres 
+    if (query.length < 2) { // permet de donner les suggestions seulement si la requête a plus de 2 lettres 
         autocomBox.innerHTML = ''; 
         autocomBox.classList.remove('active'); 
         return; 
@@ -105,7 +105,7 @@ document.getElementById('search-input').addEventListener('input', function () {
                     autocomBox.classList.remove('active'); 
                 });
                 
-                // ajoute a la liste des options
+                // ajoute à la liste des options
                 autocomBox.appendChild(li);
             });
 
@@ -115,3 +115,40 @@ document.getElementById('search-input').addEventListener('input', function () {
         
         .catch(error => console.error('Error fetching suggestions:', error)); // message d'erreur dans la console en cas d'erreur 
 });
+
+// ------------------- WebSocket ---------------------------//
+
+let ws;
+
+function connectWebSocket() {
+    ws = new WebSocket('ws://localhost:8080/ws');
+
+    ws.onopen = () => {
+        console.log('Connecté au serveur WebSocket');
+    };
+
+    ws.onmessage = (event) => {
+        const messages = document.getElementById('messages');
+        const message = document.createElement('li');
+        message.textContent = event.data;
+        messages.appendChild(message);
+    };
+
+    ws.onclose = (event) => {
+        if (event.wasClean) {
+            console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
+        } else {
+            console.error('Connection died');
+        }
+    };
+
+    ws.onerror = (error) => {
+        console.error(`WebSocket error: ${error}`);
+    };
+}
+
+window.onload = () => {
+    if (window.location.pathname === '/profil') {
+        connectWebSocket();
+    }
+};

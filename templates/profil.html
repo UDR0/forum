@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-    <meta name="author" content="Matias, Sara, Samuel, William">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <title>MyTripy</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
 
     <!-- Header -->
@@ -38,7 +41,7 @@
             </li>
 
             <li class="meta-navigation">
-                <a class="meta-a" href="#">Favoris</a>
+                <a class="meta-a" href="/contact">Contactez-nous</a>
             </li>
 
             <li class="meta-navigation-btn-connexion">
@@ -60,39 +63,18 @@
     <!-- Contenu principal -->
     <section>
         <div class="photo">
-            <img src="{{.PhotoURL}}" class="photoProfil" id="photoProfil" onclick="openPopup()">
+            <img src="{{.PhotoURL}}" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
         </div>
 
-        <h3 class="titre-bio">{{.Pseudo}}</h3>
-        <a class="btn-modifier-pseudo">Modifier votre Pseudo</a>
+        <!-- Pseudo et Bio -->
+        <p id="pseudo">{{.Pseudo}}</p>
+        <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
 
         <div class="ConteneurProfil">
             <h4>Bio</h4>
-            <p>{{.Biography}}</p>
-
-            <!-- modifier profil -->
-            <a class="btn-modifier-bio">Modifier votre Bio</a>
+            <p id="bio">{{.Biography}}</p>
         </div>
 
-        <!-- Pop-up -->
-        <div id="popup" class="popup">
-            <img src="../static/img/fondAvatar.png" class="fondAvatar">
-            <h1>Choissiez votre Avatar</h1>
-            <div class="imgAvatar">
-                <div class="femme">
-                    <img src="../static/img/avatar/avatarFemme1.png">
-                    <img src="../static/img/avatar/avatarFemme2.png">
-                    <img src="../static/img/avatar/avatarFemme3.png">
-                    <img src="../static/img/avatar/avatarFemme4.png">
-                </div>
-                <div class="homme">
-                    <img src="../static/img/avatar/avatarHomme1.png">
-                    <img src="../static/img/avatar/avatarHomme2.png">
-                    <img src="../static/img/avatar/avatarHomme3.png">
-                    <img src="../static/img/avatar/avatarHomme4.png">
-                </div>
-            </div>
-        </div>
 
         <!-- Régions Favorites -->
         <div class="favorites-regions-container">
@@ -107,6 +89,51 @@
         </div>
 
         <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+    </section>
+
+    
+<!-- Overlay sombre -->
+<div id="overlay-profil" class="overlay"></div>
+
+<!-- Pop-up pour modifier la photo de profil -->
+<div id="popup-profil" class="popup">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h1>Choisissez votre Avatar</h1>
+    <div class="imgAvatar">
+        <div class="femme">
+            <img src="../static/img/avatar/avatarFemme1.png">
+            <img src="../static/img/avatar/avatarFemme2.png">
+            <img src="../static/img/avatar/avatarFemme3.png">
+            <img src="../static/img/avatar/avatarFemme4.png">
+        </div>
+        <div class="homme">
+            <img src="../static/img/avatar/avatarHomme1.png">
+            <img src="../static/img/avatar/avatarHomme2.png">
+            <img src="../static/img/avatar/avatarHomme3.png">
+            <img src="../static/img/avatar/avatarHomme4.png">
+        </div>
+    </div>
+</div>
+
+
+<!-- Overlay sombre pour le pop-up de modification -->
+<div id="overlay-modif" class="overlay"></div>
+
+<!-- Fenêtre pop-up de modification -->
+<div id="popup-modif" class="popup-modif">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h3>Modifier Profil</h3>
+    
+    <div class="modif">
+        <h4>Pseudo</h4>
+        <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
+
+        <h4>Bio</h4>
+        <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
+    </div>
+
+    <button onclick="sauverModifications()">Sauvegarder</button>
+</div>
 
     <!-- Pied de page -->
     <footer>

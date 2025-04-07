@@ -8,7 +8,7 @@
         <meta name="author" content="Matias, Sara, Samuel, William">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
         <title>MyTripy</title>
         <link rel="stylesheet" href="static/css/styles.css">
@@ -43,7 +43,7 @@
         </li>
 
         <li class="meta-navigation">
-            <a class="meta-a" href="#">Favoris</a>
+            <a class="meta-a" href="/contact">Contactez-nous</a>
         </li>
 
         {{if .IsAuthenticated}}
@@ -65,9 +65,9 @@
 
     <!-- Contenu principal -->
     <section>
-        <img class="fond-titre" src="static/img/fond-titre.png" alt="">
+        <!-- <img class="fond-titre" src="static/img/fond-titre.png" alt=""> -->
         <!-- <h2>Explore, Partage, Voyage</h2> -->
-        <h2>Le forum des voyageurs en France</h2>
+        <!-- <h2>Le forum des voyageurs en France</h2> -->
 
         <!-- Barre de recherche -->
         <div class="search-bar">
@@ -138,75 +138,43 @@
             </div>
         </div>
 
-        <!-- Régions 
-        <div class="regions-container">
-            <div class="region">
-                <img src="static/img/regions/auvergne-rhone-alpes.png" alt="Auvergne-Rhône-Alpes">
-                <p>Auvergne-Rhône-Alpes</p>
+        <div class="image-container">
+            <div class="image-voyage-container">
+                <h1>Explorez la France</h1>
+                <a href="/destinations" class="btn-link-voyage">Je découvre</a>
+                <img src="static/img/image-voyage-4.jpg" alt="voyage" class="image-voyage">
             </div>
-            <div class="region">
-                <img src="static/img/regions/bourgogne-franche-comte.png" alt="Bourgogne-Franche-Comté">
-                <p>Bourgogne-Franche-Comté</p>
+        
+            <div class="image-travail-container">
+                <h1>Rejoins-nous</h1>
+                <p>Échange, découvre, voyage</p>
+                <a href="/SeConnecter" class="btn-link-travail">Je me connecte</a>
+                <img src="static/img/travail.jpg" alt="voyage" class="image-travail">
             </div>
-            <div class="region">
-                <img src="static/img/regions/bretagne.png" alt="Bretagne">
-                <p>Bretagne</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/centre-val-de-loire.png" alt="Centre-Val de Loire">
-                <p>Centre-Val de Loire</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/corse.png" alt="Corse">
-                <p>Corse</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/grand-est.png" alt="Grand Est">
-                <p>Grand Est</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/hauts-de-france.png" alt="Hauts-de-France">
-                <p>Hauts-de-France</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/ile-de-france.png" alt="Île-de-France">
-                <p>Île-de-France</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/normandie.png" alt="Normandie">
-                <p>Normandie</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/nouvelle-aquitaine.png" alt="Nouvelle-Aquitaine">
-                <p>Nouvelle-Aquitaine</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/occitanie.png" alt="Occitanie">
-                <p>Occitanie</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/pays-de-la-loire.png" alt="Pays de la Loire">
-                <p>Pays de la Loire</p>
-            </div>
-            <div class="region">
-                <img src="static/img/regions/provence-alpes-cote-d-azur.png" alt="Provence-Alpes-Côte d’Azur">
-                <p>Provence-Alpes-Côte d’Azur</p>
-            </div>
-        </div>-->
+        </div> 
+
 
         <!-- Régions populaires -->
-        <div class="popular-regions-container">
+        <div class="destinations">
             <h3 class="titre-popular-region">Régions populaires</h3>
             {{range .Regions}}
-            <div class="popular-region">
-                <div class="region-name">{{.RegionName}}</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+            <div class="destination-region">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
+                <div class="destination-details">
+                    <div class="destination-region-name">{{.RegionName}}</div>
+                    <div class="destination-description">
+                        Soleil, mer et montagne.
+                    </div>
                 </div>
-                <img src="{{.RegionImg}}" alt="{{.RegionName}}">
+
+                <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">                </div>
+                
+                </div>
             </div>
             {{end}}
         </div>
+
 
         <!-- Description Site -->
         <div class="description-container">

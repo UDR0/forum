@@ -1,98 +1,85 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Sélectionner les éléments
-    const burgerMenu = document.getElementById("burger"); // Le bouton du menu burger
-    const navMenu = document.querySelector(".meta-ul"); // Le menu de navigation
-    
-    // Écouter les clics sur le bouton burger
-    if (burgerMenu && navMenu) {
-        burgerMenu.addEventListener("click", () => {
-            navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
-        });
-    }
+// Sélectionner les éléments
+const burgerMenu = document.getElementById("burger"); // Le bouton du menu burger
+const navMenu = document.querySelector(".meta-ul"); // Le menu de navigation
 
-    document.querySelectorAll('.coeur-container').forEach(coeur => {
-        coeur.addEventListener('click', function () {
-            const img = this.querySelector('.coeur');
-            if (img) {
-                if (img.src.includes('coeur.png')) {
-                    img.src = 'static/img/coeur_rouge.png'; // Remplace par le cœur rouge
-                } else {
-                    img.src = 'static/img/coeur.png'; // Reviens au cœur normal
-                }
-            }
-        });
+// Écouter les clics sur le bouton burger
+burgerMenu.addEventListener("click", () => {
+    navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
+});
+
+document.querySelectorAll('.coeur-container').forEach(coeur => {
+    coeur.addEventListener('click', function () {
+        const img = this.querySelector('.coeur');
+        if (img.src.includes('coeur.png')) {
+            img.src = 'static/img/coeur_rouge.png'; // Remplace par le cœur rouge
+        } else {
+            img.src = 'static/img/coeur.png'; // Reviens au cœur normal
+        }
     });
+});
 
-    // Sélectionne toutes les images du popup
+
+// Gestion des avatars dans le pop-up de profil
+document.addEventListener("DOMContentLoaded", function () {
     const avatars = document.querySelectorAll(".imgAvatar img");
-    // Sélectionne l'image de profil
     const photoProfil = document.getElementById("photoProfil");
-    // Champ caché pour l'URL de l'avatar
-    const photoUrlInput = document.getElementById("photo_url");
 
     avatars.forEach(avatar => {
-        avatar.addEventListener("click", function() {
-            const popup = document.getElementById("popup");
-            if (popup) {
-                popup.style.display = "none";
-            }
-            if (photoProfil && photoUrlInput) {
-                // Remplace la source de l'image de profil par celle de l'avatar cliqué
-                photoProfil.src = this.src;
-                // Met à jour le champ caché avec l'URL de l'avatar choisi
-                photoUrlInput.value = this.src;
-            }
+        avatar.addEventListener("click", function () {
+            // Change l'image de profil
+            photoProfil.src = this.src;
+            closePopupProfil(); // Ferme le pop-up de profil après sélection
         });
     });
+});
 
-    document.addEventListener("click", function(event) {
-        const popup = document.getElementById("popup");
-        const openPopupBtn = document.getElementById("photoProfil");
-        if (popup && openPopupBtn && popup.style.display === "block" &&
-            !popup.contains(event.target) &&
-            event.target !== openPopupBtn
-        ) {
-            popup.style.display = "none";
-        }
-    });
+// Ouvrir le pop-up pour modifier la photo de profil
+function openPopupProfil() {
+    document.getElementById("overlay-profil").style.display = "block";
+    document.getElementById("popup-profil").style.display = "block";
+}
 
-    function openPopup() {
-        const popup = document.getElementById("popup");
-        if (popup) {
-            popup.style.display = "block";
-            event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
-        }
-    }
+// Fermer le pop-up de la photo de profil
+function closePopupProfil() {
+    document.getElementById("overlay-profil").style.display = "none";
+    document.getElementById("popup-profil").style.display = "none";
+}
 
-    // Ajoute un écouteur de clic sur le bouton pour ouvrir la popup
-    if (photoProfil) {
-        photoProfil.addEventListener("click", function(event) {
-            openPopup();
-        });
-    }
+// Fermer le pop-up en cliquant sur l'overlay
+document.getElementById("overlay-profil").onclick = closePopupProfil;
 
-    // ------------------- Profil ---------------------------//
 
-    function openPopupProfil() {
-        const popupProfil = document.getElementById("popupProfil");
-        const floue = document.getElementById("floue");
-        if (popupProfil && floue) {
-            popupProfil.style.display = "block";
-            floue.style.display = "block";
-            event.stopPropagation(); // Empêche la propagation du clic pour éviter une fermeture immédiate
-        }
-    }
 
-    function closePopupProfil() {
-        const popupProfil = document.getElementById("popupProfil");
-        const floue = document.getElementById("floue");
-        if (popupProfil && floue) {
-            popupProfil.style.display = "none";
-            floue.style.display = "none";
-            event.stopPropagation();
-        }
-    }
 
+// Ouvrir le pop-up avec overlay sombre
+function openPopupModif() {
+    document.getElementById("overlay-modif").style.display = "block";
+    document.getElementById("nouveauPseudo").value = document.getElementById("pseudo").innerText;
+    document.getElementById("nouvelleBio").value = document.getElementById("bio").innerText;
+    document.getElementById("popup-modif").style.display = "block";
+}
+
+// Fermer le pop-up et l'overlay
+function closePopupModif() {
+    document.getElementById("overlay-modif").style.display = "none";
+    document.getElementById("popup-modif").style.display = "none";
+}
+
+// Sauvegarder les modifications
+function sauverModifications() {
+    const nouveauPseudo = document.getElementById("nouveauPseudo").value;
+    const nouvelleBio = document.getElementById("nouvelleBio").value;
+
+    document.getElementById("pseudo").innerText = nouveauPseudo;
+    document.getElementById("bio").innerText = nouvelleBio;
+
+    closePopupModif();
+}
+
+// Fermer le pop-up en cliquant sur l'overlay
+document.getElementById("overlay-modif").onclick = closePopupModif;
+
+/* it is not working
     // ------------------- SEARCH ---------------------------//
 
     var searchInput = document.getElementById("search-input");
@@ -146,4 +133,4 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
         console.error("Element with ID 'search-input' not found.");
     }
-});
+    */

@@ -73,6 +73,12 @@ func main() {
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
 
+	/*   CONTACT FILE
+	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "contact")
+	})
+	*/
+
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

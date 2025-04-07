@@ -125,18 +125,20 @@
 
 <!-- Fenêtre pop-up de modification -->
 <div id="popup-modif" class="popup-modif">
-    <div class="popup-modif-content">
-        <span class="close" onclick="closePopupModif()">&times;</span>
-        <h3>Modifier Profil</h3>
-        <label for="nouveauPseudo">Pseudo :</label>
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h3>Modifier Profil</h3>
+    
+    <div class="modif">
+        <h4>Pseudo</h4>
         <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
 
-        <label for="nouvelleBio">Bio :</label>
+        <h4>Bio</h4>
         <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
-
-        <button onclick="sauverModifications()">Sauvegarder</button>
     </div>
+
+    <button onclick="sauverModifications()">Sauvegarder</button>
 </div>
+
 
 
 

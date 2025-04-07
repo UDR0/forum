@@ -319,7 +319,7 @@ section h2 {
 }
 
 .image-travail {
-    margin-top: 3%;
+    margin-top: 2%;
     width: 90%;
     height: 40vh;
     object-fit: cover;
@@ -970,34 +970,88 @@ section h2 {
     background-color: #ff0000;
 }
 
-/* Style pour le pop-up */
+
+
+/* Style général pour le pop-up */
 .popup-modif {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-}
-
-.popup-modif-content {
-    background-color: white;
+    position: fixed; /* Utiliser fixed pour qu'il reste visible même en scrollant */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1E6091;
     padding: 20px;
-    border-radius: 5px;
-    width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 90%;  /* Tu peux ajuster la largeur ici */
+    max-width: 600px;  /* Limite de la largeur du pop-up */
+    z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
 }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-    cursor: pointer;
+.popup-modif h3 {
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    color: white;
+    font-weight: 800;
+    margin-bottom: 3%;
 }
+
+.modif {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modif h4 {
+    font-family: "Open Sans", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 10px;
+    width: 100%;
+    text-align: left;
+}
+
+.modif input[type="text"],
+.modif textarea {
+    border: none;
+    outline: none; /* Supprimer l'outline par défaut */
+    width: 100%;
+    padding: 10px;
+    font-weight: "Open Sans", sans-serif;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* Ajuster la taille de la textarea */
+.modif textarea {
+    min-height: 100px; /* Hauteur minimum pour que l'utilisateur puisse voir suffisamment de texte */
+    resize: vertical; /* Permet à l'utilisateur de redimensionner la textarea verticalement */
+}
+
+.popup-modif button {
+    font-size: 1rem;
+    padding: 12px 20px;
+    width: 100%;
+    margin-top: 15px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #34A0A4; /* Couleur de fond des boutons */
+    border-radius: 25px;
+    display: block;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Boutons hover effect */
+.popup-modif button:hover {
+    background-color: #76C893;
+}
+
+
 
 
 

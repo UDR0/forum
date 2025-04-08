@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -318,9 +319,94 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	type RegionChat struct {
-		RegionName string
-		ChatCount  int
-		RegionImg  string
+		RegionName  string
+		ChatCount   int
+		RegionImg   string
+		RegionDescr string
+	}
+
+	data := struct {
+		IsAuthenticated bool
+		Pseudo          string
+		URLPhoto        string
+		Regions         []RegionChat
+	}{
+		IsAuthenticated: ok,
+		Pseudo:          pseudo,
+		URLPhoto:        urlPhoto,
+	}
+
+	// Fetch popular regions
+	db, err := sql.Open("sqlite3", "./forum.db") // Adjust connection details
+	if err != nil {
+
+		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	query := `
+        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL, r.DESCRI
+        FROM Region r
+        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
+        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
+        GROUP BY r.REGION_NAME, r.REGION_IMG_URL, r.DESCRI
+        ORDER BY CHAT_COUNT DESC
+        LIMIT 3;
+    `
+
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println("Query error:", err)
+		http.Error(w, "Erreur lors de l'exécution de la requête.", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var region RegionChat
+		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg, &region.RegionDescr); err != nil {
+			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
+			return
+		}
+		data.Regions = append(data.Regions, region)
+	}
+
+	// Render the template with the data
+	tmpl, err := template.ParseFiles("templates/mytripy-non.html")
+	if err != nil {
+		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func AllRegions(w http.ResponseWriter, r *http.Request) {
+	session, _ := Store.Get(r, "session-name")
+	username, ok := session.Values["username"].(string)
+	var pseudo, urlPhoto string
+
+	if ok {
+		db, err := sql.Open("sqlite3", "./forum.db")
+		if err != nil {
+			http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+			return
+		}
+		defer db.Close()
+
+		err = db.QueryRow("SELECT USERNAME, PHOTO_URL FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto)
+		if err != nil {
+			http.Error(w, "Erreur lors de la récupération des informations utilisateur : "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+	type RegionChat struct {
+		RegionName  string
+		RegionImg   string
+		RegionDescr string
 	}
 
 	data := struct {
@@ -343,13 +429,8 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	query := `
-        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL
-        FROM Region r
-        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
-        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
-        GROUP BY r.REGION_NAME, r.REGION_IMG_URL
-        ORDER BY CHAT_COUNT DESC
-        LIMIT 3;
+        SELECT REGION_NAME, REGION_IMG_URL, DESCRI
+        FROM Region;
     `
 
 	rows, err := db.Query(query)
@@ -361,7 +442,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr); err != nil {
 			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
 			return
 		}
@@ -369,7 +450,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the template with the data
-	tmpl, err := template.ParseFiles("templates/mytripy-non.html")
+	tmpl, err := template.ParseFiles("templates/destinations.html")
 	if err != nil {
 		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
 		return
@@ -378,6 +459,8 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func SearchSuggestionsHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q") // prend la requete qui suit le 'q' dans l'URL

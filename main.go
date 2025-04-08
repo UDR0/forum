@@ -74,9 +74,7 @@ func main() {
 
 	http.HandleFunc("/profil", forum.ProfilPage)
 
-	http.HandleFunc("/destinations", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "destinations", nil)
-	})
+	http.HandleFunc("/destinations", forum.AllRegions)
 
 	http.HandleFunc("/filsDiscussion", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "filsDiscussion", nil)

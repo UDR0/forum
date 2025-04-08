@@ -71,32 +71,21 @@
         </div>
 
         <div class="destinations">
+            {{range .Regions}}
             <div class="destination-region">
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur" class="destination-image">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
                 <div class="destination-details">
-                    <div class="destination-region-name">Provence-Alpes-Côte d’Azur</div>
+                    <div class="destination-region-name">{{.RegionName}}</div>
                     <div class="destination-description">
                         Soleil, mer et montagne.
                     </div>
                 </div>
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div>    
-            </div>
-            
-            <div class="destination-region">
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur" class="destination-image">
-                <div class="destination-details">
-                    <div class="destination-region-name">Provence-Alpes-Côte d’Azur</div>
-                    <div class="destination-description">
-                        Soleil, mer et montagne.
-                    </div>
-                </div>
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div>    
-            </div>
 
+                <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div>
+            </div>
+            {{end}}
         </div>
 
     </section>

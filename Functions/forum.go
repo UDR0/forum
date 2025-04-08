@@ -298,7 +298,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
 func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -350,7 +349,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
         JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
         GROUP BY r.REGION_NAME, r.REGION_IMG_URL
         ORDER BY CHAT_COUNT DESC
-		LIMIT 3,
+        LIMIT 3;
     `
 
 	rows, err := db.Query(query)
@@ -380,6 +379,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func AllRegions(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -401,7 +401,6 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 	}
 	type RegionChat struct {
 		RegionName string
-		ChatCount  int
 		RegionImg  string
 	}
 
@@ -425,12 +424,8 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	query := `
-        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL
-        FROM Region r
-        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
-        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
-        GROUP BY r.REGION_NAME, r.REGION_IMG_URL
-        ORDER BY CHAT_COUNT DESC,
+        SELECT REGION_NAME, REGION_IMG_URL
+        FROM Region;
     `
 
 	rows, err := db.Query(query)
@@ -442,7 +437,7 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.RegionImg); err != nil {
 			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
 			return
 		}
@@ -450,7 +445,7 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the template with the data
-	tmpl, err := template.ParseFiles("templates/mytripy-non.html")
+	tmpl, err := template.ParseFiles("templates/destinations.html")
 	if err != nil {
 		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
 		return
@@ -459,6 +454,8 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func SearchSuggestionsHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q") // prend la requete qui suit le 'q' dans l'URL

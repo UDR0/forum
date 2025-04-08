@@ -522,6 +522,9 @@ section h2 {
 
 /* Titre des régions populaires */
 .titre-popular-region, .titre-favorite-region {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 25px;
     /*text-transform: uppercase;*/
@@ -745,15 +748,6 @@ section h2 {
     text-align: left;
 }
 
-.ConteneurProfil p {
-    font-size: 14px;
-    font-weight: 400;
-    color: #000;
-    width: 90%;
-    margin-top: 5px;
-    text-align: left;
-}
-
 .ConteneurPseudo, .ConteneurMotDePasse, .ConteneurEmail {
     position: relative;
     border: 1px solid #000;
@@ -922,6 +916,67 @@ section h2 {
 
 
 /* ######################## Page : Profil ######################## */
+.card {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.card-img {
+    height: 192px;
+    width: 100%;
+}
+
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.card-avatar {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    top: calc(25% - 60px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.card-avatar img {
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+
+.pseudo {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-top: 75px;
+}
+
+.bio {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    width: 90%;
+    margin-top: 5px;
+    /* margin-bottom: 10%; */
+    text-align: left;
+}
+
 .btn-modifier-pseudo {
     font-family: "Open Sans", sans-serif;
     display: block;
@@ -1068,16 +1123,17 @@ section h2 {
     grid-template-columns: 1fr;
     margin-top: 15%;
     gap: 15px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    
 }
 
 .destination-region {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 100%;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     height: 100px;
     position: relative;
     border-radius: 25px;

@@ -62,33 +62,55 @@
 
     <!-- Contenu principal -->
     <section>
-        <div class="photo">
-            <img src="{{.PhotoURL}}" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
-        </div>
-
-        <!-- Pseudo et Bio -->
-        <p id="pseudo">{{.Pseudo}}</p>
-        <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
-
-        <div class="ConteneurProfil">
-            <h4>Bio</h4>
-            <p id="bio">{{.Biography}}</p>
-        </div>
-
-
-        <!-- Régions Favorites -->
-        <div class="favorites-regions-container">
-            <h3 class="titre-favorite-region">Régions favorites</h3>
-            <div class="favorite-region">
-                <div class="region-name">Auvergne-Rhône-Alpes</div>
-                <div class="coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
-                </div>
-                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil.png" alt="fond profil">
             </div>
-        </div>
+            <div class="card-avatar">
+                <img src="static/img/photoProfilVert.png" id="photoProfil" onclick="openPopupProfil()">
+            </div>
 
-        <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+            <!-- Pseudo et Bio -->
+            <p id="pseudo" class="pseudo">{{.Pseudo}}</p>
+            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
+
+            <div class="ConteneurProfil">
+                <h4>Bio</h4>
+                <p id="bio" class="bio">{{.Biography}}</p>
+            </div>
+
+
+            <!-- Régions Favorites -->
+            <!-- <div class="favorites-regions-container">
+                <h3 class="titre-favorite-region">Régions favorites</h3>
+                <div class="favorite-region">
+                    <div class="region-name">Auvergne-Rhône-Alpes</div>
+                    <div class="coeur-container">
+                        <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+                    </div>
+                    <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
+                </div>
+            </div> -->
+
+            <div class="destinations">
+                <h3 class="titre-favorite-region">Régions populaires</h3>
+                <div class="destination-region">
+                    <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes" class="destination-image">
+                    <div class="destination-details">
+                        <div class="destination-region-name">Auvergne-Rhône-Alpes</div>
+                        <div class="destination-description">
+                            Soleil, mer et montagne.
+                        </div>
+                    </div>
+
+                    <div class="destination-coeur-container">
+                        <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+        </div>
     </section>
 
     

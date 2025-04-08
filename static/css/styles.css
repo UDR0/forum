@@ -525,6 +525,7 @@ section h2 {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 15px;
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 25px;
     /*text-transform: uppercase;*/
@@ -625,7 +626,7 @@ section h2 {
 .description-container {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 35px;
+    /* margin-top: 35px; */
     gap: 15px; /* Espacement entre les éléments */
     width: 90%;
     margin-left: auto;
@@ -638,8 +639,8 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: center;
-    margin-top: 10%;
-    margin-bottom: 3%;
+    margin-top: 15%;
+    /* margin-bottom: 3%; */
     position: relative;
 }
 
@@ -1021,27 +1022,28 @@ section h2 {
 
 .btn-deconnexion {
     font-size: 1rem;
-    padding: 12px 20px;
-    width: 40%;
+    padding: 12px 12px;
+    max-width: auto;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 15%;
-    color: #fff;
+    margin-top: 10%;
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+    background-color: #e63946;
     text-decoration: none;
-    background-color: #d02222; /* Couleur de fond des boutons */
-    border-radius: 25px;
-    display: block;
-    transition: background-color 0.3s;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
 }
 
 /* Boutons hover effect */
-.btn-deconnexion:hover {
-    background-color: #ff0000;
+.btn-deconnexion:hover{
+    background-color: #fff;
+    border: 1px solid #e63946;
 }
-
 
 
 /* Style général pour le pop-up */
@@ -1139,7 +1141,7 @@ section h2 {
     display: grid;
     grid-template-columns: 1fr;
     margin-top: 15%;
-    gap: 15px;
+    /* gap: 15px; */
     width: 100%;
     
 }
@@ -1148,6 +1150,7 @@ section h2 {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 15px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;

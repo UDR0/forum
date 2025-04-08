@@ -64,17 +64,26 @@
 
     <!-- Conteneur Principale -->
     <section>
-        <h3 class="titre-mot-de-passe-oublie">Mot de passe oublié ?</h3>
-
-        <div class="ConteneurMotDePasseOublie">
-            <h4>Votre Email</h4>
-            <div class="ConteneurEmail">
-                <input type="password" id="Email" placeholder="nom@email.com">
-                <img src="/static/img/email.png" alt="Icône email">
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil-3.png" alt="fond profil">
             </div>
+
+            <div class="card-titre">
+                <h3 class="titre-mot-de-passe-oublie">Mot de passe oublié ?</h3>
+                <p class="sous-titre-SeConnecter">Renseigne ton adresse e-mail pour réinitialiser ton mot de passe</p>
+            </div>            
+
+            <div class="ConteneurMotDePasseOublie">
+                <h4>Votre Email</h4>
+                <div class="ConteneurEmail">
+                    <input type="password" id="Email" placeholder="nom@email.com">
+                    <img src="/static/img/email.png" alt="Icône email">
+                </div>
+            </div>
+                
+            <a class="btn-recevoir-lien" href="#">Recevoir le lien</a>
         </div>
-            
-        <a class="btn-recevoir-lien" href="#">Recevoir le lien</a>
     </section>
 
     <script src="static/script.js"></script>

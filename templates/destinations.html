@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-    <meta name="author" content="Matias, Sara, Samuel, William">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-    <title>MyTripy</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
 
     <!-- Header -->
@@ -71,34 +71,22 @@
         </div>
 
         <div class="destinations">
+            {{range .Regions}}
             <div class="destination-region">
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur" class="destination-image">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
                 <div class="destination-details">
-                    <div class="destination-region-name">Provence-Alpes-Côte d’Azur</div>
+                    <div class="destination-region-name">{{.RegionName}}</div>
                     <div class="destination-description">
                         Soleil, mer et montagne.
                     </div>
                 </div>
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div>    
-            </div>
-            
-            <div class="destination-region">
-                <img src="static/img/vieux-port.png" alt="Provence-Alpes-Côte d’Azur" class="destination-image">
-                <div class="destination-details">
-                    <div class="destination-region-name">Provence-Alpes-Côte d’Azur</div>
-                    <div class="destination-description">
-                        Soleil, mer et montagne.
-                    </div>
-                </div>
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div>    
-            </div>
 
+                <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div>
+            </div>
+            {{end}}
         </div>
-        
 
     </section>
 

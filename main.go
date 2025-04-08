@@ -80,6 +80,10 @@ func main() {
 		renderTemplate(w, "filsDiscussion", nil)
 	})
 
+	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "forum", nil)
+	})
+
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session")
 		session.Options.MaxAge = -1

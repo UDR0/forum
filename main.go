@@ -45,7 +45,6 @@ func main() {
 		http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 	})
 
-	// Routes pour les pages HTML
 	http.HandleFunc("/mytripy-non", forum.MyTripyNonHandler)
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
@@ -74,9 +73,7 @@ func main() {
 
 	http.HandleFunc("/profil", forum.ProfilPage)
 
-	http.HandleFunc("/destinations", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "destinations", nil)
-	})
+	http.HandleFunc("/destinations", forum.AllRegions)
 
 	http.HandleFunc("/filsDiscussion", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "filsDiscussion", nil)

@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         avatar.addEventListener("click", function () {
             // Change l'image de profil
             photoProfil.src = this.src;
+            document.getElementById('photo_url').value = this.src;
             closePopupProfil(); // Ferme le pop-up de profil après sélection
         });
     });

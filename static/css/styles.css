@@ -297,6 +297,9 @@ section h2 {
 
 
 
+
+
+
 .image-container {
     display: flex;
     flex-direction: column; /* Empile les blocs verticalement */
@@ -455,58 +458,6 @@ section h2 {
 
 
 
-/* ######################## Liste des régions ######################## */
-.regions-container {
-    display: flex;
-    flex-wrap: wrap; /* Permet de passer à la ligne suivante lorsque l'espace est insuffisant */
-    margin-top: 35px;
-    gap: 15px; /* Espacement entre les éléments */
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.region {
-    background-color: #76C893;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    position: relative;
-    overflow: hidden;
-}
-
-.region img {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-    transition: opacity 0.3s ease; /* Ajoute un effet au survol */
-}
-
-.region p {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: #fff;
-    opacity: 0; /* Par défaut, on cache le texte */
-    transition: opacity 0.3s ease; /* effet au survol */
-}
-
-/* Lorsque l'on survole la région, le texte devient visible */
-.region:hover p {
-    opacity: 1; /* Le texte apparait */
-}
-
-/* Effet de transparence de l'image lors du survol */
-.region:hover img {
-    opacity: 0; /* L'image disparait */
-}
-
 
 
 /* ######################## Région Populaire ######################## */
@@ -525,14 +476,13 @@ section h2 {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 15px;
+    margin-top: 15%;
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
     color: #000;
     text-align: left;
-    margin-top: 0;
     position: relative;
 }
 
@@ -626,7 +576,7 @@ section h2 {
 .description-container {
     display: grid;
     grid-template-columns: 1fr;
-    /* margin-top: 35px; */
+    margin-top: 15px;
     gap: 15px; /* Espacement entre les éléments */
     width: 90%;
     margin-left: auto;
@@ -683,30 +633,35 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: center;
-    margin-top: 3%;
+    margin-top: 15px;
     position: relative;
 }
 
 .description-btn-destination {
+    position: absolute;
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 1rem;
     padding: 12px 12px;
-    max-width: 300px;
-    color: #fff;
+    margin-top: 15px;
+    max-width: auto;
+    color: #000;
     text-decoration: none;
-    background-color: #76C893;
+    background-color: #64d6df;
     border-radius: 25px;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    left: 50%;
+    transform: translateX(-50%); /* <--- pour bien centrer */
     transition: background-color 0.3s;
     border: none;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+
 /* Boutons hover effect */
 .description-btn-destination:hover {
-    background-color: #34A0A4;
+    background-color: #fff;
+    border: 1px solid #64d6df;
 }
 
 
@@ -1140,7 +1095,7 @@ section h2 {
 .destinations {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 15%;
+    margin-top: 15px;
     /* gap: 15px; */
     width: 100%;
     
@@ -1174,12 +1129,14 @@ section h2 {
 }
 
 .destination-region-name {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     width: 70%;
 }
 
 .destination-description {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     margin-top: 0px;
     font-size: 12px;
     color: #777;
@@ -1418,7 +1375,7 @@ section h2 {
 
 /* ######################## Footer ######################## */
 footer {
-    margin-top: 10%;
+    margin-top: 20%;
     background-color: #1F5A89;
     color: white;
     padding: 20px 0;

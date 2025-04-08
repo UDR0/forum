@@ -30,38 +30,36 @@
             <img src="static/img/menu-black.png" alt="menu">
         </button>
 
+            <!-- Navigation -->
+            <ul class="meta-ul">
+                <li class="meta-navigation">
+                    <a class="meta-a" href="/mytripy-non">MyTripy</a>
+                </li>
+
+                <li class="meta-navigation">
+                    <a class="meta-a" href="/destinations">Destinations</a>
+                </li>
+
+                <li class="meta-navigation">
+                    <a class="meta-a" href="/contact">Contactez-nous</a>
+                </li>
+
+                {{if .IsAuthenticated}}
+                    <li class="meta-navigation-btn-connexion">
+                        <a class="btn" href="/profil">Mon Compte</a>
+                    </li>
+                {{else}}
+                    <li class="meta-navigation-btn-connexion">
+                        <a class="btn" href="/SeConnecter">Se connecter</a>
+                    </li>
+
+                    <li class="meta-navigation-btn-creer-compte">
+                        <a class="btn" href="/CreerCompte">Créer mon compte</a>
+                    </li>
+                {{end}}
+            </ul>
     </header>
 
-    <!-- Navigation -->
-    <ul class="meta-ul">
-        <li class="meta-navigation">
-            <a class="meta-a" href="/mytripy-non">MyTripy</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="/destinations">Destinations</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="/contact">Contactez-nous</a>
-        </li>
-
-        {{if .IsAuthenticated}}
-            <li class="meta-navigation-btn-connexion">
-                <a class="btn" href="/profil">Mon Compte</a>
-            </li>
-        {{else}}
-            <li class="meta-navigation-btn-connexion">
-                <a class="btn" href="/SeConnecter">Se connecter</a>
-            </li>
-
-            <li class="meta-navigation-btn-creer-compte">
-                <a class="btn" href="/CreerCompte">Créer mon compte</a>
-            </li>
-        {{end}}
-    </ul>
-
-    </header>
 
     <!-- Contenu principal -->
     <section>
@@ -155,8 +153,8 @@
 
 
         <!-- Régions populaires -->
+        <h3 class="titre-popular-region">Régions populaires</h3>
         <div class="destinations">
-            <h3 class="titre-popular-region">Régions populaires</h3>
             {{range .Regions}}
             <div class="destination-region">
                 <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
@@ -174,8 +172,8 @@
 
 
         <!-- Description Site -->
+        <h3 class="titre-description">Avec MyTripy, découvrez et partagez la France</h3>
         <div class="description-container">
-            <h3 class="titre-description">Avec MyTripy, découvrez et partagez la France</h3>
             <div class="description">
                 <img src="static/img/website.png" alt="Découverte">
                 <h4>Partage d’expériences</h4>
@@ -194,10 +192,9 @@
                 <p>Accède aux bons plans : itinéraires, activités et hébergements pour un voyage réussi.</p>
             </div>
 
-            <h3 class="titre-2-description">Prêt à partir à l’aventure ?</h3>
-            <button class="description-btn-destination" onclick="window.location.href='destinations.html'">Explore les destinations</button>
-
         </div>
+        <h3 class="titre-2-description">Prêt à partir à l’aventure ?</h3>
+        <button class="description-btn-destination" onclick="window.location.href='destinations.html'">Explore les destinations</button>
     </section>
 
 

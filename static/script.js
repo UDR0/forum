@@ -81,6 +81,21 @@ function sauverModifications() {
 // Fermer le pop-up en cliquant sur l'overlay
 document.getElementById("overlay-modif").onclick = closePopupModif;
 
+
+function PopupFils() {
+    const popupFils = document.getElementById("popupAjouterFil");
+    const imageBtnFils = document.getElementById("btnAjouterFil");
+
+    if (popupFils.style.display === "flex") {
+        document.getElementById("popupAjouterFil").style.display = "none";
+        document.getElementById("btnAjouterFil").src = "static/img/ajouter.png"
+    } else {
+        document.getElementById("popupAjouterFil").style.display = "flex";
+        document.getElementById("btnAjouterFil").src = "static/img/moin.png"
+    }
+}
+
+
 /* it is not working
     // ------------------- SEARCH ---------------------------//
 

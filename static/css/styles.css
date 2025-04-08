@@ -928,7 +928,7 @@ section h2 {
 }
 
 .card-img {
-    height: 192px;
+    height: 160px;
     width: 100%;
 }
 
@@ -949,7 +949,7 @@ section h2 {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    top: calc(25% - 60px);
+    top: calc(20% - 55px);
     left: 50%;
     transform: translateX(-50%);
 }
@@ -1047,7 +1047,7 @@ section h2 {
     z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
 }
 
-.popup-modif h3 {
+.popup-modif h3, .popupAjouterFil h3 {
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 1.8rem;
     color: white;
@@ -1072,7 +1072,8 @@ section h2 {
 }
 
 .modif input[type="text"],
-.modif textarea {
+.modif textarea,
+.popupAjouterFil input {
     border: none;
     outline: none; /* Supprimer l'outline par défaut */
     width: 100%;
@@ -1089,7 +1090,7 @@ section h2 {
     resize: vertical; /* Permet à l'utilisateur de redimensionner la textarea verticalement */
 }
 
-.popup-modif button {
+.popup-modif button, .popupAjouterFil button {
     font-size: 1rem;
     padding: 12px 20px;
     width: 100%;
@@ -1106,7 +1107,7 @@ section h2 {
 }
 
 /* Boutons hover effect */
-.popup-modif button:hover {
+.popup-modif button:hover, .popupAjouterFil button:hover {
     background-color: #76C893;
 }
 
@@ -1200,23 +1201,201 @@ section h2 {
 
 /* ######################## Page : Fils de Discussion ######################## */
 
+.titreFilRegion {
+    margin-top: 5%;
+    font-size: 130%;
+}
+
 .filPrincipal {
-    color: white;
-    background-color: #34A0A4;
-    width: 80%;
+    margin-top: 6%;
     margin-left: auto;
     margin-right: auto;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 1%;
+    border-radius: 15px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.filPrincipal h3 {
-    color: white !important;
-    font-size: large;
+.conteneurPhotoFilsPrincipal {
+    position: relative;
 }
 
-.filPrincipal p {
-    color: white !important;
-    font-size: small;
+.conteneurPhotoFilsPrincipal img{
+    width: 100%;
+    display: block;
 }
+
+.conteneurPhotoFilsPrincipal h3 {
+    white-space: nowrap;
+}
+
+.titreFilsPrincipal {
+    position: absolute;
+    color: rgb(0, 0, 0);
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    font-size: 60%;
+    border-radius: 25px;
+    padding: 5px;
+}
+
+.infoFilPrincipal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: right;
+    margin-right: 3%;
+}
+.infoFilPrincipal p {
+    font-size: 10px;
+    color: rgb(0, 0, 0);
+    width: auto;
+    text-align: center;
+    font-weight: normal;
+}
+
+.ajouterBtn img{
+    width: 10%;
+    margin-top: 4%;
+    cursor: pointer;
+}
+
+.popupAjouterFil {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 95%;
+    border-radius: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Open Sans", sans-serif;
+}
+
+.popupAjouterFil img{
+    position: relative;
+    width: 95%;
+    border-radius: 25px;
+}
+
+.popupAjouterFil h3,.paramFil, .popupAjouterFil input, .popupAjouterFil button{
+    position: absolute;
+    text-shadow: none !important;
+    margin: 0px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.popupAjouterFil h3 {
+    top: -3%;
+    margin-top: 5%;
+}
+
+.popupAjouterFil input{
+    font-size: 80%;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    top : 33%;
+    font-weight: bold;
+}
+
+.paramFil {
+    display: flex;
+    flex-wrap: wrap;
+    top:56%;
+    width: 80%;
+    gap : 3%;
+    align-items: center;
+    justify-content: center;
+}
+
+.popupAjouterFil h4{
+    font-size: 75%;
+    color: #000000;
+    background-color: #cbcbcb;
+    border-radius: 5px;
+    width: 48%;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    padding: 2%;
+}
+
+.menuDeroulantFils {
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    border:none;
+    width: 48%;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    font-size: 75%;
+    text-align: center;
+    padding: 2%;
+    cursor: pointer;
+}
+
+.popupAjouterFil button{
+    top:71%;
+    padding: 2%;
+    margin-top: 2%;
+    width: 48%;
+}
+
+.scroll-container {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    width:90%;
+    height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.fil {
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #eeeeee;
+    color: rgb(0, 0, 0);
+    padding: 1%;
+    border-radius: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.titreFil {
+    font-size: 80%;
+    font-weight: bold;
+    margin-left: 3%;
+}
+.infoFil {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: right;
+    margin-right: 3%;
+}
+
+.infoFil p {
+    font-size: 10px;
+    color: rgb(0, 0, 0);
+    width: auto;
+    white-space: nowrap;
+    font-weight: normal;
+    margin-bottom: 2%;
+}
+
+
+
 
 /* ######################## Footer ######################## */
 footer {

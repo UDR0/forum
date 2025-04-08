@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -318,9 +319,10 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	type RegionChat struct {
-		RegionName string
-		ChatCount  int
-		RegionImg  string
+		RegionName  string
+		ChatCount   int
+		RegionImg   string
+		RegionDescr string
 	}
 
 	data := struct {
@@ -337,23 +339,25 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	// Fetch popular regions
 	db, err := sql.Open("sqlite3", "./forum.db") // Adjust connection details
 	if err != nil {
+
 		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
 	query := `
-        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL
+        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL, r.DESCRI
         FROM Region r
         JOIN Department d ON r.REGION_NAME = d.REGION_NAME
         JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
-        GROUP BY r.REGION_NAME, r.REGION_IMG_URL
+        GROUP BY r.REGION_NAME, r.REGION_IMG_URL, r.DESCRI
         ORDER BY CHAT_COUNT DESC
         LIMIT 3;
     `
 
 	rows, err := db.Query(query)
 	if err != nil {
+		log.Println("Query error:", err)
 		http.Error(w, "Erreur lors de l'exécution de la requête.", http.StatusInternalServerError)
 		return
 	}
@@ -361,7 +365,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg, &region.RegionDescr); err != nil {
 			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
 			return
 		}
@@ -400,8 +404,9 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	type RegionChat struct {
-		RegionName string
-		RegionImg  string
+		RegionName  string
+		RegionImg   string
+		RegionDescr string
 	}
 
 	data := struct {
@@ -424,7 +429,7 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	query := `
-        SELECT REGION_NAME, REGION_IMG_URL
+        SELECT REGION_NAME, REGION_IMG_URL, DESCRI
         FROM Region;
     `
 
@@ -437,7 +442,7 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.RegionImg); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr); err != nil {
 			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
 			return
 		}

@@ -4,4 +4,31 @@ pb:
 -l'image donné a la creation de conte n'est pas pris en compte
 -searchbar
 -description de region
--like
+-list of liked regions et fils
+
+
+Auvergne-Rhône-Alpes – Alpes, Lyon, volcans
+
+Bourgogne-Franche-Comté – Vignobles, montagnes, Dijon
+
+Bretagne – Océan, traditions, crêpes
+
+Centre-Val de Loire – Châteaux, Loire, histoire
+
+Corse – Île, montagnes, mer
+
+Grand Est – Alsace, Lorraine, Champagne
+
+Hauts-de-France – Nord, Lille, industrie
+
+Île-de-France – Paris, Seine, capitale
+
+Normandie – Plages, Mont-Saint-Michel, cidre
+
+Nouvelle-Aquitaine – Bordeaux, plages, Pyrénées
+
+Occitanie – Toulouse, Méditerranée, soleil
+
+Pays de la Loire – Nantes, Atlantique, îles
+
+Provence-Alpes-Côte d’Azur – Côte d’Azur, soleil, lavande

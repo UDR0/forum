@@ -712,19 +712,30 @@ section h2 {
 
 
 /* ######################## Page : Se Connecter ######################## */
-.titre-SeConnecter, .titre-mot-de-passe-oublie {
+.card-titre {
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    position: absolute;
     width: 90%;
-    font-size: 23px;
-    /*text-transform: uppercase;*/
-    font-weight: 800;
-    color: #000;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    position: relative;
+    color: #fff;
+    text-align: center; /* ✅ centre le texte à l'intérieur */
+    top: 8%; /* ajuste selon ta mise en page */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2; /* pour passer au-dessus de l'image si besoin */
 }
+
+.titre-SeConnecter, .titre-mot-de-passe-oublie {
+    margin: 0;
+    font-size: 35px;
+    font-weight: 800;
+}
+
+.sous-titre-SeConnecter {
+    margin: 2px 0 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
 
 .ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie, .ConteneurProfil {
     display: flex;
@@ -743,7 +754,7 @@ section h2 {
     font-size: 15px;
     font-weight: bold;
     color: #000;
-    margin-top: 10px;
+    margin-top: 20px;
     width: 90%;
     text-align: left;
 }
@@ -784,6 +795,8 @@ section h2 {
     font-family: "Open Sans", sans-serif;
     display: block;
     text-align: left;
+    margin-left: auto;
+    margin-right: auto;
     width: 90%;
     margin-top: 15px;
     color: #026d90;
@@ -919,7 +932,7 @@ section h2 {
 .card {
     position: relative;
     width: 100%;
-    height: 700px;
+    height: 650px;
     display: flex;
     flex-direction: column;
     /* align-items: center; */
@@ -1110,6 +1123,9 @@ section h2 {
 .popup-modif button:hover, .popupAjouterFil button:hover {
     background-color: #76C893;
 }
+
+
+
 
 
 

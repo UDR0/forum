@@ -1100,8 +1100,28 @@ section h2 {
     margin-top: 15px;
     /* gap: 15px; */
     width: 100%;
-    
 }
+
+.destination-region-popular {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 90%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100px;
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-align: left;
+}
+
+
 
 
 /* ######################## Page : Profil destinations favorite ######################## */

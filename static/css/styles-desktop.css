@@ -259,5 +259,26 @@
         height: 100px;
         width: 400px;
     }
+
+
+    /* ######################## Page : Se Connecter & Mot de passe oublie ######################## */
+    .card-titre {
+        top: 10%; /* ajuste selon ta mise en page */
+    }
+
+    .titre-SeConnecter {
+        font-size: 40px;
+    }
+
+    .titre-mot-de-passe-oublie {
+        font-size: 40px;
+        margin-top: 13px;
+    }
+
+    .sous-titre-SeConnecter {
+        margin: 2px 0 0;
+        font-size: 18px;
+        font-weight: 500;
+    }
     
 }

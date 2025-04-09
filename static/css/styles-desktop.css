@@ -145,7 +145,7 @@
 
 
 
-    /* ######################## Top 3 Destinations ######################## */
+    /* ######################## Top 3 Destinations & Page destinations ######################## */
     .titre-popular-region, .titre-favorite-region {
         margin-top: 5%;
         font-size: 2rem;
@@ -237,4 +237,27 @@
         background-color: #fff;
         border: 1px solid #64d6df;
     }
+
+
+    /* ######################## Mon Compte ######################## */
+    .card {
+        margin-top: 2%;
+        width: 650px;
+        height: auto;
+        padding: 0 0 20px 0;
+        border-radius: 25px;
+        background-color: #fff;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 3%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .destination-region-favorites {
+        margin-bottom: 0;
+        margin-left: 35px;
+        height: 100px;
+        width: 400px;
+    }
+    
 }

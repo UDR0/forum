@@ -147,6 +147,12 @@ header {
     padding: 10px 0;
     text-align: center;
     width: 100%;
+}
+
+.meta-navigation-btn-seconnecter {
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
     border-bottom: 1px solid #d1d4d7;
 }
 

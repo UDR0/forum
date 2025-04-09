@@ -1108,7 +1108,7 @@ section h2 {
     gap: 10px;
     margin-bottom: 15px;
     width: 90%;
-    max-width: 400px;
+    /* max-width: 400px; */
     margin-left: auto;
     margin-right: auto;
     height: 100px;

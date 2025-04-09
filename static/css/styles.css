@@ -1087,6 +1087,16 @@ section h2 {
 
 
 
+/* ######################## Page : Acceuil Top 3 regions Populaire ######################## */
+.destinations-popular {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 15px;
+    /* gap: 15px; */
+    width: 100%;
+    
+}
+
 
 
 

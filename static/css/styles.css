@@ -1380,6 +1380,85 @@ section h2 {
     margin-bottom: 2%;
 }
 
+/* ######################## Page : Forum ######################## */
+
+.allPosts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow-y: auto;
+    height: 66vh;
+}
+
+.post {
+    background-color: #D9D9D9;
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.enterPost {
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #D9D9D9;
+    border-radius: 20px;
+    padding: 1%;
+    width: 95%;
+}
+
+.conainerWritePost {
+    border-radius: 20px;
+    background-color: #FFF;
+}
+
+.inputPost {
+    height: auto; 
+    margin-top: 2%;
+    width: 94%;
+    border: none;
+    border-radius: 5px;
+    padding: 2%;
+    overflow: hidden;
+    resize: none;
+    box-sizing: border-box;
+    line-height: 1.4;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+}
+
+.gras, .italic, .souligne, .texteBarre {
+    width: 7%;
+    padding: 1%;
+    transition: 0.3s background-color;
+    border-radius: 100%;
+}
+
+.gras:hover, .italic:hover, .souligne:hover, .texteBarre:hover {
+    background-color: #D9D9D9;
+    border-radius: 100%;
+    padding: 1%;
+    cursor: pointer;
+}
+
+.gras {
+    margin-left: 2%;
+}
+
+.iconSend {
+    width: 8%;
+    height: auto;
+    background-color: #FFF;
+    border-radius: 100%;
+    margin-left: 50%;
+    cursor: pointer;
+}
+
+.iconSend:hover {
+    background-color: #D9D9D9;
+}
 
 
 

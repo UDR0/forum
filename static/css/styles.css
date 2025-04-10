@@ -147,6 +147,12 @@ header {
     padding: 10px 0;
     text-align: center;
     width: 100%;
+}
+
+.meta-navigation-btn-seconnecter {
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
     border-bottom: 1px solid #d1d4d7;
 }
 
@@ -292,6 +298,9 @@ section h2 {
     background-color: transparent; /* Change la couleur au survol */
     border: 1px solid #64d6df;
 }
+
+
+
 
 
 
@@ -455,58 +464,6 @@ section h2 {
 
 
 
-/* ######################## Liste des régions ######################## */
-.regions-container {
-    display: flex;
-    flex-wrap: wrap; /* Permet de passer à la ligne suivante lorsque l'espace est insuffisant */
-    margin-top: 35px;
-    gap: 15px; /* Espacement entre les éléments */
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.region {
-    background-color: #76C893;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    position: relative;
-    overflow: hidden;
-}
-
-.region img {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-    transition: opacity 0.3s ease; /* Ajoute un effet au survol */
-}
-
-.region p {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: #fff;
-    opacity: 0; /* Par défaut, on cache le texte */
-    transition: opacity 0.3s ease; /* effet au survol */
-}
-
-/* Lorsque l'on survole la région, le texte devient visible */
-.region:hover p {
-    opacity: 1; /* Le texte apparait */
-}
-
-/* Effet de transparence de l'image lors du survol */
-.region:hover img {
-    opacity: 0; /* L'image disparait */
-}
-
 
 
 /* ######################## Région Populaire ######################## */
@@ -522,13 +479,16 @@ section h2 {
 
 /* Titre des régions populaires */
 .titre-popular-region, .titre-favorite-region {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 25px;
     /*text-transform: uppercase;*/
     font-weight: 800;
     color: #000;
     text-align: left;
-    margin-top: 0;
     position: relative;
 }
 
@@ -622,7 +582,7 @@ section h2 {
 .description-container {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 35px;
+    margin-top: 15px;
     gap: 15px; /* Espacement entre les éléments */
     width: 90%;
     margin-left: auto;
@@ -635,8 +595,8 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: center;
-    margin-top: 10%;
-    margin-bottom: 3%;
+    margin-top: 15%;
+    /* margin-bottom: 3%; */
     position: relative;
 }
 
@@ -679,49 +639,65 @@ section h2 {
     font-weight: 800;
     color: #000;
     text-align: center;
-    margin-top: 3%;
+    margin-top: 15px;
     position: relative;
 }
 
 .description-btn-destination {
+    position: absolute;
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 1rem;
     padding: 12px 12px;
-    max-width: 300px;
-    color: #fff;
+    margin-top: 15px;
+    max-width: auto;
+    color: #000;
     text-decoration: none;
-    background-color: #76C893;
+    background-color: #64d6df;
     border-radius: 25px;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    left: 50%;
+    transform: translateX(-50%); /* <--- pour bien centrer */
     transition: background-color 0.3s;
     border: none;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+
 /* Boutons hover effect */
 .description-btn-destination:hover {
-    background-color: #34A0A4;
+    background-color: #fff;
+    border: 1px solid #64d6df;
 }
 
 
 
 
 /* ######################## Page : Se Connecter ######################## */
-.titre-SeConnecter, .titre-mot-de-passe-oublie {
+.card-titre {
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    position: absolute;
     width: 90%;
-    font-size: 23px;
-    /*text-transform: uppercase;*/
-    font-weight: 800;
-    color: #000;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    position: relative;
+    color: #fff;
+    text-align: center; /* ✅ centre le texte à l'intérieur */
+    top: 8%; /* ajuste selon ta mise en page */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2; /* pour passer au-dessus de l'image si besoin */
 }
+
+.titre-SeConnecter, .titre-mot-de-passe-oublie {
+    margin: 0;
+    font-size: 35px;
+    font-weight: 800;
+}
+
+.sous-titre-SeConnecter {
+    margin: 2px 0 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
 
 .ConteneurSeConnecter, .ConteneurCreerCompte, .ConteneurMotDePasseOublie, .ConteneurProfil {
     display: flex;
@@ -740,17 +716,8 @@ section h2 {
     font-size: 15px;
     font-weight: bold;
     color: #000;
-    margin-top: 10px;
+    margin-top: 20px;
     width: 90%;
-    text-align: left;
-}
-
-.ConteneurProfil p {
-    font-size: 14px;
-    font-weight: 400;
-    color: #000;
-    width: 90%;
-    margin-top: 5px;
     text-align: left;
 }
 
@@ -790,6 +757,8 @@ section h2 {
     font-family: "Open Sans", sans-serif;
     display: block;
     text-align: left;
+    margin-left: auto;
+    margin-right: auto;
     width: 90%;
     margin-top: 15px;
     color: #026d90;
@@ -922,6 +891,67 @@ section h2 {
 
 
 /* ######################## Page : Profil ######################## */
+.card {
+    position: relative;
+    width: 100%;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.card-img {
+    height: 160px;
+    width: 100%;
+}
+
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.card-avatar {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    top: calc(20% - 55px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.card-avatar img {
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+
+.pseudo {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-top: 75px;
+}
+
+.bio {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    width: 90%;
+    margin-top: 5px;
+    /* margin-bottom: 10%; */
+    text-align: left;
+}
+
 .btn-modifier-pseudo {
     font-family: "Open Sans", sans-serif;
     display: block;
@@ -953,27 +983,28 @@ section h2 {
 
 .btn-deconnexion {
     font-size: 1rem;
-    padding: 12px 20px;
-    width: 40%;
+    padding: 12px 12px;
+    max-width: auto;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 15%;
-    color: #fff;
+    margin-top: 10%;
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+    background-color: #e63946;
     text-decoration: none;
-    background-color: #d02222; /* Couleur de fond des boutons */
-    border-radius: 25px;
-    display: block;
-    transition: background-color 0.3s;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
 }
 
 /* Boutons hover effect */
-.btn-deconnexion:hover {
-    background-color: #ff0000;
+.btn-deconnexion:hover{
+    background-color: #fff;
+    border: 1px solid #e63946;
 }
-
 
 
 /* Style général pour le pop-up */
@@ -992,7 +1023,7 @@ section h2 {
     z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
 }
 
-.popup-modif h3 {
+.popup-modif h3, .popupAjouterFil h3 {
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     font-size: 1.8rem;
     color: white;
@@ -1017,7 +1048,8 @@ section h2 {
 }
 
 .modif input[type="text"],
-.modif textarea {
+.modif textarea,
+.popupAjouterFil input {
     border: none;
     outline: none; /* Supprimer l'outline par défaut */
     width: 100%;
@@ -1034,7 +1066,7 @@ section h2 {
     resize: vertical; /* Permet à l'utilisateur de redimensionner la textarea verticalement */
 }
 
-.popup-modif button {
+.popup-modif button, .popupAjouterFil button {
     font-size: 1rem;
     padding: 12px 20px;
     width: 100%;
@@ -1051,7 +1083,7 @@ section h2 {
 }
 
 /* Boutons hover effect */
-.popup-modif button:hover {
+.popup-modif button:hover, .popupAjouterFil button:hover {
     background-color: #76C893;
 }
 
@@ -1061,23 +1093,100 @@ section h2 {
 
 
 
+/* ######################## Page : Acceuil Top 3 regions Populaire ######################## */
+.destinations-popular {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 15px;
+    /* gap: 15px; */
+    width: 100%;
+}
+
+.destination-region-popular {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 90%;
+    /* max-width: 400px; */
+    margin-left: auto;
+    margin-right: auto;
+    height: 100px;
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-align: left;
+}
+
+
+
+
+/* ######################## Page : Profil destinations favorite ######################## */
+.destinations-favorites {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 15px;
+    /* gap: 15px; */
+    width: 100%;
+}
+
+.destination-region-favorites {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100px;
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-align: left;
+}
+
+.destination-region-name-favorites {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    width: 70%;
+}
+
+.destination-description-favorites {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    margin-top: 0px;
+    font-size: 12px;
+    color: #777;
+}
+
+
+
+
 
 /* ######################## Page : Destinations ######################## */
 .destinations {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 15%;
-    gap: 15px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 15px;
+    /* gap: 15px; */
+    width: 100%;
+    
 }
 
 .destination-region {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 100%;
+    margin-bottom: 15px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     height: 100px;
     position: relative;
     border-radius: 25px;
@@ -1098,12 +1207,14 @@ section h2 {
 }
 
 .destination-region-name {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     width: 70%;
 }
 
 .destination-description {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     margin-top: 0px;
     font-size: 12px;
     color: #777;
@@ -1144,27 +1255,284 @@ section h2 {
 
 /* ######################## Page : Fils de Discussion ######################## */
 
+.titreFilRegion {
+    margin-top: 5%;
+    font-size: 130%;
+}
+
 .filPrincipal {
-    color: white;
-    background-color: #34A0A4;
-    width: 80%;
+    margin-top: 6%;
     margin-left: auto;
     margin-right: auto;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 1%;
+    border-radius: 15px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.filPrincipal h3 {
-    color: white !important;
-    font-size: large;
+.conteneurPhotoFilsPrincipal {
+    position: relative;
 }
 
-.filPrincipal p {
-    color: white !important;
-    font-size: small;
+.conteneurPhotoFilsPrincipal img{
+    width: 100%;
+    display: block;
 }
+
+.conteneurPhotoFilsPrincipal h3 {
+    white-space: nowrap;
+}
+
+.titreFilsPrincipal {
+    position: absolute;
+    color: rgb(0, 0, 0);
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    font-size: 60%;
+    border-radius: 25px;
+    padding: 5px;
+}
+
+.infoFilPrincipal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: right;
+    margin-right: 3%;
+}
+.infoFilPrincipal p {
+    font-size: 10px;
+    color: rgb(0, 0, 0);
+    width: auto;
+    text-align: center;
+    font-weight: normal;
+}
+
+.ajouterBtn img{
+    width: 10%;
+    margin-top: 4%;
+    cursor: pointer;
+}
+
+.popupAjouterFil {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 95%;
+    border-radius: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Open Sans", sans-serif;
+}
+
+.popupAjouterFil img{
+    position: relative;
+    width: 95%;
+    border-radius: 25px;
+}
+
+.popupAjouterFil h3,.paramFil, .popupAjouterFil input, .popupAjouterFil button{
+    position: absolute;
+    text-shadow: none !important;
+    margin: 0px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.popupAjouterFil h3 {
+    top: -3%;
+    margin-top: 5%;
+}
+
+.popupAjouterFil input{
+    font-size: 80%;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    top : 33%;
+    font-weight: bold;
+}
+
+.paramFil {
+    display: flex;
+    flex-wrap: wrap;
+    top:56%;
+    width: 80%;
+    gap : 3%;
+    align-items: center;
+    justify-content: center;
+}
+
+.popupAjouterFil h4{
+    font-size: 75%;
+    color: #000000;
+    background-color: #cbcbcb;
+    border-radius: 5px;
+    width: 48%;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    padding: 2%;
+}
+
+.menuDeroulantFils {
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    border:none;
+    width: 48%;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    font-size: 75%;
+    text-align: center;
+    padding: 2%;
+    cursor: pointer;
+}
+
+.popupAjouterFil button{
+    top:71%;
+    padding: 2%;
+    margin-top: 2%;
+    width: 48%;
+}
+
+.scroll-container {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    width:90%;
+    height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.fil {
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #eeeeee;
+    color: rgb(0, 0, 0);
+    padding: 1%;
+    border-radius: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.titreFil {
+    font-size: 80%;
+    font-weight: bold;
+    margin-left: 3%;
+}
+.infoFil {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: right;
+    margin-right: 3%;
+}
+
+.infoFil p {
+    font-size: 10px;
+    color: rgb(0, 0, 0);
+    width: auto;
+    white-space: nowrap;
+    font-weight: normal;
+    margin-bottom: 2%;
+}
+
+/* ######################## Page : Forum ######################## */
+
+.allPosts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow-y: auto;
+    height: 66vh;
+}
+
+.post {
+    background-color: #D9D9D9;
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.enterPost {
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #D9D9D9;
+    border-radius: 20px;
+    padding: 1%;
+    width: 95%;
+}
+
+.conainerWritePost {
+    border-radius: 20px;
+    background-color: #FFF;
+}
+
+.inputPost {
+    height: auto; 
+    margin-top: 2%;
+    width: 94%;
+    border: none;
+    border-radius: 5px;
+    padding: 2%;
+    overflow: hidden;
+    resize: none;
+    box-sizing: border-box;
+    line-height: 1.4;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+}
+
+.gras, .italic, .souligne, .texteBarre {
+    width: 7%;
+    padding: 1%;
+    transition: 0.3s background-color;
+    border-radius: 100%;
+}
+
+.gras:hover, .italic:hover, .souligne:hover, .texteBarre:hover {
+    background-color: #D9D9D9;
+    border-radius: 100%;
+    padding: 1%;
+    cursor: pointer;
+}
+
+.gras {
+    margin-left: 2%;
+}
+
+.iconSend {
+    width: 8%;
+    height: auto;
+    background-color: #FFF;
+    border-radius: 100%;
+    margin-left: 50%;
+    cursor: pointer;
+}
+
+.iconSend:hover {
+    background-color: #D9D9D9;
+}
+
+
 
 /* ######################## Footer ######################## */
 footer {
-    margin-top: 10%;
+    margin-top: 20%;
     background-color: #1F5A89;
     color: white;
     padding: 20px 0;

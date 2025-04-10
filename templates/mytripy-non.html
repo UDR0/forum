@@ -156,8 +156,7 @@
         <h3 class="titre-popular-region">Régions populaires</h3>
         <div class="destinations-popular">
             {{range .Regions}}
-            <a href="/filsDiscussion" class="destination-link">
-                <div class="destination-region-popular">
+                <div class="destination-region-popular" data-link="/filsDiscussion">
                     <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
                     <div class="destination-details">
                         <div class="destination-region-name">{{.RegionName}}</div>
@@ -167,8 +166,7 @@
                     <div class="destination-coeur-container">
                         <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
                     </div>
-                </div>
-            </a>            
+                </div>          
             {{end}}
         </div>
 

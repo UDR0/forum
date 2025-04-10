@@ -7,6 +7,17 @@ burgerMenu.addEventListener("click", () => {
     navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
 });
 
+
+
+document.querySelectorAll(".destination-region-popular").forEach((card) => {
+    card.addEventListener("click", function () {
+        const targetUrl = card.getAttribute("data-link");
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        }
+    });
+});
+
 document.querySelectorAll(".destination-coeur-container").forEach((container) => {
     container.addEventListener("click", function(event) {
         event.stopPropagation();

@@ -811,18 +811,31 @@ section h2 {
 }
 
 .photo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    margin-top: 6%;
-    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    top: calc(20% - 55px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.photoProfil {
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
 }
 
 .changerAvatar {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 12%;
     text-align: center;
     width: 90%;
     color: #026d90;
@@ -835,14 +848,6 @@ section h2 {
 
 .changerAvatar:hover {
     text-decoration: underline;
-}
-
-.photoProfil {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 1px solid black;
-    cursor: pointer;
 }
 
 /* Correction pour s'assurer que le pop-up de profil est visible */

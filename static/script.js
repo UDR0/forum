@@ -9,7 +9,7 @@ burgerMenu.addEventListener("click", () => {
 
 
 
-document.querySelectorAll(".destination-region-popular").forEach((card) => {
+document.querySelectorAll(".destination-region-popular", ".filPrincipal-region").forEach((card) => {
     card.addEventListener("click", function () {
         const targetUrl = card.getAttribute("data-link");
         if (targetUrl) {

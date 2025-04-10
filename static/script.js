@@ -7,16 +7,23 @@ burgerMenu.addEventListener("click", () => {
     navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
 });
 
-document.querySelectorAll('.coeur-container').forEach(coeur => {
-    coeur.addEventListener('click', function () {
-        const img = this.querySelector('.coeur');
-        if (img.src.includes('coeur.png')) {
-            img.src = 'static/img/coeur_rouge.png'; // Remplace par le cœur rouge
+document.querySelectorAll(".destination-coeur-container").forEach((container) => {
+    container.addEventListener("click", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        const coeur = container.querySelector(".destination-coeur"); // récupère l’image dans le container
+
+        if (coeur.src.includes("coeur_rouge.png")) {
+            coeur.src = "static/img/coeur.png";
         } else {
-            img.src = 'static/img/coeur.png'; // Reviens au cœur normal
+            coeur.src = "static/img/coeur_rouge.png";
         }
     });
 });
+
+
+
 
 
 // Gestion des avatars dans le pop-up de profil

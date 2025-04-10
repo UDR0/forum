@@ -1126,6 +1126,13 @@ section h2 {
     text-align: left;
 }
 
+.destination-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+
 
 
 

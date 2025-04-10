@@ -156,17 +156,19 @@
         <h3 class="titre-popular-region">Régions populaires</h3>
         <div class="destinations-popular">
             {{range .Regions}}
-            <div class="destination-region-popular">
-                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
-                <div class="destination-details">
-                    <div class="destination-region-name">{{.RegionName}}</div>
-                    <div class="destination-description">{{.RegionDescr}}</div>
+            <a href="/filsDiscussion" class="destination-link">
+                <div class="destination-region-popular">
+                    <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
+                    <div class="destination-details">
+                        <div class="destination-region-name">{{.RegionName}}</div>
+                        <div class="destination-description">{{.RegionDescr}}</div>
+                    </div>
+            
+                    <div class="destination-coeur-container">
+                        <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    </div>
                 </div>
-
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div>
-            </div>
+            </a>            
             {{end}}
         </div>
 
@@ -194,7 +196,7 @@
 
         </div>
         <h3 class="titre-2-description">Prêt à partir à l’aventure ?</h3>
-        <button class="description-btn-destination" onclick="window.location.href='destinations.html'">Explore les destinations</button>
+        <button class="description-btn-destination" onclick="window.location.href='/destinations'">Explore les destinations</button>
     </section>
 
 

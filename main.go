@@ -36,6 +36,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
+	// Définir les routes
+	http.HandleFunc("/updateProfile", forum.UpdateProfileHandler)
+
 	// Route pour la page d'accueil
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {

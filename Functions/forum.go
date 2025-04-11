@@ -211,6 +211,8 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
+// Page de profil pour afficher les informations utilisateur
+// Page de profil pour afficher les informations utilisateur
 func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -222,7 +224,7 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
+		http.Error(w, "Erreur d'ouverture de la base de données", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
@@ -582,4 +584,102 @@ func SearchSuggestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json") // Avertit que la reponse est en JSON
 	json.NewEncoder(w).Encode(suggestions)             // Encode la reponse en JSON
+}
+
+//////////////////////////////////// PROFIL /////////////////////////////////////////////////////////
+
+type UpdateProfileRequest struct {
+	Pseudo string `json:"pseudo"`
+	Bio    string `json:"bio"`
+	Avatar string `json:"avatar"`
+}
+
+func updateUserInDB(db *sql.DB, userID int, pseudo, bio, avatar string) error {
+	// Construire dynamiquement la requête SQL en fonction des champs renseignés
+	query := "UPDATE User SET"
+	params := []interface{}{}
+	if pseudo != "" {
+		query += " USERNAME = ?,"
+		params = append(params, pseudo)
+	}
+	if bio != "" {
+		query += " BIOGRAPHY = ?,"
+		params = append(params, bio)
+	}
+	if avatar != "" {
+		query += " PHOTO_URL = ?,"
+		params = append(params, avatar)
+	}
+
+	// Supprimer la dernière virgule et ajouter la condition WHERE
+	query = query[:len(query)-1] + " WHERE rowid = ?"
+	params = append(params, userID)
+
+	// Exécuter la requête SQL
+	result, err := db.Exec(query, params...)
+	if err != nil {
+		return fmt.Errorf("Erreur lors de l'exécution de la requête SQL : %v", err)
+	}
+
+	// Vérifier combien de lignes ont été affectées
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("Erreur lors de la vérification des lignes affectées : %v", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("Aucune ligne mise à jour. Vérifiez si l'utilisateur avec ID %d existe.", userID)
+	}
+
+	fmt.Printf("Mise à jour réussie : %d ligne(s) affectée(s)\n", rowsAffected)
+	return nil
+}
+
+// API pour mettre à jour le profil utilisateur
+func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req UpdateProfileRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Requête invalide", http.StatusBadRequest)
+		return
+	}
+
+	// Log des données reçues pour déboguer
+	fmt.Printf("Requête reçue : Pseudo=%s, Bio=%s, Avatar=%s\n", req.Pseudo, req.Bio, req.Avatar)
+
+	session, _ := Store.Get(r, "session-name")
+	username, ok := session.Values["username"].(string)
+	if !ok {
+		http.Error(w, "Utilisateur non connecté", http.StatusUnauthorized)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		http.Error(w, "Erreur d'ouverture de la base de données", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	var userID int
+	err = db.QueryRow("SELECT rowid FROM User WHERE USERNAME = ?", username).Scan(&userID)
+	if err != nil {
+		http.Error(w, "Utilisateur non trouvé", http.StatusNotFound)
+		return
+	}
+
+	// Mise à jour des informations dans la base de données
+	err = updateUserInDB(db, userID, req.Pseudo, req.Bio, req.Avatar)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Erreur lors de la mise à jour : %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Répondre avec succès
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Profil mis à jour avec succès"})
 }

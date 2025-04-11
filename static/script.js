@@ -208,3 +208,36 @@ window.onload = () => {
         connectWebSocket();
     }
 };
+
+function updateAvatar(avatarURL) {
+    if (!avatarURL || avatarURL.trim() === "") {
+        console.error("URL d'avatar invalide ou vide !");
+        return;
+    }
+
+    fetch('/updateProfile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            avatar: avatarURL, // Assurez-vous que l'URL est correctement envoyée
+            pseudo: "", // Gardez vide si aucun changement
+            bio: "" // Gardez vide si aucun changement
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la mise à jour de l\'avatar');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message);
+        // Mettre à jour l'avatar sur la page sans rechargement
+        document.getElementById('photoProfil').src = avatarURL;
+        // Fermer le pop-up
+        document.getElementById('popup-profil').style.display = 'none';
+    })
+    .catch(error => console.error(error));
+}

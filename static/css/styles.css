@@ -75,7 +75,6 @@ header {
 
 
 
-
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
     background-color: transparent; /* Couleur du fond du bouton */
@@ -103,6 +102,54 @@ header {
     background-color: #64d6df;
     border: 1px solid #64d6df;
 }
+
+
+
+
+
+
+/* ######################## Header juste le X ######################## */
+.header-chp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #fff;
+    /* box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4); */
+}
+
+
+.sortir {
+    margin-left: auto;
+    background-color: transparent; /* Couleur du fond du bouton */
+    border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
+}
+
+/* Image du menu burger */
+.sortir img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Effet de survol pour le bouton */
+.sortir:hover {
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
+}
+
+
+
 
 
 
@@ -215,7 +262,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre floue */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     /*transform: rotate(-4deg);  Rotation de -3 degrés */
     /*display: inline-block;  Pour éviter que la rotation affecte le flux du texte */
     /*padding: 5px 20px;  Espacement autour du texte */
@@ -1778,6 +1825,50 @@ section h2 {
     transform: scale(1.2);
   }
 
+
+
+
+/* ######################## Mentions Legales ######################## */
+.mentions-legales {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mentions-legales h1 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 15px;
+    /* background-color: #e2e2e2;
+    width: 100%;
+    padding: 20px; */
+    /* border-bottom: #777 1px solid; */
+}
+
+.mentions-legales h3 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 15px;
+    width: 90%;
+}
+
+.mentions-legales p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: left;
+    margin-top: 5px;
+    width: 90%;
+    border-bottom: #777 1px solid; 
+    padding-bottom: 25px;
+}
   
 
 

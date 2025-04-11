@@ -84,6 +84,10 @@ func main() {
 		renderTemplate(w, "forum", nil)
 	})
 
+	http.HandleFunc("/mentions-legales", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "mentions-legales", nil)
+	})
+
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session")
 		session.Options.MaxAge = -1

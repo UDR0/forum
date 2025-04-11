@@ -478,12 +478,12 @@ func RegionPage(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifier si la région existe et récupérer ses informations
 	var regionDetails struct {
-		Name        string
-		Image       string
-		Description string
+		Name  string
+		Image string
+		Fils  string
 	}
-	err = db.QueryRow("SELECT REGION_NAME, REGION_IMG_URL, DESCRI FROM Region WHERE REGION_NAME = ?", regionName).
-		Scan(&regionDetails.Name, &regionDetails.Image, &regionDetails.Description)
+	err = db.QueryRow("SELECT REGION_NAME, REGION_IMG_URL, FILS FROM Region WHERE REGION_NAME = ?", regionName).
+		Scan(&regionDetails.Name, &regionDetails.Image, &regionDetails.Fils)
 	if err == sql.ErrNoRows {
 		// Si aucune ligne n'est retournée, la région n'existe pas
 		http.Error(w, "La région spécifiée n'existe pas.", http.StatusNotFound)
@@ -501,14 +501,14 @@ func RegionPage(w http.ResponseWriter, r *http.Request) {
 		DateTime string
 	}
 	data := struct {
-		Name        string
-		Image       string
-		Description string
-		Chats       []Chat
+		Name  string
+		Image string
+		Fils  string
+		Chats []Chat
 	}{
-		Name:        regionDetails.Name,
-		Image:       regionDetails.Image,
-		Description: regionDetails.Description,
+		Name:  regionDetails.Name,
+		Image: regionDetails.Image,
+		Fils:  regionDetails.Fils,
 	}
 
 	// Charger et exécuter le template filsDiscussion.html

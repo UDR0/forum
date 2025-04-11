@@ -22,7 +22,6 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -59,9 +58,6 @@
 
     </header>
 
-    
-
-
     <!-- Contenu principal -->
     <section>
         <!-- Barre de recherche -->
@@ -73,6 +69,7 @@
         <div class="destinations">
             {{range .Regions}}
             <div class="destination-region">
+                <a href="/region?region={{.RegionName}}" class="destination-link"></a> <!-- Lien invisible -->
                 <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
                 <div class="destination-details">
                     <div class="destination-region-name">{{.RegionName}}</div>
@@ -87,8 +84,6 @@
         </div>
 
     </section>
-
-
 
     <script src="static/script.js"></script>
 </body>

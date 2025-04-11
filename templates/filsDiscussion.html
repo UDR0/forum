@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-    <meta name="author" content="Matias, Sara, Samuel, William">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-    <title>MyTripy</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>{{.Name}} - MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
 
     <!-- Header -->
@@ -20,7 +22,6 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -39,14 +40,14 @@
             </li>
 
             <li class="meta-navigation">
-                <a class="meta-a" href="#">Favoris</a>
+                <a class="meta-a" href="/contact">Contactez-nous</a>
             </li>
 
             <li class="meta-navigation-btn-connexion">
                 <a class="btn" href="/profil">Mon Compte</a>
             </li>
 
-            <li class="meta-navigation-btn-connexion">
+            <li class="meta-navigation-btn-seconnecter">
                 <a class="btn" href="/SeConnecter">Se connecter</a>
             </li>
 
@@ -54,11 +55,7 @@
                 <a class="btn" href="/CreerCompte">Créer mon compte</a>
             </li>
         </ul>
-
     </header>
-
-    
-
 
     <!-- Contenu principal -->
     <section>
@@ -68,50 +65,62 @@
             <button class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
         </div>
 
-        <h1>PROVENCE ALPES COTE D'AZUR</h1>
-
-        <div class="filPrincipal">
-            <h3>PROVENCE ALPES COTE D'AZUR</h3>
-            <p><strong>PRINCIPALE</strong></p>
-            <p>264 Messages</p>
+        <!-- Informations sur la région -->
+        <div class="discussion-principale">
+            <div class="discussion-cree">
+                <div class="discussion-cree-info">
+                    <img src="{{.Image}}" alt="Image de la région {{.Name}}" class="discussion-cree-info-profil">
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">{{.Name}}</p>
+                        <p class="discussion-cree-info-nom">MyTripy</p>
+                    </div>
+                </div>                
+                <p class="discussion-cree-descriptif">{{.Description}}</p>
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>{{len .Chats}}</p>
+                </div>
+            </div>
         </div>
 
+        <!-- Liste des discussions -->
+        <div class="discussion">
+            {{range .Chats}}
+            <div class="discussion-cree">
+                <div class="discussion-cree-info">
+                    <img src="static/img/avatar/avatarHomme2.png" alt="" class="discussion-cree-info-profil">
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">{{.Name}}</p>
+                        <p class="discussion-cree-info-nom">Créé le : {{.DateTime}}</p>
+                    </div>
+                </div>                
+                <p class="discussion-cree-descriptif">Discussion dynamique pour {{$.Name}}.</p>
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>152</p>
+                </div>
+            </div>
+            {{end}}
+        </div>
+
+        <!-- Ajouter une discussion -->
+        <div class="ajouterBtn">
+            <img src="static/img/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
+        </div>
+
+        <div class="popupAjouterFil" id="popupAjouterFil">
+            <img src="/static/img/fondPopupFil.png">
+            <h3>Nouveau Fils</h3>
+            <input id="nomFil" placeholder="Entrez le Titre de votre nouveau Fil"> 
+            <div class="paramFil">
+                <h4>Région sélectionnée</h4>
+                <select class="menuDeroulantFils">
+                    <option>{{.Name}}</option>
+                </select>
+            </div>
+            <button>Créer</button>
+        </div>
     </section>
-
-
-    <!-- Pied de page -->
-    <footer>
-        <div class="conteneurFooter">
-            <div class="coordonés">
-                <h4>Coordonées</h4>
-                <p>Pl. Sophie Laffitte Immeuble AGORA, <br>06560 Valbonne</p>  
-                <p>mytripy@ynov.com</p>
-                <p>08 00 60 06 33</p>
-            </div>
-            <div class="navigation">
-                <h4>Navigation</h4>
-                <p>Acceuil</p>
-                <p>Destinations</p>
-                <p>Favoris</p>
-            </div>
-            <div class="nosReseaux">
-                <h4>Nos Réseaux</h4>
-                <div class="instagram">
-                    <img src="../static/img/instagram.png">
-                    <p>@mytripy</p>
-                </div>
-                <div class="facebook">
-                    <img src="../static/img/facebook.png">
-                    <p>@mytripy</p>
-                </div>
-                <div class="twitter">
-                    <img src="../static/img/twitter.png">
-                    <p>@mytripy</p>
-                </div>
-            </div>
-        </div>
-        <h4 class="mentions">Contacts  |  Mentions Légales  |  Modération  |  Politique de Confidentialité  |  Cookies </h4>
-    </footer>
 
     <script src="static/script.js"></script>
 </body>

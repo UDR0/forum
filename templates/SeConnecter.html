@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-    <meta name="author" content="Matias, Sara, Samuel, William">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-    <title>MyTripy</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
 
     <!-- Header -->
@@ -26,96 +29,75 @@
         <button class="burger-menu" id="burger">
             <img src="static/img/menu-black.png" alt="menu">
         </button>
-    </header>
+
 
     <!-- Navigation -->
     <ul class="meta-ul">
         <li class="meta-navigation">
             <a class="meta-a" href="/mytripy-non">MyTripy</a>
         </li>
+
         <li class="meta-navigation">
             <a class="meta-a" href="/destinations">Destinations</a>
         </li>
+
         <li class="meta-navigation">
-            <a class="meta-a" href="#">Favoris</a>
+            <a class="meta-a" href="/contact">Contactez-nous</a>
         </li>
+
         <li class="meta-navigation-btn-connexion">
             <a class="btn" href="/profil">Mon Compte</a>
         </li>
-        <li class="meta-navigation-btn-connexion">
+
+        <li class="meta-navigation-btn-seconnecter">
             <a class="btn" href="/SeConnecter">Se connecter</a>
         </li>
+
         <li class="meta-navigation-btn-creer-compte">
             <a class="btn" href="/CreerCompte">Créer mon compte</a>
         </li>
     </ul>
 
+    </header>
+
     <!-- Conteneur Principale -->
     <section>
-        <h3 class="titre-SeConnecter">Connecte-toi et explore le monde avec la communauté MyTripy</h3>
-    
-        <!-- Formulaire pour la connexion -->
-        <form action="/SeConnecter" method="POST">
-            <div class="ConteneurSeConnecter">
-                <h4>Pseudo</h4>
-                <div class="ConteneurPseudo">
-                    <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
-                    <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-                </div>
-    
-                <h4>Mot de passe</h4>
-                <div class="ConteneurMotDePasse">
-                    <input type="password" id="MotDePasse" name="password" placeholder="Votre mot de passe" required>
-                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
-                </div>
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil-3.png" alt="fond profil">
             </div>
-            <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
-            <!-- Bouton pour soumettre les identifiants -->
-            <button type="submit" class="btn-SeConnecter">Se connecter</button>
-        </form>
-    
-        <!-- Lien pour le mot de passe oublié -->
-        <a href="/mot-de-passe-oublie" class="mot-de-passe-oublie">Mot de passe oublié ?</a>
+
+            <div class="card-titre">
+                <h3 class="titre-SeConnecter">Connecte-toi</h3>
+                <p class="sous-titre-SeConnecter">Explore le monde avec la communauté MyTripy</p>
+            </div>
+            
+            <!-- Formulaire pour la connexion -->
+            <form action="/SeConnecter" method="POST">
+                <div class="ConteneurSeConnecter">
+                    <h4>Pseudo</h4>
+                    <div class="ConteneurPseudo">
+                        <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
+                        <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                    </div>
+        
+                    <h4>Mot de passe</h4>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="MotDePasse" name="password" placeholder="Votre mot de passe" required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+                </div>
+                <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
+                <!-- Bouton pour soumettre les identifiants -->
+                <button type="submit" class="btn-SeConnecter">Se connecter</button>
+            </form>
+        
+            <!-- Lien pour le mot de passe oublié -->
+            <a href="/mot-de-passe-oublie" class="mot-de-passe-oublie">Mot de passe oublié ?</a>
+        </div>
     </section>
+    
 
-    <script>
-        let ws;
-
-        function connectWebSocket() {
-            ws = new WebSocket('ws://localhost:8080/ws');
-
-            ws.onopen = () => {
-                console.log('Connecté au serveur WebSocket');
-            };
-
-            ws.onmessage = (event) => {
-                const messages = document.getElementById('messages');
-                const message = document.createElement('li');
-                message.textContent = event.data;
-                messages.appendChild(message);
-            };
-
-            ws.onclose = (event) => {
-                if (event.wasClean) {
-                    console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
-                } else {
-                    console.error('Connection died');
-                }
-            };
-
-            ws.onerror = (error) => {
-                console.error(`WebSocket error: ${error}`);
-            };
-        }
-
-        window.onload = () => {
-            if (window.location.pathname === '/profil') {
-                connectWebSocket();
-            }
-        };
-    </script>
-
-    <ul id="messages"></ul>
     <script src="static/script.js"></script>
 </body>
 </html>

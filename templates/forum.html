@@ -59,36 +59,42 @@
 
     </header>
 
-    
 
 
     <!-- Contenu principal -->
     <section>
-        <!-- Barre de recherche -->
-        <div class="search-bar">
-            <input type="text" placeholder="Rechercher une destination..." id="search-input">
-            <button class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
-        </div>
-
-        <div class="destinations">
-            {{range .Regions}}
-            <div class="destination-region">
-                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
-                <div class="destination-details">
-                    <div class="destination-region-name">{{.RegionName}}</div>
-                    <div class="destination-description">{{.RegionDescr}}</div>
+        <div class="allPosts">
+            <div class="post">
+                <div class="infoPost">
+                    <img src="#">
+                    <h3>Pseudo</h3>
+                    <h4>Date et heure</h4>
                 </div>
-
-                <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                <div class="message">
+                    <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                        eo quoque accedente quod et nomenclatores adsueti haec et talia 
+                        venditare, mercede accepta lucris quosdam et prandiis inserunt 
+                        subditicios ignobiles et obscuros.
+                    </p>
                 </div>
             </div>
-            {{end}}
+        </div>
+
+
+        <div class="enterPost">
+            <div class="conainerWritePost">
+                <textarea type="text" placeholder="Tapez votre Post..." class="inputPost"></textarea>
+                <div class="modifText">
+                    <img src="../static/img/gras.png" class="gras">
+                    <img src="../static/img/italic.png" class="italic">
+                    <img src="../static/img/souligne.png" class="souligne">
+                    <img src="../static/img/texteBarre.png" class="texteBarre">
+                    <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend">
+                </div>
+            </div>
         </div>
 
     </section>
-
-
 
     <script src="static/script.js"></script>
 </body>

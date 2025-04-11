@@ -6,8 +6,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/gorilla/sessions"
-	"github.com/gorilla/websocket"
+	"github.com/gorilla/sessions"  // go get github.com/gorilla/sessions
+	"github.com/gorilla/websocket" // go get github.com/gorilla/websocket
 )
 
 var (
@@ -46,7 +46,7 @@ func main() {
 	})
 
 	// Routes pour les pages HTML
-	http.HandleFunc("/mytripy-non", forum.MyTripyNonPage)
+	http.HandleFunc("/mytripy-non", forum.MyTripyNonHandler)
 
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
@@ -74,12 +74,15 @@ func main() {
 
 	http.HandleFunc("/profil", forum.ProfilPage)
 
-	http.HandleFunc("/destinations", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "destinations", nil)
-	})
+	http.HandleFunc("/destinations", forum.AllRegions)
 
 	http.HandleFunc("/filsDiscussion", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "filsDiscussion", nil)
+	})
+	http.HandleFunc("/region", forum.RegionPage)
+
+	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "forum", nil)
 	})
 
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -89,11 +92,18 @@ func main() {
 		forum.Logout(w, r)
 	})
 
+	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
+
 	// Route pour ajouter un chat
 	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
 
 	// Route pour la gestion des WebSockets
 	http.HandleFunc("/ws", handleConnections)
+	/*   CONTACT FILE
+	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "contact")
+	})
+	*/
 
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")

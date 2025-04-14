@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/contact">Contactez-nous</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+
+            <li class="meta-navigation-btn-seconnecter">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
+
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
+        </ul>
+
+    </header>
+
+
+    <!-- Contenu principal -->
+    <section>
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil.png" alt="fond profil">
+            </div>
+            <div class="card-avatar">
+                <img src="static/img/photoProfil.png" id="photoProfil" onclick="openPopupProfil()">
+            </div>
+
+            <!-- Pseudo et Bio -->
+            <p id="pseudo" class="pseudo">{{.Pseudo}}</p>
+            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
+
+            <div class="ConteneurProfil">
+                <h4>Bio</h4>
+                <p id="bio" class="bio">{{.Biography}}</p>
+            </div>
+
+
+            <!-- Régions Favorites -->
+            <!-- <div class="favorites-regions-container">
+                <h3 class="titre-favorite-region">Régions favorites</h3>
+                <div class="favorite-region">
+                    <div class="region-name">Auvergne-Rhône-Alpes</div>
+                    <div class="coeur-container">
+                        <img src="static/img/coeur.png" alt="Like" class="coeur" id="coeur-img">
+                    </div>
+                    <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes">
+                </div>
+            </div> -->
+
+            <h3 class="titre-favorite-region">Régions favorites</h3>
+            <div class="destinations-favorites">
+                <div class="destination-region-favorites">
+                    <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes" class="destination-image">
+                    <div class="destination-details">
+                        <div class="destination-region-name-favorites">Auvergne-Rhône-Alpes</div>
+                        <div class="destination-description-favorites">
+                            Soleil, mer et montagne.
+                        </div>
+                    </div>
+
+                    <div class="destination-coeur-container">
+                        <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="titre-favorite-region">Mes fils de discussion</h3>
+            <div class="discussion">
+                <div class="discussion-cree">
+                    <div class="discussion-cree-info">
+                        <img src="static/img/avatar/avatarHomme2.png" alt="" class="discussion-cree-info-profil">
+                        
+                        <div class="discussion-cree-info-texte">
+                            <p class="discussion-cree-info-titre">Je cherche un parc à Antibes</p>
+                            <p class="discussion-cree-info-nom">Matias Bouchenoire</p>
+                        </div>
+                    </div>                
+    
+                    <p class="discussion-cree-descriptif">J'habite à Antibes et j’aimerais me promener ce week-end, mais je ne connais pas de bons parcs dans le coin. Des suggestions ? Merci d’avance ! 😊</p>
+                    
+                    <div class="discussion-cree-chat">
+                        <img src="static/img/messager.png" alt="discussion">
+                        <p>152</p>
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+        </div>
+    </section>
+
+    
+<!-- Overlay sombre -->
+<div id="overlay-profil" class="overlay"></div>
+
+<!-- Pop-up pour modifier la photo de profil -->
+<div id="popup-profil" class="popup">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h1>Choisissez votre Avatar</h1>
+    <div class="imgAvatar">
+        <div class="femme">
+            <img src="../static/img/avatar/avatarFemme1.png">
+            <img src="../static/img/avatar/avatarFemme2.png">
+            <img src="../static/img/avatar/avatarFemme3.png">
+            <img src="../static/img/avatar/avatarFemme4.png">
+        </div>
+        <div class="homme">
+            <img src="../static/img/avatar/avatarHomme1.png">
+            <img src="../static/img/avatar/avatarHomme2.png">
+            <img src="../static/img/avatar/avatarHomme3.png">
+            <img src="../static/img/avatar/avatarHomme4.png">
+        </div>
+    </div>
+</div>
+
+
+<!-- Overlay sombre pour le pop-up de modification -->
+<div id="overlay-modif" class="overlay"></div>
+
+<!-- Fenêtre pop-up de modification -->
+<div id="popup-modif" class="popup-modif">
+    <img src="../static/img/fondAvatar.png" class="fondAvatar">
+    <h3>Modifier Profil</h3>
+    
+    <div class="modif">
+        <h4>Pseudo</h4>
+        <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
+
+        <h4>Bio</h4>
+        <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
+    </div>
+
+    <button onclick="sauverModifications()">Sauvegarder</button>
+</div>
+
+
+    <script src="static/script.js"></script>
+</body>
+</html>

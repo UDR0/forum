@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/contact">Contactez-nous</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+
+            <li class="meta-navigation-btn-seconnecter">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
+
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
+        </ul>
+
+    </header>
+
+    
+
+
+    <!-- Contenu principal -->
+    <section>
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher une destination..." id="search-input">
+            <button class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+        </div>
+
+        <!-- <h3 class="titre-description">Explorez la Provence-Alpes-Côte d'Azur</h3> -->
+
+        <!-- <div class="filPrincipal">
+            <div class="filPrincipal-region" data-link="/forum">
+                <img src="static/img/vieux-port.png" alt="Auvergne-Rhône-Alpes" class="filPrincipal-image">
+                <div class="filPrincipal-details">
+                    <div class="filPrincipal-name">Provence-Alpes-Côte d'Azur</div>
+                    <div class="filPrincipal-sous-name">Discussion principale</div>
+                    <div class="filPrincipal-nb-chat">
+                        <img src="static/img/messager.png" alt="discussion">
+                        <p>152</p>
+                    </div>
+                </div>
+
+                <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div>
+            </div>
+        </div> -->
+
+        <div class="discussion-principale">
+            <div class="discussion-cree">
+                <div class="discussion-cree-info">
+                    <img src="static/img/vieux-port.png" alt="" class="discussion-cree-info-profil">
+                    
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">Provence-Alpes-Côte d'Azur</p>
+                        <p class="discussion-cree-info-nom">MyTripy</p>
+                    </div>
+                </div>                
+
+                <p class="discussion-cree-descriptif">Partagez ici vos meilleures adresses, vos coins secrets ou vos questions sur la région PACA 🌞. </p>
+                
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>287</p>
+                </div>
+
+                <!-- <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div> -->
+            </div>
+        </div>
+
+        <!-- <div class="filPrincipal">
+            <div class="conteneurPhotoFilsPrincipal">
+                <h3 class="titreFilsPrincipal"> PROVENCE ALPES COTE D'AZUR </h3>
+                <img src="../static/img/vieux-port.png">
+            </div>
+            <div class="conteneurInfoPrincipale">
+                <div class="infoFilPrincipal">
+                    <p>Fils principal qui regroupe l'ensemble des départements de la région</p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="ajouterBtn">
+            <img src="../static/img/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
+        </div>
+
+        <div class="popupAjouterFil" id="popupAjouterFil">
+            <img src="/static/img/fondPopupFil.png">
+            <h3>Nouveau Fils</h3>
+            <input id="nomFil" placeholder="Entrez le Titre de votre nouveau Fil"> 
+            <div class="paramFil">
+                <h4>Region Selectionnée</h4>
+                <select class="menuDeroulantFils">
+                    <option>Département</option>
+                    <option>Département 1</option>
+                    <option>Département 2</option>
+                    <option>Département 3</option>
+                </select>
+            </div>
+            <button>Créer</button>
+        </div>
+
+        <!-- <div class="scroll-container">
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+
+            <div class="fil">
+                <div class="titreFil">Provence Alpes Cotes d'Azur</div>
+                <div class="infoFil">
+                    <p><strong>Créer par SaraDu06</strong></p>
+                    <p>2597 Messages</p>
+                </div>
+            </div>
+            
+        </div> -->
+
+        <div class="discussion">
+            <div class="discussion-cree">
+                <div class="discussion-cree-info">
+                    <img src="static/img/avatar/avatarHomme2.png" alt="" class="discussion-cree-info-profil">
+                    
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">Je cherche un parc à Antibes</p>
+                        <p class="discussion-cree-info-nom">Matias Bouchenoire</p>
+                    </div>
+                </div>                
+
+                <p class="discussion-cree-descriptif">J'habite à Antibes et j’aimerais me promener ce week-end, mais je ne connais pas de bons parcs dans le coin. Des suggestions ? Merci d’avance ! 😊</p>
+                
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>152</p>
+                </div>
+
+                <!-- <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div> -->
+            </div>
+
+            <div class="discussion-cree">
+                <div class="discussion-cree-info">
+                    <img src="static/img/avatar/avatarFemme1.png" alt="" class="discussion-cree-info-profil">
+                    
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">Des bons plans pour visiter Marseille en 2 jours ?</p>
+                        <p class="discussion-cree-info-nom">Sophie Lemoine</p>
+                    </div>
+                </div>                
+            
+                <p class="discussion-cree-descriptif">Je prévois un week-end à Marseille avec mon compagnon, et j’aimerais savoir ce qu’il faut absolument voir et où manger sans se ruiner 😄</p>
+                
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>89</p>
+                </div>
+            
+                <!-- <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div> -->
+            </div>            
+        </div>
+
+
+    </section>
+
+
+    <script src="static/script.js"></script>
+</body>
+</html>

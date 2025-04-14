@@ -241,3 +241,75 @@ function updateAvatar(avatarURL) {
     })
     .catch(error => console.error(error));
 }
+
+
+// Fonction pour sauvegarder les modifications et fermer le pop-up
+function updateProfile() {
+    const pseudoInput = document.getElementById('nouveauPseudo');
+    const bioInput = document.getElementById('nouvelleBio');
+    const pseudo = pseudoInput ? pseudoInput.value : null;
+    const bio = bioInput ? bioInput.value : null;
+
+    if (!pseudo || !bio) {
+        console.error("Pseudo ou bio manquant !");
+        return;
+    }
+
+    fetch('/updateProfile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pseudo: pseudo,
+            bio: bio
+        })
+    })
+    .then(response => {
+        console.log("Statut de la réponse :", response.status);
+
+        // Vérifiez si le statut est 204 ou si le corps est vide
+        if (response.status === 204) {
+            console.log("Pas de contenu retourné par le serveur.");
+            return {}; // Retourne un objet vide
+        }
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de la mise à jour du profil');
+        }
+
+        // Vérifiez si la réponse est JSON valide
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text); // Analysez le texte comme JSON
+            } catch (error) {
+                console.warn("Réponse non JSON reçue :", text);
+                return {}; // Retourne un objet vide si le parsing échoue
+            }
+        });
+    })
+    .then(data => {
+        console.log("Données reçues :", data);
+
+        // Mettre à jour les informations sur la page
+        const pseudoElement = document.getElementById('pseudo');
+        const bioElement = document.getElementById('bio');
+
+        if (pseudoElement) pseudoElement.innerText = pseudo;
+        if (bioElement) bioElement.innerText = bio;
+
+        // Fermer le pop-up
+        closePopupModif();
+    })
+    .catch(error => console.error("Erreur :", error));
+}
+
+// Écouter le clic sur le bouton "Sauvegarder"
+document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('save-button');
+    if (saveButton) {
+        saveButton.addEventListener('click', updateProfile);
+    } else {
+        console.error("Bouton 'Sauvegarder' introuvable !");
+    }
+});

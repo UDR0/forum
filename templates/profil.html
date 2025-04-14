@@ -163,6 +163,9 @@
 <div id="overlay-modif" class="overlay"></div>
 
 <!-- Fenêtre pop-up de modification -->
+<div id="overlay-modif" class="overlay" onclick="closePopupModif()"></div>
+
+<!-- Fenêtre pop-up de modification -->
 <div id="popup-modif" class="popup-modif">
     <h3>Modifier Profil</h3>
     <div class="modif">
@@ -173,65 +176,10 @@
         <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
     </div>
 
-    <button onclick="updateProfile()">Sauvegarder</button>
+    <!-- Bouton Sauvegarder -->
+    <button id="save-button">Sauvegarder</button>
 </div>
 
-<script>
-    // Fonction pour mettre à jour l'avatar
-    function updateAvatar(avatarURL) {
-        fetch('/updateProfile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                avatar: avatarURL
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour de l\'avatar');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            // Mettre à jour l'avatar sur la page
-            document.getElementById('photoProfil').src = avatarURL;
-        })
-        .catch(error => console.error(error));
-    }
-
-    // Fonction pour mettre à jour le pseudo et la bio
-    function updateProfile() {
-        const pseudo = document.getElementById('nouveauPseudo').value;
-        const bio = document.getElementById('nouvelleBio').value;
-
-        fetch('/updateProfile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                pseudo: pseudo,
-                bio: bio
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour du profil');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            // Mettre à jour les informations sur la page
-            document.getElementById('pseudo').innerText = pseudo;
-            document.getElementById('bio').innerText = bio;
-        })
-        .catch(error => console.error(error));
-    }
-</script>
     <script src="static/script.js"></script>
 </body>
 </html>

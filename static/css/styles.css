@@ -1590,3 +1590,18 @@ footer p {
 
 }
 
+/*////////////////// DROPDOWN ////////////////////////*/
+.dropdown {
+    border: 1px solid #ccc;
+    width: 300px;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }

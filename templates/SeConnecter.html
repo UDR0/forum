@@ -61,31 +61,41 @@
     </header>
 
     <!-- Conteneur Principale -->
+    <!-- Conteneur Principale -->
     <section>
-        <h3 class="titre-SeConnecter">Connecte-toi et explore le monde avec la communauté MyTripy</h3>
-    
-        <!-- Formulaire pour la connexion -->
-        <form action="/SeConnecter" method="POST">
-            <div class="ConteneurSeConnecter">
-                <h4>Pseudo</h4>
-                <div class="ConteneurPseudo">
-                    <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
-                    <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-                </div>
-    
-                <h4>Mot de passe</h4>
-                <div class="ConteneurMotDePasse">
-                    <input type="password" id="MotDePasse" name="password" placeholder="Votre mot de passe" required>
-                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
-                </div>
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil-3.png" alt="fond profil">
             </div>
-            <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
-            <!-- Bouton pour soumettre les identifiants -->
-            <button type="submit" class="btn-SeConnecter">Se connecter</button>
-        </form>
-    
-        <!-- Lien pour le mot de passe oublié -->
-        <a href="/mot-de-passe-oublie" class="mot-de-passe-oublie">Mot de passe oublié ?</a>
+
+            <div class="card-titre">
+                <h3 class="titre-SeConnecter">Connecte-toi</h3>
+                <p class="sous-titre-SeConnecter">Explore le monde avec la communauté MyTripy</p>
+            </div>
+            
+            <!-- Formulaire pour la connexion -->
+            <form action="/SeConnecter" method="POST">
+                <div class="ConteneurSeConnecter">
+                    <h4>Pseudo</h4>
+                    <div class="ConteneurPseudo">
+                        <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
+                        <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                    </div>
+        
+                    <h4>Mot de passe</h4>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="MotDePasse" name="password" placeholder="Votre mot de passe" required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+                </div>
+                <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
+                <!-- Bouton pour soumettre les identifiants -->
+                <button type="submit" class="btn-SeConnecter">Se connecter</button>
+            </form>
+        
+            <!-- Lien pour le mot de passe oublié -->
+            <a href="/mot-de-passe-oublie" class="mot-de-passe-oublie">Mot de passe oublié ?</a>
+        </div>
     </section>
     
 

@@ -6,20 +6,15 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/gorilla/sessions"  // go get github.com/gorilla/sessions
-	"github.com/gorilla/websocket" // go get github.com/gorilla/websocket
+	"github.com/gorilla/sessions" // go get github.com/gorilla/sessions
 )
 
 var (
-	store    = sessions.NewCookieStore([]byte("something-very-secret"))
-	upgrader = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	}
+	store = sessions.NewCookieStore([]byte("something-very-secret"))
 )
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
+
 	tmplPath := fmt.Sprintf("templates/%s.html", tmpl)
 	t, err := template.ParseFiles(tmplPath)
 	if err != nil {
@@ -76,8 +71,10 @@ func main() {
 
 	http.HandleFunc("/destinations", forum.AllRegions)
 
-	http.HandleFunc("/filsDiscussion", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "filsDiscussion", nil)
+	http.HandleFunc("/like", forum.LikeHandler)
+
+	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "forum", nil)
 	})
 
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -87,54 +84,22 @@ func main() {
 		forum.Logout(w, r)
 	})
 
-	http.HandleFunc("/search-suggestions", forum.SearchSuggestionsHandler)
+	http.HandleFunc("/search", forum.SearchSuggestionsHandler)
 
-	// Route pour ajouter un chat
-	http.Handle("/addChat", forum.AuthMiddleware(http.HandlerFunc(forum.AddChat)))
+	http.HandleFunc("/welcome", forum.FileDiscussion)
+	http.HandleFunc("/create-chat", forum.CreateChatHandler)
+	http.HandleFunc("/select-chat", forum.SelectChatHandler)
+	http.HandleFunc("/fetch-chats", forum.FetchChatsHandler)
 
-	// Route pour la gestion des WebSockets
-	http.HandleFunc("/ws", handleConnections)
-	/*   CONTACT FILE
-	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "contact")
-	})
-	*/
+	http.HandleFunc("/chat_messages", forum.FilMessagesHandler)
+	http.HandleFunc("/send-message", forum.SendMessageHandler)
+	http.HandleFunc("/fetch-messages", forum.FetchMessagesHandler)
+
+	http.HandleFunc("/region", forum.RegionHandler)
 
 	// Démarrer le serveur
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		fmt.Println("Erreur lors du lancement du serveur :", err)
-	}
-}
-
-func handleConnections(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	user := session.Values["user"]
-	if user == nil {
-		http.Error(w, "Utilisateur non connecté", http.StatusUnauthorized)
-		return
-	}
-
-	ws, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		fmt.Println("Erreur lors de la mise à niveau de la connexion :", err)
-		return
-	}
-	defer ws.Close()
-
-	for {
-		var msg map[string]interface{}
-		err := ws.ReadJSON(&msg)
-		if err != nil {
-			fmt.Println("Erreur lors de la lecture du message :", err)
-			break
-		}
-		fmt.Printf("Message reçu de %v : %v\n", user, msg)
-
-		err = ws.WriteJSON(msg)
-		if err != nil {
-			fmt.Println("Erreur lors de l'écriture du message :", err)
-			break
-		}
 	}
 }

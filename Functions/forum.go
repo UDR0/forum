@@ -212,7 +212,6 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 }
 
 // Page de profil pour afficher les informations utilisateur
-// Page de profil pour afficher les informations utilisateur
 func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -594,6 +593,7 @@ type UpdateProfileRequest struct {
 	Avatar string `json:"avatar"`
 }
 
+// Fonction pour mettre à jour les informations utilisateur dans la base de données
 func updateUserInDB(db *sql.DB, userID int, pseudo, bio, avatar string) error {
 	// Construire dynamiquement la requête SQL en fonction des champs renseignés
 	query := "UPDATE User SET"
@@ -618,20 +618,19 @@ func updateUserInDB(db *sql.DB, userID int, pseudo, bio, avatar string) error {
 	// Exécuter la requête SQL
 	result, err := db.Exec(query, params...)
 	if err != nil {
-		return fmt.Errorf("Erreur lors de l'exécution de la requête SQL : %v", err)
+		return err
 	}
 
 	// Vérifier combien de lignes ont été affectées
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("Erreur lors de la vérification des lignes affectées : %v", err)
+		return err
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("Aucune ligne mise à jour. Vérifiez si l'utilisateur avec ID %d existe.", userID)
+		return sql.ErrNoRows
 	}
 
-	fmt.Printf("Mise à jour réussie : %d ligne(s) affectée(s)\n", rowsAffected)
 	return nil
 }
 
@@ -647,9 +646,6 @@ func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Requête invalide", http.StatusBadRequest)
 		return
 	}
-
-	// Log des données reçues pour déboguer
-	fmt.Printf("Requête reçue : Pseudo=%s, Bio=%s, Avatar=%s\n", req.Pseudo, req.Bio, req.Avatar)
 
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -675,11 +671,14 @@ func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	// Mise à jour des informations dans la base de données
 	err = updateUserInDB(db, userID, req.Pseudo, req.Bio, req.Avatar)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Erreur lors de la mise à jour : %v", err), http.StatusInternalServerError)
+		if err == sql.ErrNoRows {
+			http.Error(w, "Aucune mise à jour effectuée", http.StatusBadRequest)
+		} else {
+			http.Error(w, "Erreur lors de la mise à jour", http.StatusInternalServerError)
+		}
 		return
 	}
 
 	// Répondre avec succès
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Profil mis à jour avec succès"})
 }

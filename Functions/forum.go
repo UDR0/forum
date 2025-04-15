@@ -40,23 +40,6 @@ func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 	}
 }
 
-// //////////////////////// HAS TO BE USED TO SAY WHEN MESSAGEES WAS SENT /////////////////////////////////////
-func timeAgo(t time.Time) string {
-	now := time.Now()
-	duration := now.Sub(t)
-
-	if duration < time.Minute {
-		return fmt.Sprintf("%d seconds ago", int(duration.Seconds()))
-	} else if duration < time.Hour {
-		return fmt.Sprintf("%d minutes ago", int(duration.Minutes()))
-	} else if duration < time.Hour*24 {
-		return fmt.Sprintf("%d hours ago", int(duration.Hours()))
-	} else {
-		days := int(duration.Hours() / 24)
-		return fmt.Sprintf("%d days ago", days)
-	}
-}
-
 // Regarde si l'utilisateur existe (ce l'ho già nell'altra pero non è uguale)
 func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
 	var emailExists, pseudoExists bool
@@ -331,6 +314,32 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	if err := t.Execute(w, data); err != nil {
 		http.Error(w, "Erreur lors de l'exécution du template : "+err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	type ProfileData struct {
+		Pseudo string `json:"pseudo"`
+		Bio    string `json:"bio"`
+	}
+
+	var data ProfileData
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Erreur de décodage JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Simulez la mise à jour (par exemple, en sauvegardant dans une base de données)
+	// Exemple : updateDatabase(data.Pseudo, data.Bio)
+
+	// Répondre avec un message de succès
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Profil mis à jour avec succès !"))
 }
 
 // deconessione dalla sessione, questo c'è ma non è uguale
@@ -626,6 +635,8 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch chats for the region...
+
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
@@ -633,38 +644,113 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT name, creator FROM chats WHERE region=?", region)
+	// Fetch main chat
+	queryMain := `SELECT 
+                      c.name AS chat_name, 
+                      COUNT(m.id) AS message_count, 
+                      c.descri, 
+                      r.REGION_IMG_URL
+                  FROM 
+                      chats c
+                  LEFT JOIN 
+                      messages m ON c.name = m.chat_name
+                  LEFT JOIN 
+                      Region r ON c.region = r.REGION_NAME
+                  WHERE 
+                      c.principal = TRUE 
+                      AND c.region = ?
+                  GROUP BY 
+                      c.name, c.descri, r.REGION_IMG_URL`
+	principal, err := db.Query(queryMain, region)
 	if err != nil {
 		http.Error(w, "Server error", http.StatusInternalServerError)
+		return
+	}
+	defer principal.Close()
+
+	type MainChat struct {
+		Name         string
+		MessageCount int
+		Descri       string
+		ImageURL     string
+	}
+
+	var mainChat MainChat
+	if principal.Next() {
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL)
+		if err != nil {
+			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "No main chat found", http.StatusNotFound)
+		return
+	}
+
+	// Fetch user chats
+	queryChats := `SELECT 
+                       c.name, 
+                       COUNT(m.id) AS message_count, 
+                       c.descri, 
+                       u.PHOTO_URL, 
+                       u.USERNAME
+                   FROM 
+                       chats c
+                   LEFT JOIN 
+                       messages m ON c.name = m.chat_name
+                   LEFT JOIN 
+                       User u ON c.creator = u.USERNAME
+                   WHERE 
+                       c.principal = FALSE 
+                       AND c.region = ?
+                   GROUP BY 
+                       c.name, c.descri, u.PHOTO_URL, u.USERNAME`
+	rows, err := db.Query(queryChats, region)
+	if err != nil {
+		http.Error(w, "Server error while fetching chats", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
 	var chats []struct {
-		Name    string
-		Creator string
+		Name         string
+		MessageCount int
+		Descri       string
+		PhotoURL     string
+		Creator      string
 	}
+
 	for rows.Next() {
 		var chat struct {
-			Name    string
-			Creator string
+			Name         string
+			MessageCount int
+			Descri       string
+			PhotoURL     string
+			Creator      string
 		}
-		if err := rows.Scan(&chat.Name, &chat.Creator); err != nil {
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator); err != nil {
+			log.Println("Error scanning chat data:", err)
 			continue
 		}
 		chats = append(chats, chat)
 	}
 
+	// Final data struct
 	data := struct {
 		Username string
 		Region   string
+		MainChat MainChat
 		Chats    []struct {
-			Name    string
-			Creator string
+			Name         string
+			MessageCount int
+			Descri       string
+			PhotoURL     string
+			Creator      string
 		}
 	}{
 		Username: username,
 		Region:   region,
+		MainChat: mainChat,
 		Chats:    chats,
 	}
 
@@ -695,7 +781,8 @@ func CreateChatHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	chatName := r.FormValue("chatname")
-	region := r.FormValue("region") // Prendi il valore della regione dal form
+	chatDescription := r.FormValue("description") // Retrieve the description
+	region := r.FormValue("region")
 	if chatName == "" || region == "" {
 		http.Error(w, "Chat name or region missing", http.StatusBadRequest)
 		log.Println("Chat creation failed: missing chat name or region.")
@@ -709,28 +796,29 @@ func CreateChatHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	_, err = db.Exec("INSERT INTO chats (name, creator, region) VALUES (?, ?, ?)", chatName, creator, region)
+	// Adjust the SQL to include the description field
+	_, err = db.Exec("INSERT INTO chats (name, creator, region, descri, principal) VALUES (?, ?, ?, ?,?)", chatName, creator, region, chatDescription, "FALSE")
 	if err != nil {
 		log.Printf("Chat creation failed: %v", err)
 		http.Error(w, "Chat creation failed", http.StatusInternalServerError)
 		return
 	}
 
-	log.Printf("Chat created successfully: %s in region %s by %s", chatName, region, creator)
+	log.Printf("Chat created successfully: %s in region %s by %s with description: %s", chatName, region, creator, chatDescription)
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
 // chiamato quando scegli un chat, salva il nome del chat dove vuoi andare e ridirige verso /chat_messages
 func SelectChatHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	chatName := r.FormValue("chatname")
+	chatName := r.URL.Query().Get("chatname") // Get chatname from query parameter
 	if chatName == "" {
 		http.Error(w, "Chat name missing", http.StatusBadRequest)
-		log.Println("Chat selection failed: missing chat name in POST body.")
+		log.Println("Chat selection failed: missing chat name in request.")
 		return
 	}
 
@@ -750,15 +838,14 @@ func SelectChatHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("Chatname stored in session: %s", chatName)
-	http.Redirect(w, r, "/chat_messages", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 // prende tutte le chat di una certa regione
 func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
-	region := r.URL.Query().Get("region") // Get the region from the query parameter
+	region := r.URL.Query().Get("region")
 	if region == "" {
 		http.Error(w, "Region is required", http.StatusBadRequest)
-		log.Println("Region not provided in the request.")
 		return
 	}
 
@@ -769,35 +856,115 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT name, creator FROM chats WHERE region=?", region) // Filter by region
+	// Fetch main chat
+	queryMain := `SELECT 
+                      c.name AS chat_name, 
+                      COUNT(m.id) AS message_count, 
+                      c.descri, 
+                      r.REGION_IMG_URL
+                  FROM 
+                      chats c
+                  LEFT JOIN 
+                      messages m ON c.name = m.chat_name
+                  LEFT JOIN 
+                      Region r ON c.region = r.REGION_NAME
+                  WHERE 
+                      c.principal = TRUE 
+                      AND c.region = ?
+                  GROUP BY 
+                      c.name, c.descri, r.REGION_IMG_URL`
+	principal, err := db.Query(queryMain, region)
+	if err != nil {
+		http.Error(w, "Server error", http.StatusInternalServerError)
+		return
+	}
+	defer principal.Close()
+
+	type MainChat struct {
+		Name         string
+		MessageCount int
+		Descri       string
+		ImageURL     string
+	}
+
+	var mainChat MainChat
+	if principal.Next() {
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL)
+		if err != nil {
+			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "No main chat found", http.StatusNotFound)
+		return
+	}
+
+	// Fetch user chats
+	queryChats := `SELECT 
+                       c.name, 
+                       COUNT(m.id) AS message_count, 
+                       c.descri, 
+                       u.PHOTO_URL, 
+                       u.USERNAME
+                   FROM 
+                       chats c
+                   LEFT JOIN 
+                       messages m ON c.name = m.chat_name
+                   LEFT JOIN 
+                       User u ON c.creator = u.USERNAME
+                   WHERE 
+                       c.principal = FALSE 
+                       AND c.region = ?
+                   GROUP BY 
+                       c.name, c.descri, u.PHOTO_URL, u.USERNAME`
+	rows, err := db.Query(queryChats, region)
 	if err != nil {
 		http.Error(w, "Server error while fetching chats", http.StatusInternalServerError)
-		log.Println("Error fetching chats for region:", region, err)
 		return
 	}
 	defer rows.Close()
 
 	var chats []struct {
-		Name    string
-		Creator string
+		Name         string
+		MessageCount int
+		Descri       string
+		PhotoURL     string
+		Creator      string
 	}
+
 	for rows.Next() {
 		var chat struct {
-			Name    string
-			Creator string
+			Name         string
+			MessageCount int
+			Descri       string
+			PhotoURL     string
+			Creator      string
 		}
-		if err := rows.Scan(&chat.Name, &chat.Creator); err != nil {
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator); err != nil {
 			log.Println("Error scanning chat data:", err)
 			continue
 		}
 		chats = append(chats, chat)
 	}
 
+	// Final data struct
+	data := struct {
+		MainChat MainChat
+		Chats    []struct {
+			Name         string
+			MessageCount int
+			Descri       string
+			PhotoURL     string
+			Creator      string
+		}
+	}{
+		MainChat: mainChat,
+		Chats:    chats,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(chats)
-	if err != nil {
-		log.Println("Error encoding chats to JSON:", err)
-		http.Error(w, "Error encoding chats", http.StatusInternalServerError)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		http.Error(w, "Error encoding data", http.StatusInternalServerError)
 	}
 }
 
@@ -832,7 +999,7 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		"SELECT sender, message, strftime('%H:%M', timestamp) FROM messages WHERE chat_name=? ORDER BY timestamp ASC",
+		"SELECT m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL FROM messages m LEFT JOIN User u ON m.sender = u.USERNAME WHERE m.chat_name = ? ORDER BY m.timestamp ASC;",
 		chatName,
 	)
 	if err != nil {
@@ -843,36 +1010,53 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
-		Sender    string
-		Message   string
-		Timestamp string
+		Sender      string
+		Message     string
+		TimeElapsed string // Contains calculated elapsed time
+		ImgUser     string
 	}
 	for rows.Next() {
-		var msg struct {
-			Sender    string
-			Message   string
-			Timestamp string
-		}
-		if err := rows.Scan(&msg.Sender, &msg.Message, &msg.Timestamp); err != nil {
+		var sender, message, timestamp, imgUser string
+		if err := rows.Scan(&sender, &message, &timestamp, &imgUser); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
-		messages = append(messages, msg)
+
+		// Calculate elapsed time
+		elapsedTime, err := formatElapsedTime(timestamp)
+		if err != nil {
+			log.Println("Error parsing timestamp:", err)
+			continue
+		}
+
+		messages = append(messages, struct {
+			Sender      string
+			Message     string
+			TimeElapsed string
+			ImgUser     string
+		}{
+			Sender:      sender,
+			Message:     message,
+			TimeElapsed: elapsedTime,
+			ImgUser:     imgUser,
+		})
 	}
 
 	data := struct {
 		ChatName string
 		Username string
 		Messages []struct {
-			Sender    string
-			Message   string
-			Timestamp string
+			Sender      string
+			Message     string
+			TimeElapsed string
+			ImgUser     string
 		}
 	}{
 		ChatName: chatName,
 		Username: username,
 		Messages: messages,
 	}
+	log.Printf("Messages passed to template: %+v", messages)
 
 	err = template.Must(template.ParseFiles("templates/chat_messages.html")).Execute(w, data)
 	if err != nil {
@@ -915,8 +1099,8 @@ func SendMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the current time for the timestamp
-	currentTime := time.Now().Format("15:04")
+	// Save current timestamp with full date and time
+	currentTime := time.Now().Format("2006-01-02 15:04:05") // Full timestamp format
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
@@ -925,7 +1109,6 @@ func SendMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Insert the message into the database
 	_, err = db.Exec(
 		"INSERT INTO messages (chat_name, sender, message, timestamp) VALUES (?, ?, ?, ?)",
 		chatName, username, message, currentTime,
@@ -963,7 +1146,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		"SELECT sender, message, strftime('%H:%M', timestamp) FROM messages WHERE chat_name=? ORDER BY timestamp ASC",
+		"SELECT m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL FROM messages m LEFT JOIN User u ON m.sender = u.USERNAME WHERE m.chat_name = ? ORDER BY m.timestamp ASC;",
 		chatName,
 	)
 	if err != nil {
@@ -974,21 +1157,36 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
-		Sender    string
-		Message   string
-		Timestamp string
+		Sender      string
+		Message     string
+		TimeElapsed string
+		ImgUser     string
 	}
 	for rows.Next() {
-		var msg struct {
-			Sender    string
-			Message   string
-			Timestamp string
-		}
-		if err := rows.Scan(&msg.Sender, &msg.Message, &msg.Timestamp); err != nil {
+		var sender, message, timestamp, imgUser string
+		if err := rows.Scan(&sender, &message, &timestamp, &imgUser); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
-		messages = append(messages, msg)
+
+		// Calculate elapsed time
+		elapsedTime, err := formatElapsedTime(timestamp)
+		if err != nil {
+			log.Println("Error parsing timestamp:", err)
+			continue
+		}
+
+		messages = append(messages, struct {
+			Sender      string
+			Message     string
+			TimeElapsed string
+			ImgUser     string
+		}{
+			Sender:      sender,
+			Message:     message,
+			TimeElapsed: elapsedTime,
+			ImgUser:     imgUser,
+		})
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -997,6 +1195,45 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error encoding messages to JSON:", err)
 		http.Error(w, "Error encoding messages", http.StatusInternalServerError)
 	}
+}
+
+func formatElapsedTime(input string) (string, error) {
+	// Parse the input time string
+	layout := "2006-01-02 15:04:05"
+	inputTime, err := time.Parse(layout, input)
+	if err != nil {
+		return "", err
+	}
+
+	// Get the current time
+	currentTime := time.Now()
+
+	// Calculate the difference
+	duration := currentTime.Sub(inputTime)
+
+	// Handle specific cases
+	years := int(duration.Hours() / (24 * 365))
+	if years > 0 {
+		return fmt.Sprintf("%d ans", years), nil
+	}
+
+	months := int(duration.Hours() / (24 * 30))
+	if months > 0 {
+		return fmt.Sprintf("%d mois", months), nil
+	}
+
+	days := int(duration.Hours() / 24)
+	if days > 0 {
+		return fmt.Sprintf("%dj", days), nil
+	}
+
+	hours := int(duration.Hours())
+	if hours > 0 {
+		return fmt.Sprintf("%dh", hours), nil
+	}
+	timeStr := inputTime.Format("15:04")
+	// Default case if none of the above applies
+	return timeStr, nil
 }
 
 // //////////////////////////////////////// REGION HANDLER ///////////////////////////////////////////////

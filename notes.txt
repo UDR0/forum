@@ -1,13 +1,14 @@
--prendere le info della biografia e cambiare le info del sql (faro questo weekend o domani con la searchbar) // in teoria
 -list for liked regions and likes vengono salvati ma non si ricorda sulla pagina html / torna bianco quando ricarico la pagina
 -fare in modo che puoi lickare solo se sei connesso o che i cuoi appaiono solo se sei connesso
 -error of the fetch each in the js, cannot be null
-i pulsanti // in teoria
-searchbar // inteoria
+-quando non sei connesso puoi accedere ai chat ma non alle discussioni
+
+prendere le info della biografia e cambiare le info del sql (faro questo weekend o domani con la searchbar) // in teoria
 
 
-<<<<<<<<<<<
-photo, titre file, description, pseudo, conteur messages dans ce chat 
+<<<<<<<<<<< fatto pero manca registrare il chat nella database
+photo, titre file/, description/, pseudo/, compteur messages dans ce chat 
 photo, nom, heure, message 
 >>>>>>>>>>>
 
+likes, will, sam, 

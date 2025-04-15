@@ -75,7 +75,6 @@ header {
 
 
 
-
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
     background-color: transparent; /* Couleur du fond du bouton */
@@ -103,6 +102,54 @@ header {
     background-color: #64d6df;
     border: 1px solid #64d6df;
 }
+
+
+
+
+
+
+/* ######################## Header juste le X ######################## */
+.header-chp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #fff;
+    /* box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4); */
+}
+
+
+.sortir {
+    margin-left: auto;
+    background-color: transparent; /* Couleur du fond du bouton */
+    border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
+}
+
+/* Image du menu burger */
+.sortir img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Effet de survol pour le bouton */
+.sortir:hover {
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
+}
+
+
+
 
 
 
@@ -215,7 +262,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre floue */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     /*transform: rotate(-4deg);  Rotation de -3 degrés */
     /*display: inline-block;  Pour éviter que la rotation affecte le flux du texte */
     /*padding: 5px 20px;  Espacement autour du texte */
@@ -612,6 +659,8 @@ section h2 {
     height: auto;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: 0.3s box-shadow;
+    cursor: pointer;
 }
 
 .description img {
@@ -761,6 +810,7 @@ section h2 {
     margin-right: auto;
     width: 90%;
     margin-top: 15px;
+    margin-bottom: 20px;
     color: #026d90;
     text-decoration: none;
     font-size: 14px;
@@ -791,6 +841,10 @@ section h2 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+.btn-recevoir-lien {
+    margin-bottom: 20px;
+}
+
 /* Boutons hover effect */
 .btn-SeConnecter:hover, .btn-CreerCompte:hover, .btn-recevoir-lien:hover {
     background-color: #76C893;
@@ -811,18 +865,31 @@ section h2 {
 }
 
 .photo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    margin-top: 6%;
-    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    top: calc(20% - 55px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.photoProfil {
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
 }
 
 .changerAvatar {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 12%;
     text-align: center;
     width: 90%;
     color: #026d90;
@@ -837,27 +904,21 @@ section h2 {
     text-decoration: underline;
 }
 
-.photoProfil {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 1px solid black;
-    cursor: pointer;
-}
-
 /* Correction pour s'assurer que le pop-up de profil est visible */
 .fondAvatar {
     top: 0px;
     left: 0px;
     width: 100%;
+    height: 100%;
     position: fixed;
-    z-index: -1; /* Laisser cette valeur mais s'assurer que le pop-up a un z-index supérieur */
+    z-index: -1;
+    object-fit: cover;
 }
 
 /* Style général pour le pop-up */
 .popup {
     display: none;
-    position: fixed; /* Utiliser fixed pour qu'il reste visible même en scrollant */
+    position: fixed; /* Pour qu'il reste visible même en scrollant */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -865,9 +926,10 @@ section h2 {
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    width: 90%;  /* Tu peux ajuster la largeur ici */
+    width: 90%;
     max-width: 600px;  /* Limite de la largeur du pop-up */
     z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
+    overflow: hidden;
 }
 
 .popup h1 {
@@ -894,7 +956,7 @@ section h2 {
 .card {
     position: relative;
     width: 100%;
-    height: 650px;
+    height: auto;
     display: flex;
     flex-direction: column;
     /* align-items: center; */
@@ -924,7 +986,7 @@ section h2 {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    top: calc(20% - 55px);
+    top: calc(15% - 60px);
     left: 50%;
     transform: translateX(-50%);
 }
@@ -988,6 +1050,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     margin-top: 10%;
+    margin-bottom: 20px;
     font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
     text-align: center;
     color: #000;
@@ -1116,10 +1179,11 @@ section h2 {
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: 0.3s box-shadow;
     cursor: pointer;
     text-align: left;
 }
+
 
 
 
@@ -1192,15 +1256,19 @@ section h2 {
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:0.3s box-shadow;
     cursor: pointer;
     text-align: left;
 }
 
+
 .destination-image {
     width: 40%;
     height: 150px;
+    object-fit: cover;
+    transition: width 0.3s ease;
 }
+
 
 .destination-details {
     flex: 1;
@@ -1210,7 +1278,8 @@ section h2 {
     font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 600;
-    width: 70%;
+    width: 75%;
+    /* white-space: nowrap; */
 }
 
 .destination-description {
@@ -1255,7 +1324,7 @@ section h2 {
 
 /* ######################## Page : Fils de Discussion ######################## */
 
-.titreFilRegion {
+/* .titreFilRegion {
     margin-top: 5%;
     font-size: 130%;
 }
@@ -1312,11 +1381,12 @@ section h2 {
     width: auto;
     text-align: center;
     font-weight: normal;
-}
+} */
+
+
 
 .ajouterBtn img{
-    width: 10%;
-    margin-top: 4%;
+    width: 40px;
     cursor: pointer;
 }
 
@@ -1327,6 +1397,8 @@ section h2 {
     justify-content: center;
     position: relative;
     width: 95%;
+    margin-top: 1.5%;
+    margin-bottom: 10px;
     border-radius: 25px;
     margin-left: auto;
     margin-right: auto;
@@ -1337,13 +1409,14 @@ section h2 {
     position: relative;
     width: 95%;
     border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.popupAjouterFil h3,.paramFil, .popupAjouterFil input, .popupAjouterFil button{
+.popupAjouterFil h3,.paramFil, .nomFil, .descriptionFil, .popupAjouterFil button{
     position: absolute;
     text-shadow: none !important;
     margin: 0px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 .popupAjouterFil h3 {
@@ -1351,20 +1424,32 @@ section h2 {
     margin-top: 5%;
 }
 
-.popupAjouterFil input{
-    font-size: 80%;
+.nomFil{
+    font-size: 80% !important;
     color: #000000;
     margin-left: auto;
     margin-right: auto;
-    width: 80%;
-    top : 33%;
+    width: 80% !important;
+    top : 25%;
     font-weight: bold;
+    font-family: "Open Sans", sans-serif !important;
+}
+
+.descriptionFil{
+    font-size: 80% !important;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80% !important;
+    top : 43%;
+    font-weight: bold;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 .paramFil {
     display: flex;
     flex-wrap: wrap;
-    top:56%;
+    top:62%;
     width: 80%;
     gap : 3%;
     align-items: center;
@@ -1396,25 +1481,26 @@ section h2 {
 }
 
 .popupAjouterFil button{
-    top:71%;
+    top:77%;
     padding: 2%;
     margin-top: 2%;
     width: 48%;
 }
 
-.scroll-container {
+/* .scroll-container {
     margin-left: auto;
     margin-right: auto;
     display: flex;
     flex-direction: column;
     width:90%;
+    margin-top: 1.5%;
     height: 500px;
     overflow-y: auto;
-    padding: 10px;
+
 }
 
 .fil {
-    margin-top: 3%;
+    margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
     background-color: #eeeeee;
@@ -1446,81 +1532,323 @@ section h2 {
     white-space: nowrap;
     font-weight: normal;
     margin-bottom: 2%;
+} */
+
+.discussion-principale {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 9%;
+    width: 100%;
 }
+
+
+/* Conteneur principal de la discussion */
+.discussion {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Section de la discussion */
+.discussion-cree {
+    font-family: Sen, Verdana, Arial, Helvetica, sans-serif;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    width: 90%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    text-align: left;
+    align-items: flex-start;
+}
+
+.discussion-cree-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.discussion-cree-info-texte {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.discussion-cree-info-profil {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #000;
+}
+
+.discussion-cree-info-titre {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin: 0;
+}
+
+.discussion-cree-info-nom {
+    margin-top: 0px;
+    font-size: 12px;
+    color: #777;
+}
+
+.discussion-cree-descriptif {
+    font-size: 14px;
+    color: #000;
+    text-align: left;
+}
+
+.discussion-cree-chat {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* aligne le contenu à droite */
+    margin-top: 10px;
+    gap: 4px;
+    border: #777 1px solid;
+    border-radius: 25px;
+    padding: 5px;
+}
+
+.discussion-cree-chat img {
+    width: 11px;
+    height: 11px;
+}
+
+.discussion-cree-chat p {
+    font-size: 12px;
+    color: #777;
+}
+
+
+
+
 
 /* ######################## Page : Forum ######################## */
 
 .allPosts {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 10px;
-    overflow-y: auto;
-    height: 66vh;
+    overflow-y: scroll;
+    height: auto;
+    max-height: 75vh;
+    scrollbar-width: none;
+    border-bottom: 0.4vh solid #D9D9D9;
 }
 
 .post {
-    background-color: #D9D9D9;
+    background-color: #ffffff;
+    border: 0.4vh solid #D9D9D9;
+    border-radius: 25px;
     width: 95%;
-    box-sizing: border-box;
-}
-
-.enterPost {
-    position: fixed;
-    bottom: 0%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #D9D9D9;
-    border-radius: 20px;
-    padding: 1%;
-    width: 95%;
-}
-
-.conainerWritePost {
-    border-radius: 20px;
-    background-color: #FFF;
-}
-
-.inputPost {
-    height: auto; 
-    margin-top: 2%;
-    width: 94%;
-    border: none;
-    border-radius: 5px;
-    padding: 2%;
-    overflow: hidden;
-    resize: none;
-    box-sizing: border-box;
-    line-height: 1.4;
-    font-family: "Open Sans", sans-serif;
-    font-weight: bold;
-}
-
-.gras, .italic, .souligne, .texteBarre {
-    width: 7%;
-    padding: 1%;
-    transition: 0.3s background-color;
-    border-radius: 100%;
-}
-
-.gras:hover, .italic:hover, .souligne:hover, .texteBarre:hover {
-    background-color: #D9D9D9;
-    border-radius: 100%;
-    padding: 1%;
+    margin-bottom: 0;
+    margin-bottom: 2.5%;
+    margin-top: 2.5%;
+    position: relative;
+    z-index: 5;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
+    transition: 0.3s box-shadow;
     cursor: pointer;
 }
 
-.gras {
+.post:hover {
+    box-shadow: 0 4px 8px rgba(60, 60, 60, 0.5);
+}
+
+.infoPost {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5%;
+}
+
+.infoPost img {
+    width: 17%;
+    height: auto;
+    object-fit: cover;
+    margin: 0px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.txtInfoPost {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    margin-left: 3%;
+}
+
+.txtInfoPost h4 {
+    font-size: 1.8vh;
+    color: #777;
+    font-weight: normal;
+}
+
+.message {
+    margin: 5%;
+    text-align: justify;
+    width: 90%;
+}
+
+/* .interactionPost {
+    margin-right: 5%;
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1%;
+    margin-bottom: 1%;
+}
+
+.iconLikePost{
+    width: 7%;
+} */
+
+/* .iconCommentairePost {
+    margin-left: 74%;
+}
+
+.commentaires {
+    display: none;
+    background-color: #D9D9D9;
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -5px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 2%;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    max-height: 50vh;
+}
+
+.commentaire {
+    background-color: #ffffff;
+    width: 93%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.infoCom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.infoCom img {
+    position: absolute;
+    top: 5%;
+    width: 8%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 0px;
+    border: none;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.txtInfoCom {
+    position: absolute;
+    top: 5%;
+    left: 13%;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    margin-left: 3%;
+    margin-top: 5%;
+}
+
+.iconLikeCom {
+    position:absolute;
+    right: 5%;
+    top: 5%;
+    width: 7%;
+    height: auto;
+    object-fit: cover;
+    margin-top: 5%;
+    cursor: pointer;
+}
+
+.messageCom {
+    margin-top: 15%;
+    width: 90%;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.messageCom p{
+    font-size: 2vh;
+    text-align: justify;
+    margin: 5%;
+} */
+
+.conainerWritePost {
+    position: fixed;
+    bottom: 4%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 95%;
+    border-radius: 25px;
+    border: 0.4vh solid #D9D9D9;
+    background-color: #FFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2%;
+    z-index: 999;
+    justify-content: space-between;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.inputPost {
+    height: 1.5em;
+    width: 85%;
+    border: none;
+    outline: none;
+    border-radius: 5px;
     margin-left: 2%;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 1%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    resize: none;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(0, 0, 0);
 }
 
 .iconSend {
-    width: 8%;
-    height: auto;
-    background-color: #FFF;
-    border-radius: 100%;
-    margin-left: 50%;
+    width: 10%;
+    object-fit: contain;
     cursor: pointer;
 }
 
@@ -1531,56 +1859,166 @@ section h2 {
 
 
 /* ######################## Footer ######################## */
-footer {
-    margin-top: 20%;
-    background-color: #1F5A89;
-    color: white;
-    padding: 20px 0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-.conteneurFooter {
+.footer {
+    background-color: #f8f8f8;
+    padding: 20px 15px;
+    margin-top: 25%;
+    font-family: 'Sen', sans-serif;
+    font-size: 14px;
+    color: #333;
+    border-top: 1px solid #ddd;
+  }
+  
+  .footer-container {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.conteneurFooter div {
-    flex: 1;
-    padding: 2px;
-    
-}
-
-footer h4 {
-    font-size: 15px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .footer-section h4 {
+    font-size: 16px;
+    font-weight: 600;
     margin-bottom: 10px;
-}
-
-footer p {
-    margin: 10px 0;
-    font-size: 10px;
-}
-
-.nosReseaux img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.nosReseaux div {
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-section ul li a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .footer-section ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-socials {
     display: flex;
+    gap: 12px;
+  }
+  
+  .footer-socials img {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .footer-socials img:hover {
+    transform: scale(1.2);
+  }
+
+
+
+
+/* ######################## Mentions Legales ######################## */
+.mentions-legales {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin: 5px 0;
+    width: 100%;
 }
 
-.mentions {
+.mentions-legales h1 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 15px;
+    /* background-color: #e2e2e2;
+    width: 100%;
+    padding: 20px; */
+    /* border-bottom: #777 1px solid; */
+}
+
+.mentions-legales h3 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 15px;
+    width: 90%;
+}
+
+.mentions-legales p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: left;
+    margin-top: 5px;
+    width: 90%;
+    border-bottom: #777 1px solid; 
+    padding-bottom: 25px;
+}
+  
+
+/* ######################## À Propos ######################## */
+.apropos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.apropos h1 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #000;
+    text-align: center;
     margin-top: 20px;
-    padding-top: 10px;
-    font-size: 10px;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.apropos h3 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 20px;
+    border-bottom: 2px solid #777;
+    text-shadow: none;
+    /* margin-left: 5%; */
+    width: 90%;
+}
+
+.apropos p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: justify;
+    margin-top: 10px;
+    width: 90%;
+    line-height: 1.6;
+    margin-bottom: 3%;
+}
+
+.apropos ul {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: left;
+    margin-top: 10px;
+    width: 90%;
+    padding-left: 10%;
+    list-style-type: disc;
+}
+
+.apropos ul li {
+    margin-top: 5px;
 }
 
 
@@ -1589,6 +2027,7 @@ footer p {
 @media (max-width: 768px) {
 
 }
+
 
 /*////////////////// DROPDOWN ////////////////////////*/
 .dropdown {

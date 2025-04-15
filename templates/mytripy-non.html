@@ -185,8 +185,7 @@
         <h3 class="titre-popular-region">Régions populaires</h3>
         <div class="destinations-popular">
             {{range .Regions}}
-            <a href="/region?name={{.RegionName}}">
-                <div class="destination-region-popular">
+                <div class="destination-region-popular"  onclick="selectRegion('{{.RegionName}}')">
                     <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
                     <div class="destination-details">
                         <div class="destination-region-name">{{.RegionName}}</div>
@@ -197,7 +196,6 @@
                         <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
                     </div>
                 </div>
-            </a>
             {{end}}
         </div>
 
@@ -264,7 +262,21 @@
         <h4 class="mentions">Contacts | Mentions Légales | Modération | Politique de Confidentialité | Cookies </h4>
     </footer>
 
-   
+    <script>
+        function selectRegion(regionName) {
+            console.log(`You clicked on region: ${regionName}`); // Debugging
+            fetch(`/region?name=${regionName}`, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(`Region ${regionName} successfully selected`); // Debugging
+                        window.location.href = "/welcome";
+                    } else {
+                        console.error("Failed to select region:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting region:", error));
+        }
+    </script>
 </body>
 <script src="static/script.js"></script>
 

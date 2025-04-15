@@ -68,6 +68,7 @@ func main() {
 	})
 
 	http.HandleFunc("/profil", forum.ProfilPage)
+	http.HandleFunc("/updateProfile", forum.UpdateProfile)
 
 	http.HandleFunc("/destinations", forum.AllRegions)
 

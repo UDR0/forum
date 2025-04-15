@@ -1,74 +1,245 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
-    <div class="container">
-        
-        <h2>Chats for {{.Region}}</h2>
-        <ul id="chat-list">
-            {{range .Chats}}
-            <li>
-                <form action="/select-chat" method="POST" style="display: inline;">
-                    <input type="hidden" name="chatname" value="{{.Name}}">
-                    <button type="submit">{{.Name}} ({{.Creator}})</button>
-                </form>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
             </li>
-            {{else}}
-            <p>No chats available in {{.Region}}. Create one below!</p>
-            {{end}}
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/contact">Contactez-nous</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+
+            <li class="meta-navigation-btn-seconnecter">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
+
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
         </ul>
 
-        <h2>Create a New Chat</h2>
-        <form id="createChatForm" action="/create-chat" method="post">
-            <input type="text" name="chatname" placeholder="Enter chat name" required>
-            <input type="hidden" name="region" value="{{.Region}}">
-            <button type="submit">Create Chat</button>
-        </form>
-    </div>
+    </header>
+
+    
+
+
+    <!-- Contenu principal -->
+    <section>
+        <!-- Barre de recherche  (non so se metterla perché cerca le regioni soltanto non i chat, oppure faccio in modo che cerchi i post quando sono su questa regione)-->
+        <div class="search-bar">
+            <input 
+                type="text" 
+                placeholder="Rechercher une destination..." 
+                id="searchBar" 
+                oninput="filterOptions()">
+            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+        </div>
+        <div id="dropdown" class="dropdown"></div>
+
+
+        <div class="discussion-principale">
+            <div class="discussion-cree" onclick="selectChat('{{.MainChat.Name}}')">
+                <div class="discussion-cree-info">
+                    <img src="{{.MainChat.ImageURL}}" alt="" class="discussion-cree-info-profil">
+                    
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">{{.MainChat.Name}}</p>
+                        <p class="discussion-cree-info-nom">MyTripy</p>
+                    </div>
+                </div>                
+
+                <p class="discussion-cree-descriptif">{{.MainChat.Descri}}</p>
+                
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>{{.MainChat.MessageCount}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ajouterBtn">
+            <img src="../static/img/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
+        </div>
+        <div class="popupAjouterFil" id="popupAjouterFil">
+            <img src="/static/img/fondPopupFil.png">
+            <h3>Nouveau Fils</h3>
+            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil" required> 
+            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil" required> 
+            <div class="paramFil"> <h4>{{.Region}}</h4> </div>
+            <button onclick="createChat()">Créer</button>
+        </div>
+<!--       
+         <div class="popupAjouterFil" id="popupAjouterFil">
+            <img src="/static/img/fondPopupFil.png">
+            <h3>Nouveau Fils</h3>
+            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil"> 
+            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil"> 
+            <div class="paramFil">
+                <h4>Region Selectionnée</h4>
+                <select class="menuDeroulantFils">
+                    <option>Département</option>
+                    <option>Département 1</option>
+                    <option>Département 2</option>
+                    <option>Département 3</option>
+                </select>
+            </div>
+            <button>Créer</button>
+        </div>
+    -->
+        <div class="discussion">
+            {{range .Chats}}
+            <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
+                <div class="discussion-cree-info">
+                    <img src="{{.PhotoURL}}" alt="user photo" class="discussion-cree-info-profil">
+                    
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">{{.Name}}</p>
+                        <p class="discussion-cree-info-nom">{{.Creator}}</p>
+                    </div>
+                </div>                
+
+                <p class="discussion-cree-descriptif">{{.Descri}}</p>
+                
+                <div class="discussion-cree-chat">
+                    <img src="static/img/messager.png" alt="discussion">
+                    <p>{{.MessageCount}}</p>
+                </div>
+
+                <!-- <div class="destination-coeur-container">
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                </div> -->
+            </div>
+            {{else}}
+            <p>No chats available in {{.Region}}. Create one below!</p>
+            {{end}}   
+        </div>
+
+
+    </section>
 
     <script>
         function fetchChats(region) {
-    fetch(`/fetch-chats?region=${region}`)
-        .then(response => response.json())
-        .then(chats => {
-            const chatList = document.getElementById("chat-list");
-            chatList.innerHTML = ""; // Clear current chats
-
-            if (!Array.isArray(chats) || chats.length === 0) {
-                // Handle the case where no chats are available
-                const noChatsMessage = document.createElement("p");
-                noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
-                chatList.appendChild(noChatsMessage);
-                return;
+            fetch(`/fetch-chats?region=${region}`)
+                .then(response => response.json())
+                .then(chats => {
+                    const chatList = document.getElementById("chat-list");
+                    chatList.innerHTML = ""; // Clear current chats
+    
+                    if (!Array.isArray(chats) || chats.length === 0) {
+                        const noChatsMessage = document.createElement("p");
+                        noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
+                        chatList.appendChild(noChatsMessage);
+                        return;
+                    }
+    
+                    chats.forEach(chat => {
+                        const listItem = document.createElement("li");
+                        const button = document.createElement("button");
+    
+                        button.textContent = `${chat.Name} (${chat.Creator})`;
+                        button.addEventListener("click", () => {
+                            selectChat(chat.Name); // Function for handling chat selection
+                        });
+    
+                        listItem.appendChild(button);
+                        chatList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error("Error fetching chats:", error));
+        }
+    
+        function selectChat(chatName) {
+    fetch(`/select-chat?chatname=${chatName}`)
+        .then(response => {
+            if (response.ok) {
+                window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
+            } else {
+                console.error("Failed to select chat:", response.statusText);
             }
-
-            // If chats are available, display them
-            chats.forEach(chat => {
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `<form action="/select-chat" method="POST" style="display: inline;">
-                    <input type="hidden" name="chatname" value="${chat.Name}">
-                    <button type="submit">${chat.Name} (${chat.Creator})</button>
-                </form>`;
-                chatList.appendChild(listItem);
-            });
         })
-        .catch(error => console.error("Error fetching chats:", error));
+        .catch(error => console.error("Error selecting chat:", error));
+}
+
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchChats("{{.Region}}");
+        });
+
+        function createChat() {
+    const chatTitle = document.getElementById("chatTitle").value.trim();
+    const chatDescription = document.getElementById("chatDescription").value.trim(); // Fetch description
+    const region = document.getElementById("regionField").value;
+
+    if (!chatTitle || !region) {
+        alert("Le titre et la région sont obligatoires !");
+        return;
+    }
+
+    // Send data via POST
+    fetch("/create-chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `chatname=${encodeURIComponent(chatTitle)}&description=${encodeURIComponent(chatDescription)}&region=${encodeURIComponent(region)}`
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = "/welcome"; // Redirect to welcome page
+        } else {
+            console.error("Failed to create chat:", response.statusText);
+            alert("Échec de la création du chat. Veuillez réessayer !");
+        }
+    })
+    .catch(error => {
+        console.error("Error creating chat:", error);
+        alert("Une erreur s'est produite lors de la création du chat.");
+    });
 }
 
 
-
-        // Dynamically fetch chats for the current region
-        document.addEventListener("DOMContentLoaded", function () {
-            fetchChats("{{.Region}}"); // Pass the region dynamically from Go template
-        });
     </script>
-
+    <script src="static/script.js"></script>
 </body>
-
 </html>

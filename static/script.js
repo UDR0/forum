@@ -7,7 +7,53 @@ burgerMenu.addEventListener("click", () => {
     navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
 });
 
+document.querySelectorAll(".destination-region-popular", ".filPrincipal-region").forEach((card) => {
+    card.addEventListener("click", function () {
+        const targetUrl = card.getAttribute("data-link");
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        }
+    });
+});
 
+document.querySelectorAll('.destination-coeur-container').forEach(container => {
+    container.addEventListener("click", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const img = this.querySelector('.destination-coeur');
+        const regionName = this.getAttribute('data-region'); // Get region name
+        
+        // Determine liked status
+        const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
+        
+        // Toggle heart icon
+        if (liked) {
+            img.src = 'static/img/coeur_rouge.png'; // Change to red heart
+            console.log(`Liked region: ${regionName}`);
+        } else {
+            img.src = 'static/img/coeur.png'; // Change back to normal heart
+            console.log(`Unliked region: ${regionName}`);
+        }
+
+        // Send data to the server
+        fetch('/like', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ region: regionName, liked }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`Server response:`, data); // Log server's response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
+        });
+    });
+});
+
+/*
 document.querySelectorAll('.destination-coeur-container').forEach(container => {
     container.addEventListener('click', function () {
         const img = this.querySelector('.destination-coeur');
@@ -44,7 +90,6 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
 });
 
 
-
 // Gestion des avatars dans le pop-up de profil
 document.addEventListener("DOMContentLoaded", function () {
     const avatars = document.querySelectorAll(".imgAvatar img"); // Select all avatar images
@@ -69,7 +114,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+*/
 
+// Gestion des avatars dans le pop-up de profil
+document.addEventListener("DOMContentLoaded", function () {
+    const avatars = document.querySelectorAll(".imgAvatar img");
+    const photoProfil = document.getElementById("photoProfil");
+
+    avatars.forEach(avatar => {
+        avatar.addEventListener("click", function () {
+            // Change l'image de profil
+            photoProfil.src = this.src;
+            closePopupProfil(); // Ferme le pop-up de profil après sélection
+        });
+    });
+});
 
 // ------------------- Profil ---------------------------//
 
@@ -82,7 +141,6 @@ function openPopupProfil() {
 
 // Function to close the pop-up for the profile photo
 function closePopupProfil() {
-    // CHANGED: Fixed invalid "null" to "none"
     document.getElementById("overlay-profil").style.display = "none";
     document.getElementById("popup-profil").style.display = "none";
 }
@@ -109,11 +167,35 @@ function sauverModifications() {
     const nouveauPseudo = document.getElementById("nouveauPseudo").value;
     const nouvelleBio = document.getElementById("nouvelleBio").value;
 
+    // Mettre à jour l'affichage local
     document.getElementById("pseudo").innerText = nouveauPseudo;
     document.getElementById("bio").innerText = nouvelleBio;
 
+    // Envoyer les données au serveur
+    fetch('/updateProfile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pseudo: nouveauPseudo,
+            bio: nouvelleBio
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Mise à jour réussie !");
+        } else {
+            console.error("Erreur lors de la mise à jour.");
+        }
+    })
+    .catch(error => {
+        console.error("Erreur de connexion :", error);
+    });
+
     closePopupModif();
 }
+
 
 // ------------------- Pop-up for Additional Features ---------------------------//
 

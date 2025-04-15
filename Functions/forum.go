@@ -38,39 +38,65 @@ func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 }
 
 func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
-	var emailExists, pseudoExists bool
-	var hashedEmail string
+	var emailInDB string
+	var pseudoExists bool
 	var id int
 
 	// Étape 1 : Vérifier l'existence de l'e-mail
-	rows, err := db.Query("SELECT EMAIL FROM User")
-	if err != nil {
+	log.Println("Vérification de l'email dans la base de données...")
+	err := db.QueryRow("SELECT EMAIL FROM User WHERE EMAIL = ?", email).Scan(&emailInDB)
+	if err == nil {
+		if emailInDB == email {
+			log.Println("L'email existe :", emailInDB)
+		}
+	} else if err == sql.ErrNoRows {
+		log.Println("Email non trouvé.")
+	} else {
+		log.Println("Erreur lors de la vérification de l'email :", err)
 		return false, false, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(&hashedEmail)
-		if err != nil {
-			return false, false, err
-		}
-
-		// Utiliser bcrypt pour comparer l'e-mail fourni avec le hash stocké
-		if bcrypt.CompareHashAndPassword([]byte(hashedEmail), []byte(email)) == nil {
-			emailExists = true
-			break
-		}
 	}
 
 	// Étape 2 : Vérifier l'existence du pseudo
+	log.Println("Vérification du pseudo dans la base de données...")
 	err = db.QueryRow("SELECT rowid FROM User WHERE USERNAME = ?", pseudo).Scan(&id)
 	if err == nil {
 		pseudoExists = true
-	} else if err != sql.ErrNoRows {
+		log.Println("Le pseudo existe :", pseudoExists)
+	} else if err == sql.ErrNoRows {
+		log.Println("Pseudo non trouvé.")
+	} else {
+		log.Println("Erreur lors de la vérification du pseudo :", err)
 		return false, false, err
 	}
 
-	return emailExists, pseudoExists, nil
+	return emailInDB != "", pseudoExists, nil
+}
+
+func GetUserDetails(db *sql.DB, email, pseudo string) (bool, bool, string, string, error) {
+	var emailInDB, pseudoInDB string
+	var emailExists, pseudoExists bool
+
+	// Vérifier l'existence de l'email et le récupérer
+	err := db.QueryRow("SELECT EMAIL FROM User WHERE EMAIL = ?", email).Scan(&emailInDB)
+	if err == nil {
+		emailExists = true
+	} else if err != sql.ErrNoRows {
+		emailInDB = ""
+	} else {
+		return false, false, "", "", err
+	}
+
+	// Vérifier l'existence du pseudo et le récupérer
+	err = db.QueryRow("SELECT USERNAME FROM User WHERE USERNAME = ?", pseudo).Scan(&pseudoInDB)
+	if err == nil {
+		pseudoExists = true
+	} else if err != sql.ErrNoRows {
+		pseudoInDB = ""
+	} else {
+		return false, false, "", "", err
+	}
+
+	return emailExists, pseudoExists, emailInDB, pseudoInDB, nil
 }
 
 func isValidPassword(password string) bool {
@@ -109,7 +135,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	pseudo := r.FormValue("pseudo")
 	motDePasse := r.FormValue("mot_de_passe")
 	confirmeMotDePasse := r.FormValue("confirme_mot_de_passe")
-	photoURL := r.FormValue("photo_url") // Récupérer l'URL de l'avatar choisi
+	photoURL := r.FormValue("photo_url")
 
 	// Validation du format de l'email
 	emailPattern := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
@@ -155,12 +181,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailChiffre, err := bcrypt.GenerateFromPassword([]byte(email), bcrypt.DefaultCost)
-	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors du chiffrement de l'email.")
-		return
-	}
-
 	// Utilisez l'URL de l'avatar choisi ou une URL de photo par défaut
 	if photoURL == "" {
 		photoURL = "static/img/avatar/avatarFemme1.png"
@@ -170,7 +190,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	biographie := ""
 
-	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, photoURL, biographie)
+	// Insérer l'email en clair dans la base de données
+	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, email, photoURL, biographie)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
 		return
@@ -181,7 +202,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = pseudo
 	session.Save(r, w)
 
-	// Rediriger vers la page mytripy-non après la création du compte
 	http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 }
 
@@ -705,7 +725,6 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Décoder les données JSON envoyées par le client
 	var requestData struct {
 		Email           string `json:"email"`
 		Username        string `json:"username"`
@@ -718,18 +737,6 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Validation des mots de passe
-	if requestData.NewPassword != requestData.ConfirmPassword {
-		http.Error(w, "Les mots de passe ne correspondent pas.", http.StatusBadRequest)
-		return
-	}
-
-	if !isValidPassword(requestData.NewPassword) {
-		http.Error(w, "Le mot de passe ne respecte pas les critères de sécurité.", http.StatusBadRequest)
-		return
-	}
-
-	// Connexion à la base de données
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		http.Error(w, "Erreur lors de la connexion à la base de données.", http.StatusInternalServerError)
@@ -737,14 +744,24 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Vérifier si l'utilisateur existe
-	emailExists, pseudoExists, err := CheckUserExists(db, requestData.Email, requestData.Username)
+	// Utiliser la nouvelle fonction pour vérifier et récupérer les détails utilisateur
+	emailExists, pseudoExists, emailInDB, pseudoInDB, err := GetUserDetails(db, requestData.Email, requestData.Username)
 	if err != nil {
-		http.Error(w, "Erreur interne lors de la vérification de l'utilisateur.", http.StatusInternalServerError)
+		http.Error(w, "Utilisateur introuvable.", http.StatusInternalServerError)
 		return
 	}
 	if !emailExists || !pseudoExists {
 		http.Error(w, "Utilisateur introuvable.", http.StatusBadRequest)
+		return
+	}
+
+	// Validation des mots de passe
+	if requestData.NewPassword != requestData.ConfirmPassword {
+		http.Error(w, "Les mots de passe ne correspondent pas.", http.StatusBadRequest)
+		return
+	}
+	if !isValidPassword(requestData.NewPassword) {
+		http.Error(w, "Le mot de passe ne respecte pas les critères de sécurité.\nune majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.", http.StatusBadRequest)
 		return
 	}
 
@@ -756,7 +773,7 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Mettre à jour le mot de passe dans la base de données
-	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", passwordHash, requestData.Email, requestData.Username)
+	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", passwordHash, emailInDB, pseudoInDB)
 	if err != nil {
 		http.Error(w, "Erreur lors de la mise à jour du mot de passe.", http.StatusInternalServerError)
 		return

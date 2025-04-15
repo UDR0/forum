@@ -1714,11 +1714,15 @@ section h2 {
     margin-right: auto;
     gap: 1%;
     margin-bottom: 1%;
-}
+} */
 
 .iconLikePost{
-    width: 7%;
-} */
+    position: absolute;
+    width: 4%;
+    top:0px;
+    right: 2%;
+    margin-top: 2%;
+}
 
 /* .iconCommentairePost {
     margin-left: 74%;

@@ -71,6 +71,8 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/api/password-reset", forum.ResetPasswordHandler)
+
 	http.HandleFunc("/mot-de-passe-oublie", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "mot-de-passe-oublie", nil)
 	})

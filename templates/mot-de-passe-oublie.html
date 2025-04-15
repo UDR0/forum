@@ -14,78 +14,110 @@
         <link rel="stylesheet" href="static/css/styles.css">
         <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
     </head>
-<body>
+    <body>
+        <!-- Header -->
+        <header>
+            <!-- Logo -->
+            <a href="/mytripy-non" class="logo">
+                <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+                <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            </a>
 
-    <!-- Header -->
-    <header>
-        <!-- Logo -->
-        <a href="/mytripy-non" class="logo">
-            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
-            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
-        </a>
+            <!-- Menu Burger -->
+            <button class="burger-menu" id="burger">
+                <img src="static/img/menu-black.png" alt="menu">
+            </button>
+        </header>
 
-        <!-- Menu Burger -->
-        <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
-        </button>
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+            <li class="meta-navigation">
+                <a class="meta-a" href="/contact">Contactez-nous</a>
+            </li>
+            <li class="meta-navigation-btn-seconnecter">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+            </li>
+            <li class="meta-navigation-btn-creer-compte">
+                <a class="btn" href="/CreerCompte">Créer mon compte</a>
+            </li>
+        </ul>
 
-    </header>
-
-
-    <!-- Navigation -->
-    <ul class="meta-ul">
-        <li class="meta-navigation">
-            <a class="meta-a" href="/mytripy-non">MyTripy</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="/destinations">Destinations</a>
-        </li>
-
-        <li class="meta-navigation">
-            <a class="meta-a" href="/contact">Contactez-nous</a>
-        </li>
-
-        <li class="meta-navigation-btn-connexion">
-            <a class="btn" href="/profil">Mon Compte</a>
-        </li>
-
-        <li class="meta-navigation-btn-seconnecter">
-            <a class="btn" href="/SeConnecter">Se connecter</a>
-        </li>
-
-        <li class="meta-navigation-btn-creer-compte">
-            <a class="btn" href="/CreerCompte">Créer mon compte</a>
-        </li>
-    </ul>
-
-    </header>
-
-    <!-- Conteneur Principale -->
-    <section>
-        <div class="card">
-            <div class="card-img">
-                <img src="static/img/fond-profil-3.png" alt="fond profil">
-            </div>
-
-            <div class="card-titre">
-                <h3 class="titre-mot-de-passe-oublie">Mot de passe oublié ?</h3>
-                <p class="sous-titre-SeConnecter">Renseigne ton adresse e-mail pour réinitialiser ton mot de passe</p>
-            </div>            
-
-            <div class="ConteneurMotDePasseOublie">
-                <h4>Votre Email</h4>
-                <div class="ConteneurEmail">
-                    <input type="password" id="Email" placeholder="nom@email.com">
-                    <img src="/static/img/email.png" alt="Icône email">
+        <!-- Conteneur Principal -->
+        <section>
+            <div class="card">
+                <div class="card-img">
+                    <img src="static/img/fond-profil-3.png" alt="fond profil">
                 </div>
-            </div>
-                
-            <a class="btn-recevoir-lien" href="#">Recevoir le lien</a>
-        </div>
-    </section>
 
-    <script src="static/script.js"></script>
-</body>
+                <div class="card-titre">
+                    <h3 class="titre-mot-de-passe-oublie">Réinitialisation du mot de passe</h3>
+                    <p class="sous-titre-SeConnecter">Renseignez les informations ci-dessous pour réinitialiser votre mot de passe</p>
+                </div>
+
+                <!-- Formulaire -->
+                <form id="resetPasswordForm">
+                    <div class="ConteneurMotDePasseOublie">
+                        <h4>Votre Email</h4>
+                        <div class="ConteneurEmail">
+                            <input type="email" id="Email" placeholder="nom@email.com" required>
+                            <img src="/static/img/email.png" alt="Icône email">
+                        </div>
+
+                        <h4>Votre pseudo</h4>
+                        <div class="ConteneurEmail">
+                            <input type="text" id="Pseudo" placeholder="Votre pseudo" required>
+                            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                        </div>
+                    
+                        <h4>Nouveau mot de passe</h4>
+                        <div class="ConteneurEmail">
+                            <input type="password" id="NouveauMotDePasse" placeholder="Mot de passe" required>
+                            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                        </div>
+                        <div class="ConteneurMotDePasse">
+                            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe" required>
+                            <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
+                </form>
+            </div>
+        </section>
+        <script>
+           document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById("Email").value;
+    const username = document.getElementById("Pseudo").value;
+    const newPassword = document.getElementById("NouveauMotDePasse").value;
+    const confirmPassword = document.getElementById("ConfirmeMotDePasse").value;
+
+    try {
+        const response = await fetch("/api/password-reset", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, username, newPassword, confirmPassword }),
+        });
+
+        if (response.ok) {
+            alert("Mot de passe réinitialisé avec succès !");
+            window.location.href = "/SeConnecter";
+        } else {
+            const errorText = await response.text();
+            alert("Erreur : " + errorText);
+        }
+    } catch (error) {
+        alert("Erreur réseau : " + error.message);
+    }
+});
+        </script>
+        <script src="static/script.js"></script>
+    </body>
 </html>

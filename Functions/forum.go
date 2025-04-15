@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/sessions" //go get github.com/gorilla/sessions
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
+	//"golang.org/x/exp/rand"
 )
 
 // Exporter le magasin de sessions
@@ -38,15 +39,30 @@ func renderError(w http.ResponseWriter, tmpl string, errorMsg string) {
 
 func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
 	var emailExists, pseudoExists bool
+	var hashedEmail string
 	var id int
 
-	err := db.QueryRow("SELECT rowid FROM User WHERE EMAIL = ?", email).Scan(&id)
-	if err == nil {
-		emailExists = true
-	} else if err != sql.ErrNoRows {
+	// Étape 1 : Vérifier l'existence de l'e-mail
+	rows, err := db.Query("SELECT EMAIL FROM User")
+	if err != nil {
 		return false, false, err
 	}
+	defer rows.Close()
 
+	for rows.Next() {
+		err := rows.Scan(&hashedEmail)
+		if err != nil {
+			return false, false, err
+		}
+
+		// Utiliser bcrypt pour comparer l'e-mail fourni avec le hash stocké
+		if bcrypt.CompareHashAndPassword([]byte(hashedEmail), []byte(email)) == nil {
+			emailExists = true
+			break
+		}
+	}
+
+	// Étape 2 : Vérifier l'existence du pseudo
 	err = db.QueryRow("SELECT rowid FROM User WHERE USERNAME = ?", pseudo).Scan(&id)
 	if err == nil {
 		pseudoExists = true
@@ -681,4 +697,72 @@ func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Répondre avec succès
 	w.WriteHeader(http.StatusOK)
+}
+
+func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Décoder les données JSON envoyées par le client
+	var requestData struct {
+		Email           string `json:"email"`
+		Username        string `json:"username"`
+		NewPassword     string `json:"newPassword"`
+		ConfirmPassword string `json:"confirmPassword"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+		http.Error(w, "Requête invalide", http.StatusBadRequest)
+		return
+	}
+
+	// Validation des mots de passe
+	if requestData.NewPassword != requestData.ConfirmPassword {
+		http.Error(w, "Les mots de passe ne correspondent pas.", http.StatusBadRequest)
+		return
+	}
+
+	if !isValidPassword(requestData.NewPassword) {
+		http.Error(w, "Le mot de passe ne respecte pas les critères de sécurité.", http.StatusBadRequest)
+		return
+	}
+
+	// Connexion à la base de données
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		http.Error(w, "Erreur lors de la connexion à la base de données.", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Vérifier si l'utilisateur existe
+	emailExists, pseudoExists, err := CheckUserExists(db, requestData.Email, requestData.Username)
+	if err != nil {
+		http.Error(w, "Erreur interne lors de la vérification de l'utilisateur.", http.StatusInternalServerError)
+		return
+	}
+	if !emailExists || !pseudoExists {
+		http.Error(w, "Utilisateur introuvable.", http.StatusBadRequest)
+		return
+	}
+
+	// Hacher le nouveau mot de passe
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(requestData.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Erreur lors du hachage du mot de passe.", http.StatusInternalServerError)
+		return
+	}
+
+	// Mettre à jour le mot de passe dans la base de données
+	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", passwordHash, requestData.Email, requestData.Username)
+	if err != nil {
+		http.Error(w, "Erreur lors de la mise à jour du mot de passe.", http.StatusInternalServerError)
+		return
+	}
+
+	// Répondre avec succès
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Mot de passe réinitialisé avec succès."))
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+
+
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
+            </li>
+
+            <li class="meta-navigation-btn-seconnecter">
+                <a class="btn" href="/SeConnecter">Se connecter</a>
+    </li>
+        </ul>
+    </header>
+
+    <!-- Conteneur Principale -->
+    <section>
+        <div class="card">
+            <div class="ConteneurCreerCompte">
+                <form id="creerCompteForm" action="/CreerCompte" method="post" onsubmit="return validateForm()">
+                    <div class="photo">
+                        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
+                    </div>
+                    <a href="#" class="changerAvatar" onclick="openPopupProfil()">Changer d'Avatar</a>
+
+                    <h4>Email</h4>
+                    <div class="ConteneurEmail">
+                        <input type="text" id="email" name="email" placeholder="nom@email.com" required>
+                        <img src="/static/img/email.png" alt="Icône email">
+                    </div>
+
+                    <h4>Pseudo</h4>
+                    <div class="ConteneurPseudo">
+                        <input type="text" id="pseudo" name="pseudo" placeholder="Votre Pseudo" required>
+                        <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                    </div>
+
+                    <h4>Mot de passe</h4>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Votre mot de passe"
+                            required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="confirme_mot_de_passe" name="confirme_mot_de_passe"
+                            placeholder="Confirmer votre mot de passe" required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+
+                    <!-- Champ caché pour stocker l'URL de l'avatar choisi -->
+                    <input type="hidden" id="photo_url" name="photo_url" value="../static/img/photoProfil.png">
+
+                    <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
+
+                    <button type="submit" class="btn-CreerCompte">Créer un compte</button>
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Overlay sombre -->
+    <div id="overlay-profil" class="overlay"></div>
+
+    <!-- Pop-up pour modifier la photo de profil -->
+    <div id="popup-profil" class="popup">
+        <img src="../static/img/fondAvatar.png" class="fondAvatar">
+        <h1>Choisissez votre Avatar</h1>
+        <div class="imgAvatar">
+            <div class="femme">
+                <img src="../static/img/avatar/avatarFemme1.png">
+                <img src="../static/img/avatar/avatarFemme2.png">
+                <img src="../static/img/avatar/avatarFemme3.png">
+                <img src="../static/img/avatar/avatarFemme4.png">
+            </div>
+            <div class="homme">
+                <img src="../static/img/avatar/avatarHomme1.png">
+                <img src="../static/img/avatar/avatarHomme2.png">
+                <img src="../static/img/avatar/avatarHomme3.png">
+                <img src="../static/img/avatar/avatarHomme4.png">
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+
+</html>

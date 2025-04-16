@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+        <!-- Navigation -->
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
+            </li>
+        </ul>
+
+    </header>
+
+
+    <!-- Contenu principal -->
+    <!-- Contenu principal -->
+    <section>
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil.png" alt="fond profil">
+            </div>
+            <div class="card-avatar">
+                <img src="{{.PhotoURL}}" id="photoProfil" onclick="openPopupProfil()">
+            </div>
+
+            <!-- Pseudo et Bio -->
+            <p id="pseudo" class="pseudo">{{.Pseudo}}</p>
+            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
+
+            <div class="ConteneurProfil">
+                <h4>Bio</h4>
+                <p id="bio" class="bio">{{.Biography}}</p>
+            </div>
+
+            <!-- Régions Favorites -->
+            <h3 class="titre-favorite-region">Régions favorites</h3>
+            {{range .Regions}}
+            <div class="destinations-favorites" onclick="selectRegion('{{.RegionName}}')">
+                
+                    <div class="destination-region-favorites">
+                        <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
+                        <div class="destination-details">
+                            <div class="destination-region-name-favorites">{{.RegionName}}</div>
+                            <div class="destination-description-favorites">{{.RegionDescr}}</div>
+                        </div>
+                    </div>
+            </div>
+            {{end}}
+        
+
+            <!-- Fil discussion créés -->
+            <h3 class="titre-favorite-region">Mes fils de discussion créés</h3>
+            <!-- <div class="discussion"> -->
+                {{range .Chats}}
+                <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
+                    <div class="discussion-cree-info">
+                        <img src="{{.PhotoURL}}" alt="" class="discussion-cree-info-profil">
+
+                        <div class="discussion-cree-info-texte">
+                            <p class="discussion-cree-info-titre">{{.Name}}</p>
+                        </div>
+                    </div>
+
+                    <p class="discussion-cree-descriptif">{{.Description}}</p>
+
+                    <div class="discussion-cree-chat">
+                        <img src="static/img/messager.png" alt="discussion">
+                        <p>{{.MessageCount}}</p>
+                    </div>
+                </div>
+                {{end}}
+            <!-- </div> -->
+
+
+            <!-- Fil discussion Favorites -->
+            <h3 class="titre-favorite-region">Mes fils de discussion favorites</h3>
+            <!-- <div class="discussion"> -->
+                {{range .LikedChats}}
+                <div class="discussion-cree">
+                    <div class="discussion-cree-info">
+                        <img src="{{.PhotoURL}}" alt="" class="discussion-cree-info-profil">
+
+                        <div class="discussion-cree-info-texte">
+                            <p class="discussion-cree-info-titre">{{.Name}}</p>
+                            <p class="discussion-cree-info-nom">{{.Creator}}</p>
+                        </div>
+                    </div>
+
+                    <p class="discussion-cree-descriptif">{{.Description}}</p>
+
+                    <div class="discussion-cree-chat">
+                        <img src="static/img/messager.png" alt="discussion">
+                        <p>{{.MessageCount}}</p>
+                    </div>
+                </div>
+                {{end}}
+            <!-- </div> -->
+            <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+        </div>
+    </section>
+            
+   
+
+
+    <!-- Overlay sombre -->
+    <div id="overlay-profil" class="overlay"></div>
+
+    <!-- Pop-up pour modifier la photo de profil -->
+    <div id="popup-profil" class="popup">
+        <img src="../static/img/fondAvatar.png" class="fondAvatar">
+        <h1>Choisissez votre Avatar</h1>
+        <div class="imgAvatar">
+            <div class="femme">
+                <img src="../static/img/avatar/avatarFemme1.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarFemme1.png')">
+                <img src="../static/img/avatar/avatarFemme2.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarFemme2.png')">
+                <img src="../static/img/avatar/avatarFemme3.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarFemme3.png')">
+                <img src="../static/img/avatar/avatarFemme4.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarFemme4.png')">
+            </div>
+            <div class="homme">
+                <img src="../static/img/avatar/avatarHomme1.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarHomme1.png')">
+                <img src="../static/img/avatar/avatarHomme2.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarHomme2.png')">
+                <img src="../static/img/avatar/avatarHomme3.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarHomme3.png')">
+                <img src="../static/img/avatar/avatarHomme4.png"
+                    onclick="updateAvatar('../static/img/avatar/avatarHomme4.png')">
+            </div>
+        </div>
+        <input type="hidden" id="photo_url" value="">
+    </div>
+
+
+    <!-- Overlay sombre pour le pop-up de modification -->
+    <div id="overlay-modif" class="overlay"></div>
+
+    <!-- Fenêtre pop-up de modification -->
+    <div id="popup-modif" class="popup-modif">
+        <img src="../static/img/fondAvatar.png" class="fondAvatar">
+        <h3>Modifier Profil</h3>
+
+        <div class="modif">
+            <h4>Pseudo</h4>
+            <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
+
+            <h4>Bio</h4>
+            <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
+        </div>
+
+        <button onclick="sauverModifications()">Sauvegarder</button>
+    </div>
+
+    <script>
+        function selectChat(chatName) {
+            fetch(`/select-chat?chatname=${chatName}`)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
+                    } else {
+                        console.error("Failed to select chat:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting chat:", error));
+        }
+
+        function selectRegion(regionName) {
+            console.log(`You clicked on region: ${regionName}`); // Debugging
+            fetch(`/region?name=${regionName}`, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(`Region ${regionName} successfully selected`); // Debugging
+                        window.location.href = "/welcome";
+                    } else {
+                        console.error("Failed to select region:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting region:", error));
+        }
+
+    </script>
+    <script src="static/script.js"></script>
+</body>
+
+</html>

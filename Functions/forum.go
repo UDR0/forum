@@ -655,78 +655,54 @@ func LikeChatHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-type LikeMsgRequest struct {
-	MsgID int  `json:"msgId"` // Message ID from the client
-	Liked bool `json:"liked"` // Liked status from the client
-}
-
-func LikeMsgHandler(w http.ResponseWriter, r *http.Request) {
+func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var likeMsgRequest LikeMsgRequest
-	err := json.NewDecoder(r.Body).Decode(&likeMsgRequest)
+	var likeData struct {
+		MessageID int  `json:"message_id"`
+		Liked     bool `json:"liked"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&likeData)
 	if err != nil {
-		log.Println("Error decoding JSON:", err)
-		http.Error(w, "Bad request: Unable to parse JSON", http.StatusBadRequest)
+		log.Println("Error decoding request body:", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	session, err := Store.Get(r, "session-name")
-	if err != nil {
-		log.Println("Error retrieving session:", err)
-		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
-		return
-	}
-
-	username, ok := session.Values["username"].(string)
-	if !ok || username == "" {
-		log.Println("Error: Username not found in session.")
-		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
-		return
-	}
-
+	// Here, update your database to reflect the like/unlike action
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	// Check if the user already liked this message
-	var exists bool
-	query := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = ?);`
-	err = db.QueryRow(query, username, likeMsgRequest.MsgID).Scan(&exists)
-	if err != nil {
-		log.Println("Error checking existing like:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
-
-	if exists {
-		log.Printf("Updating like status for user '%s' on message ID '%d'.", username, likeMsgRequest.MsgID)
-		_, err = db.Exec(`UPDATE Msg_Liked SET liked = ? WHERE username = ? AND message_id = ?;`,
-			likeMsgRequest.Liked, username, likeMsgRequest.MsgID)
+	if likeData.Liked {
+		_, err = db.Exec(`INSERT INTO Msg_Liked (message_id, username) VALUES (?, ?)`, likeData.MessageID, "current_user")
+		if err != nil {
+			log.Println("Error inserting like:", err)
+			http.Error(w, "Error updating database", http.StatusInternalServerError)
+			return
+		}
 	} else {
-		log.Printf("Inserting new like record for user '%s' on message ID '%d'.", username, likeMsgRequest.MsgID)
-		_, err = db.Exec(`INSERT INTO Msg_Liked (username, message_id, liked) VALUES (?, ?, ?);`,
-			username, likeMsgRequest.MsgID, likeMsgRequest.Liked)
+		_, err = db.Exec(`DELETE FROM Msg_Liked WHERE message_id = ? AND username = ?`, likeData.MessageID, "current_user")
+		if err != nil {
+			log.Println("Error deleting like:", err)
+			http.Error(w, "Error updating database", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	if err != nil {
-		log.Println("Error executing SQL query:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
-
-	log.Printf("Like status updated: Message ID '%d', User '%s', Liked: %t", likeMsgRequest.MsgID, username, likeMsgRequest.Liked)
-
+	// Respond with success
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"message": fmt.Sprintf("Message '%d' like status updated for user '%s': %t", likeMsgRequest.MsgID, username, likeMsgRequest.Liked),
+		"status":     "success",
+		"message_id": fmt.Sprintf("%d", likeData.MessageID),
 	})
 }
 
@@ -1307,31 +1283,25 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username, ok := session.Values["username"].(string)
-	if !ok || username == "" {
-		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
-		return
-	}
-
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
+		log.Println("Error opening database:", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
 	rows, err := db.Query(
-		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL,
-                EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = m.id) AS liked
+		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL
          FROM messages m
          LEFT JOIN User u ON m.sender = u.USERNAME
          WHERE m.chat_name = ?
          ORDER BY m.timestamp ASC;`,
-		username, chatName,
+		chatName,
 	)
 	if err != nil {
-		http.Error(w, "Server error while fetching messages", http.StatusInternalServerError)
 		log.Println("Error fetching messages:", err)
+		http.Error(w, "Error retrieving messages", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -1342,14 +1312,12 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		Message     string
 		TimeElapsed string
 		ImgUser     string
-		Liked       bool
 	}
 	for rows.Next() {
 		var messageID int
 		var sender, message, timestamp, imgUser string
-		var liked bool
-		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &liked); err != nil {
-			log.Println("Error scanning message data:", err)
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser); err != nil {
+			log.Println("Error scanning message row:", err)
 			continue
 		}
 
@@ -1366,39 +1334,34 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 			Message     string
 			TimeElapsed string
 			ImgUser     string
-			Liked       bool
 		}{
 			MessageID:   messageID,
 			Sender:      sender,
 			Message:     message,
 			TimeElapsed: elapsedTime,
 			ImgUser:     imgUser,
-			Liked:       liked,
 		})
 	}
 
 	data := struct {
 		ChatName string
-		Username string
 		Messages []struct {
 			MessageID   int
 			Sender      string
 			Message     string
 			TimeElapsed string
 			ImgUser     string
-			Liked       bool
 		}
 	}{
 		ChatName: chatName,
-		Username: username,
 		Messages: messages,
 	}
-	log.Printf("Messages passed to template: %+v", messages)
 
-	err = template.Must(template.ParseFiles("templates/chat_messages.html")).Execute(w, data)
+	tmpl := template.Must(template.ParseFiles("templates/chat_messages.html"))
+	err = tmpl.Execute(w, data)
 	if err != nil {
-		log.Println("Error rendering chat messages template:", err)
-		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		log.Println("Error rendering template:", err)
+		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}
 }
 
@@ -1470,88 +1433,72 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	chatName, ok := session.Values["chatname"].(string)
 	if !ok || chatName == "" {
-		http.Error(w, "Chat not selected. Please select a chat.", http.StatusBadRequest)
+		http.Error(w, "Chat not selected. Please go back and select a chat.", http.StatusBadRequest)
 		log.Println("Chatname not found in session.")
-		return
-	}
-
-	username, ok := session.Values["username"].(string)
-	if !ok || username == "" {
-		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
+		log.Println("Error opening database:", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
 	rows, err := db.Query(
-		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL,
-                EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = m.id) AS liked
+		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL
          FROM messages m
          LEFT JOIN User u ON m.sender = u.USERNAME
          WHERE m.chat_name = ?
          ORDER BY m.timestamp ASC;`,
-		username, chatName,
+		chatName,
 	)
 	if err != nil {
-		http.Error(w, "Server error while fetching messages", http.StatusInternalServerError)
 		log.Println("Error fetching messages:", err)
+		http.Error(w, "Server error while fetching messages", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
 	var messages []struct {
-		MessageID   int
-		Sender      string
-		Message     string
-		TimeElapsed string
-		ImgUser     string
-		Liked       bool
+		MessageID   int    `json:"message_id"`
+		Sender      string `json:"sender"`
+		Message     string `json:"message"`
+		TimeElapsed string `json:"time_elapsed"`
+		ImgUser     string `json:"img_user"`
 	}
 	for rows.Next() {
 		var messageID int
 		var sender, message, timestamp, imgUser string
-		var liked bool
-		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &liked); err != nil {
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
 
-		// Calculate elapsed time
-		elapsedTime, err := formatElapsedTime(timestamp)
+		elapsedTime, err := formatElapsedTime(timestamp) // Custom function to format timestamps
 		if err != nil {
-			log.Println("Error parsing timestamp:", err)
+			log.Println("Error formatting timestamp:", err)
 			continue
 		}
 
 		messages = append(messages, struct {
-			MessageID   int
-			Sender      string
-			Message     string
-			TimeElapsed string
-			ImgUser     string
-			Liked       bool
+			MessageID   int    `json:"message_id"`
+			Sender      string `json:"sender"`
+			Message     string `json:"message"`
+			TimeElapsed string `json:"time_elapsed"`
+			ImgUser     string `json:"img_user"`
 		}{
 			MessageID:   messageID,
 			Sender:      sender,
 			Message:     message,
 			TimeElapsed: elapsedTime,
 			ImgUser:     imgUser,
-			Liked:       liked,
 		})
 	}
 
-	// Send JSON response
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(messages)
-	if err != nil {
-		log.Println("Error encoding messages to JSON:", err)
-		http.Error(w, "Error encoding messages", http.StatusInternalServerError)
-	}
+	json.NewEncoder(w).Encode(messages)
 }
 
 func formatElapsedTime(input string) (string, error) {

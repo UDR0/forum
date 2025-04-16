@@ -97,48 +97,8 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
     });
 });
 
-document.querySelectorAll('.messages-coeur-container').forEach(container => {
-    container.addEventListener("click", function(event) {
-        event.stopPropagation(); // Prevent parent element click
-        event.preventDefault(); // Prevent default action
 
-        const img = this.querySelector('.messages-coeur');
-        const messageId = this.getAttribute('data-msg-id'); // Get the message ID
 
-        if (!img || !messageId) {
-            console.error('Error: Missing heart icon or message ID.');
-            return;
-        }
-
-        // Determine liked status
-        const liked = !img.src.includes('coeur_rouge.png'); // True if switching to red heart
-
-        // Optimistically toggle the heart icon
-        img.src = liked ? 'static/img/coeur_rouge.png' : 'static/img/coeur.png';
-
-        // Send the like status to the server
-        fetch('/like-msg', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ msgId: messageId, liked }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update like status on the server.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(`Server response:`, data); // Log successful server response
-        })
-        .catch(error => {
-            console.error('Error communicating with the server:', error);
-
-            // Revert the heart icon if the request fails
-            img.src = liked ? 'static/img/coeur.png' : 'static/img/coeur_rouge.png';
-        });
-    });
-});
 
 
 // Gestion des avatars dans le pop-up de profil

@@ -595,6 +595,33 @@ section h2 {
     object-fit: cover;
 }
 
+.coeur-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    padding: 9px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.coeur {
+    width: 20px;
+    height: 20px;
+}
+
+.coeur-container.active {
+    background-color: #fff;
+}
+
+
+
 
 
 
@@ -1678,15 +1705,6 @@ section h2 {
     width: 90%;
 }
 
-/* test heart */
-.messages-coeur{
-    position: absolute;
-    width: 4%;
-    top:0px;
-    right: 2%;
-    margin-top: 2%;
-}
-
 /* .interactionPost {
     margin-right: 5%;
     display: flex;
@@ -1697,6 +1715,7 @@ section h2 {
     gap: 1%;
     margin-bottom: 1%;
 } */
+
 
 /* .iconCommentairePost {
     margin-left: 74%;
@@ -2007,6 +2026,8 @@ section h2 {
 }
 
 
+
+
 /*////////////////// DROPDOWN ////////////////////////*/
 .dropdown {
     border: 1px solid #ccc;
@@ -2046,4 +2067,13 @@ section h2 {
 
 .chat-coeur-container.active {
     background-color: #fff;
+}
+
+
+.msg-like{
+    position: absolute;
+    width: 4%;
+    top:0px;
+    right: 2%;
+    margin-top: 2%;
 }

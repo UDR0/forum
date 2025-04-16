@@ -11,7 +11,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gorilla/sessions" //go get github.com/gorilla/sessions
+	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
 )

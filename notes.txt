@@ -1,9 +1,3 @@
--like messages
--creare nuovo chat
-
-
--error of the fetch each in the js, cannot be null
-
 <<<<<<<<<<< fatto pero manca registrare il chat nella database
 photo, titre file/, description/, pseudo/, compteur messages dans ce chat 
 photo, nom, heure, message 
@@ -48,11 +42,6 @@ avoir le fil de chat main qui est obligatoire
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-chats_messages:
-je dois encore recaire le merge avec samuel parce que ca marche pas
 
 mot de passe oublie:
 merge avec william
-
-
-test the docker

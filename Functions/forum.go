@@ -1346,11 +1346,11 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username, _ := session.Values["username"].(string)
-	chatName, ok := session.Values["chatname"].(string)
-	if !ok || chatName == "" {
-		http.Error(w, "Chat not selected. Please go back and select a chat.", http.StatusBadRequest)
-		log.Println("Chatname not found in session.")
+	username, usernameExists := session.Values["username"].(string)
+	chatName, chatNameExists := session.Values["chatname"].(string)
+	if !usernameExists || username == "" || !chatNameExists || chatName == "" {
+		// Redirect to /connection if the user is not logged in or chat is not selected
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
@@ -1525,6 +1525,7 @@ func SendMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 // prende tutti il messaggi di una chat specifica per poi fare apparirli nella pagina
 func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
+	// Retrieve session
 	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
@@ -1532,14 +1533,16 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username, _ := session.Values["username"].(string)
-	chatName, ok := session.Values["chatname"].(string)
-	if !ok || chatName == "" {
-		http.Error(w, "Chat not selected. Please go back and select a chat.", http.StatusBadRequest)
-		log.Println("Chatname not found in session.")
+	// Check if the user is logged in
+	username, usernameExists := session.Values["username"].(string)
+	chatName, chatNameExists := session.Values["chatname"].(string)
+	if !usernameExists || username == "" || !chatNameExists || chatName == "" {
+		// Redirect to /connection if the user is not logged in or chat is not selected
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
+	// Open the database
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
@@ -1548,6 +1551,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Fetch messages for the specific chat
 	rows, err := db.Query(
 		`SELECT 
             m.id, 
@@ -1602,6 +1606,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
+		// Format elapsed time
 		elapsedTime, err := formatElapsedTime(timestamp)
 		if err != nil {
 			log.Println("Error formatting timestamp:", err)
@@ -1627,6 +1632,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	// Prepare JSON response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(messages)
 }

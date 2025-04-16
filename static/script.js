@@ -33,6 +33,21 @@ document.querySelectorAll(".destination-coeur-container").forEach((container) =>
     });
 });
 
+function like(image) {
+    if (image.src.includes("coeur_rouge.png")) {
+        image.src = "static/img/coeur.png";
+    } else {
+        image.src = "static/img/coeur_rouge.png";
+    }
+}
+
+function likeGris(image) {
+    if (image.src.includes("coeur_rouge.png")) {
+        image.src = "static/img/coeurGris.png";
+    } else {
+        image.src = "static/img/coeur_rouge.png";
+    }
+}
 
 
 

@@ -1,10 +1,8 @@
--list for liked regions and likes vengono salvati ma non si ricorda sulla pagina html / torna bianco quando ricarico la pagina
--fare in modo che puoi lickare solo se sei connesso o che i cuoi appaiono solo se sei connesso
+-like messages
+-creare nuovo chat
+
+
 -error of the fetch each in the js, cannot be null
--quando non sei connesso puoi accedere ai chat ma non alle discussioni
-
-prendere le info della biografia e cambiare le info del sql (faro questo weekend o domani con la searchbar) // in teoria
-
 
 <<<<<<<<<<< fatto pero manca registrare il chat nella database
 photo, titre file/, description/, pseudo/, compteur messages dans ce chat 
@@ -12,3 +10,49 @@ photo, nom, heure, message
 >>>>>>>>>>>
 
 likes, will, sam, 
+
+Sur toutes les pages:
+suggestionsde la searchbar
+footeur est moche
+le logo mutripy n'est pas responsive
+
+Page profile:
+le truc pour modifier la bio monte quand j'ajoute des fils et des regions liké et tt
+faut pas permettre à l'utilisateur de changer le pseudo
+quand il n'a pas aimé de region ou chat ou rien cree you tout qui est vide jsp si vous voulez laisser comme ca
+
+Page my-tripy-non:
+(j'ai changé le bouton à la fin il emmène à la page à propos, sinon on a 4 endroits pour acceder aux destinations ca fait trop)
+
+Destinations:
+c fini, les likes et tt marche
+
+Contactez nous:
+Je c pas ya quoi sur cette page ya aucune info(faites juste une page en dur parce que je pourrait pas faire des truc g deja le chat qui me prend la tete)
+
+Créer compte:
+tout marche normalement
+
+se connecter:
+tout marche normalement
+
+apropos:
+normalement c fini, enfin sauf si vous voulez rajouter des infos
+
+mentions legales:
+ne sont jamais appelées
+
+welcome/qui est la page des fils (je dois la renommer):
+les boutons en haut
+avoir le fil de chat main qui est obligatoire
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+chats_messages:
+je dois encore recaire le merge avec samuel parce que ca marche pas
+
+mot de passe oublie:
+merge avec william
+
+
+test the docker

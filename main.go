@@ -43,6 +43,10 @@ func main() {
 	// Routes pour les pages HTML
 	http.HandleFunc("/mytripy-non", forum.MyTripyNonHandler)
 
+	http.HandleFunc("/apropos", func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "apropos", nil)
+	})
+
 	http.HandleFunc("/SeConnecter", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			forum.CheckCredentialsForConnection(w, r)
@@ -69,14 +73,12 @@ func main() {
 
 	http.HandleFunc("/profil", forum.ProfilPage)
 	http.HandleFunc("/updateProfile", forum.UpdateProfile)
-
+	http.HandleFunc("/updateAvatar", forum.UpdateAvatar)
 	http.HandleFunc("/destinations", forum.AllRegions)
 
 	http.HandleFunc("/like", forum.LikeHandler)
-
-	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "forum", nil)
-	})
+	http.HandleFunc("/likechat", forum.LikeChatHandler)
+	http.HandleFunc("/like-msg", forum.LikeMsgHandler)
 
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session")

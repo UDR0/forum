@@ -76,16 +76,12 @@
 
     <!-- Contenu principal -->
     <section>
-        
-    <div class="search-bar">
-        <input 
-            type="text" 
-            placeholder="Rechercher une destination..." 
-            id="searchBar" 
-            oninput="filterOptions()">
-        <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
-    </div>
-    <div id="dropdown" class="dropdown"></div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
+            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+        </div>
+        <div id="dropdown" class="dropdown"></div>
 
         <!-- MAP France -->
         <div class="map-france" id="map">
@@ -185,17 +181,23 @@
         <h3 class="titre-popular-region">Régions populaires</h3>
         <div class="destinations-popular">
             {{range .Regions}}
-                <div class="destination-region-popular"  onclick="selectRegion('{{.RegionName}}')">
-                    <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
-                    <div class="destination-details">
-                        <div class="destination-region-name">{{.RegionName}}</div>
-                        <div class="destination-description">{{.RegionDescr}}</div>
-                    </div>
-
-                    <div class="destination-coeur-container" data-region="{{.RegionName}}">
-                        <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                    </div>
+            <div class="destination-region-popular" onclick="selectRegion('{{.RegionName}}')">
+                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
+                <div class="destination-details">
+                    <div class="destination-region-name">{{.RegionName}}</div>
+                    <div class="destination-description">{{.RegionDescr}}</div>
                 </div>
+
+                {{if $.IsConnected}}
+                <div class="destination-coeur-container" data-region="{{.RegionName}}">
+                    {{if .RegionLiked}}
+                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+                    {{else}}
+                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
             {{end}}
         </div>
 
@@ -222,9 +224,7 @@
             </div>
 
         </div>
-        <h3 class="titre-2-description">Prêt à partir à l’aventure ?</h3>
-        <button class="description-btn-destination" onclick="window.location.href='destinations'">Explore les
-            destinations</button>
+        <button class="description-btn-destination" onclick="window.location.href='apropos'">À propos</button>
     </section>
 
 

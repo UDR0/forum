@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-        <meta name="author" content="Matias, Sara, Samuel, William">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-        <title>MyTripy</title>
-        <link rel="stylesheet" href="static/css/styles.css">
-        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-    </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+</head>
+
 <body>
 
     <!-- Header -->
@@ -62,7 +68,7 @@
 
     </header>
 
-    
+
 
 
     <!-- Contenu principal -->
@@ -83,15 +89,21 @@
                     <div class="destination-region-name">{{.RegionName}}</div>
                     <div class="destination-description">{{.RegionDescr}}</div>
                 </div>
+                {{if $.IsConnected}}
                 <div class="destination-coeur-container" data-region="{{.RegionName}}">
+                    {{if .RegionLiked}}
+                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+                    {{else}}
                     <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    {{end}}
                 </div>
+                {{end}}
             </div>
             {{end}}
         </div>
-        
-        
-        
+
+
+
     </section>
 
     <script>
@@ -111,8 +123,9 @@
     </script>
 
 
-    
-    
+
+
     <script src="static/script.js"></script>
 </body>
+
 </html>

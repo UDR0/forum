@@ -18,10 +18,54 @@ document.querySelectorAll(".destination-region-popular", ".filPrincipal-region")
 
 document.querySelectorAll('.destination-coeur-container').forEach(container => {
     container.addEventListener("click", function(event) {
+        event.stopPropagation(); // Prevent parent element click
+        event.preventDefault(); // Prevent default action
+
+        const img = this.querySelector('.destination-coeur');
+        const regionName = this.getAttribute('data-region'); // Get region name
+
+        if (!img || !regionName) {
+            console.error('Error: Missing heart icon or region name.');
+            return;
+        }
+
+        // Determine liked status
+        const liked = !img.src.includes('coeur_rouge.png'); // True if switching to red heart
+
+        // Optimistically toggle the heart icon
+        img.src = liked ? 'static/img/coeur_rouge.png' : 'static/img/coeur.png';
+
+        // Send the like status to the server
+        fetch('/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ region: regionName, liked }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update like status on the server.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Server response:`, data); // Log successful server response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
+
+            // Revert the heart icon if the request fails
+            img.src = liked ? 'static/img/coeur.png' : 'static/img/coeur_rouge.png';
+        });
+    });
+});
+
+
+document.querySelectorAll('.chat-coeur-container').forEach(container => {
+    container.addEventListener("click", function(event) {
         event.stopPropagation();
         event.preventDefault();
-        const img = this.querySelector('.destination-coeur');
-        const regionName = this.getAttribute('data-region'); // Get region name
+        const img = this.querySelector('.chat-coeur');
+        const chatName = this.getAttribute('data-chat'); // Get region name
         
         // Determine liked status
         const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
@@ -29,19 +73,19 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
         // Toggle heart icon
         if (liked) {
             img.src = 'static/img/coeur_rouge.png'; // Change to red heart
-            console.log(`Liked region: ${regionName}`);
+            console.log(`Liked region: ${chatName}`);
         } else {
             img.src = 'static/img/coeur.png'; // Change back to normal heart
-            console.log(`Unliked region: ${regionName}`);
+            console.log(`Unliked region: ${chatName}`);
         }
 
         // Send data to the server
-        fetch('/like', {
+        fetch('/likechat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ region: regionName, liked }),
+            body: JSON.stringify({ region: chatName, liked }),
         })
         .then(response => response.json())
         .then(data => {
@@ -53,68 +97,49 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
     });
 });
 
-/*
-document.querySelectorAll('.destination-coeur-container').forEach(container => {
-    container.addEventListener('click', function () {
-        const img = this.querySelector('.destination-coeur');
-        const regionName = this.getAttribute('data-region'); // Get region name
-        
-        // Determine liked status
-        const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
-        
-        // Toggle heart icon
-        if (liked) {
-            img.src = 'static/img/coeur_rouge.png'; // Change to red heart
-            console.log(`Liked region: ${regionName}`);
-        } else {
-            img.src = 'static/img/coeur.png'; // Change back to normal heart
-            console.log(`Unliked region: ${regionName}`);
+document.querySelectorAll('.messages-coeur-container').forEach(container => {
+    container.addEventListener("click", function(event) {
+        event.stopPropagation(); // Prevent parent element click
+        event.preventDefault(); // Prevent default action
+
+        const img = this.querySelector('.messages-coeur');
+        const messageId = this.getAttribute('data-msg-id'); // Get the message ID
+
+        if (!img || !messageId) {
+            console.error('Error: Missing heart icon or message ID.');
+            return;
         }
 
-        // Send data to the server
-        fetch('/like', {
+        // Determine liked status
+        const liked = !img.src.includes('coeur_rouge.png'); // True if switching to red heart
+
+        // Optimistically toggle the heart icon
+        img.src = liked ? 'static/img/coeur_rouge.png' : 'static/img/coeur.png';
+
+        // Send the like status to the server
+        fetch('/like-msg', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ region: regionName, liked }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ msgId: messageId, liked }),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(`Server response:`, data); // Log server's response
-        })
-        .catch(error => {
-            console.error('Error communicating with the server:', error);
-        });
-    });
-});
-
-
-// Gestion des avatars dans le pop-up de profil
-document.addEventListener("DOMContentLoaded", function () {
-    const avatars = document.querySelectorAll(".imgAvatar img"); // Select all avatar images
-    const photoProfil = document.getElementById("photoProfil"); // Profile photo element
-    const photoUrlElement = document.getElementById("photo_url"); // Hidden input for avatar URL
-
-    avatars.forEach(avatar => {
-        avatar.addEventListener("click", function () {
-            // Update the profile photo
-            photoProfil.src = this.src;
-
-            // Update the hidden input value
-            if (photoUrlElement) {
-                photoUrlElement.value = this.src;
-                console.log(`photo_url updated: ${photoUrlElement.value}`);
-            } else {
-                console.error("Element 'photo_url' not found!");
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update like status on the server.');
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Server response:`, data); // Log successful server response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
 
-            // Close the pop-up after avatar selection
-            closePopupProfil();
+            // Revert the heart icon if the request fails
+            img.src = liked ? 'static/img/coeur.png' : 'static/img/coeur_rouge.png';
         });
     });
 });
-*/
+
 
 // Gestion des avatars dans le pop-up de profil
 document.addEventListener("DOMContentLoaded", function () {
@@ -129,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 
 // ------------------- Profil ---------------------------//
 
@@ -198,19 +224,31 @@ function sauverModifications() {
 
 
 // ------------------- Pop-up for Additional Features ---------------------------//
+function updateAvatar(avatarURL) {
+    fetch('/updateAvatar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            avatar: avatarURL
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Errore durante l\'aggiornamento dell\'avatar.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message);
 
-function PopupFils() {
-    const popupFils = document.getElementById("popupAjouterFil");
-    const imageBtnFils = document.getElementById("btnAjouterFil");
-
-    if (popupFils.style.display === "flex") {
-        document.getElementById("popupAjouterFil").style.display = "none";
-        document.getElementById("btnAjouterFil").src = "static/img/ajouter.png";
-    } else {
-        document.getElementById("popupAjouterFil").style.display = "flex";
-        document.getElementById("btnAjouterFil").src = "static/img/moin.png";
-    }
+        // Ricarica la pagina
+        window.location.reload();
+    })
+    .catch(error => console.error("Errore:", error));
 }
+
 
 ////////////////////////////////// SEARCHBAR ///////////////////////////////////////// Define functions globally
 

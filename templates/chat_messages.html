@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-    <meta name="author" content="Matias, Sara, Samuel, William">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-    <title>MyTripy</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-</head>
-
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
 <body>
 
     <!-- Header -->
@@ -28,6 +22,7 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -52,23 +47,19 @@
             <li class="meta-navigation-btn-connexion">
                 <a class="btn" href="/profil">Mon Compte</a>
             </li>
-
-            <li class="meta-navigation-btn-seconnecter">
-                <a class="btn" href="/SeConnecter">Se connecter</a>
-            </li>
-
-            <li class="meta-navigation-btn-creer-compte">
-                <a class="btn" href="/CreerCompte">Créer mon compte</a>
-            </li>
         </ul>
 
     </header>
 
-    <div class="container">
-        <section>
+
+
+
+
+
+    
+        <!--
             <div class="allPosts">
-            {{range .Messages}}
-            
+                {{range .Messages}}
                 <div class="post">
                     <div class="infoPost">
                         <img src="{{.ImgUser}}" class="photoProfil">
@@ -80,107 +71,130 @@
                     <div class="message">
                         <p>{{.Message}}</p>
                     </div>
+
+                    {{if $.Username}}
+                    <div class="messages-coeur-container" data-msg-id="{{.MessageID}}">
+                        {{if .Liked}}
+                        <img src="static/img/coeur_rouge.png" alt="Liked" class="messages-coeur">
+                        {{else}}
+                        <img src="static/img/coeur.png" alt="Like" class="messages-coeur">
+                        {{end}}
+                    </div>
+                    {{end}}                
                 </div>
-            
-            {{else}}
-            <p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>
-            {{end}}
-            </div>
+
+                {{else}}
+                <p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>
+                {{end}}
+            </div> 
+            <div class="allPosts">
+                {{range .Messages}}
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="{{.ImgUser}}" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>{{.Sender}}</h3>
+                            <h4>{{.TimeElapsed}}</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>{{.Message}}</p>
+                        <img src="../static/img/coeur.png" class="messages-coeur">
+                    </div>
+                </div>
+                
+                {{else}}
+                <p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>
+                {{end}}
+            </div> 
+
+
+
+
 
             <div class="conainerWritePost">
                 <textarea id="messageInput" placeholder="Tapez votre Post..." class="inputPost"
                     oninput="adjustHeight(this)"></textarea>
                 <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" onclick="sendMessage()">
-            </div>
-        </section>
-    </div>
+            </div>-->
+        
+    
 
     <script>
         // Function to dynamically adjust the height of the textarea
-function adjustHeight(textarea) {
-    const scrollHeight = textarea.scrollHeight;
-    const minHeight = 30;  // Minimum height (in pixels)
-    const maxHeight = 50;  // Maximum height (in pixels)
+        function adjustHeight(textarea) {
+            const scrollHeight = textarea.scrollHeight;
+            const minHeight = 30;  // Minimum height (in pixels)
+            const maxHeight = 50;  // Maximum height (in pixels)
 
-    if (scrollHeight <= maxHeight) {
-        textarea.style.height = scrollHeight + 'px';
-    } else {
-        textarea.style.height = maxHeight + 'px';
-        textarea.style.overflowY = 'auto'; // Enable vertical scrolling
-    }
+            if (scrollHeight <= maxHeight) {
+                textarea.style.height = scrollHeight + 'px';
+            } else {
+                textarea.style.height = maxHeight + 'px';
+                textarea.style.overflowY = 'auto'; // Enable vertical scrolling
+            }
 
-    if (textarea.value === "") {
-        textarea.style.height = minHeight + 'px'; // Reset height when empty
-    }
-}
-
-// Function to send the message via POST
-function sendMessage() {
-    const messageInput = document.getElementById("messageInput").value.trim();
-
-    if (!messageInput) {
-        alert("Le message ne peut pas être vide !");
-        return;
-    }
-
-    fetch("/send-message", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `message=${encodeURIComponent(messageInput)}`
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log("Message envoyé avec succès !");
-            document.getElementById("messageInput").value = ""; // Effacer la zone de texte
-            document.getElementById("messageInput").style.height = "30px"; // Réinitialiser la hauteur
-            fetchMessages(); // Mettre à jour les messages dynamiquement
-        } else {
-            console.error("Erreur lors de l'envoi du message :", response.statusText);
-            alert("Échec de l'envoi du message. Veuillez réessayer !");
+            if (textarea.value === "") {
+                textarea.style.height = minHeight + 'px'; // Reset height when empty
+            }
         }
-    })
-    .catch(error => {
-        console.error("Erreur lors de l'envoi du message :", error);
-        alert("Une erreur s'est produite.");
-    });
-}
 
+        // Function to send the message via POST
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput").value.trim();
 
-
-// Listener for Enter key submission
-document.getElementById("messageInput").addEventListener("keydown", function (event) {
-    if (event.key === "Enter" && !event.shiftKey) { // Envoi avec "Entrée", sauf si "Shift" est maintenu
-        event.preventDefault(); // Empêcher la nouvelle ligne
-        sendMessage(); // Appeler la fonction d'envoi
-    }
-});
-
-
-// Function to fetch messages dynamically
-function fetchMessages() {
-    const allPostsContainer = document.querySelector(".allPosts");
-    if (!allPostsContainer) {
-        console.error("Erreur : élément avec la classe 'allPosts' introuvable.");
-        return;
-    }
-
-    fetch('/fetch-messages')
-        .then(response => response.json())
-        .then(messages => {
-            allPostsContainer.innerHTML = ""; // Vider les messages existants
-
-            if (!Array.isArray(messages) || messages.length === 0) {
-                allPostsContainer.innerHTML = "<p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>";
+            if (!messageInput) {
+                alert("Le message ne peut pas être vide !");
                 return;
             }
 
-            messages.forEach(msg => {
-                const postDiv = document.createElement("div");
-                postDiv.classList.add("post");
+            fetch("/send-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `message=${encodeURIComponent(messageInput)}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Message envoyé avec succès !");
+                        document.getElementById("messageInput").value = ""; // Effacer la zone de texte
+                        document.getElementById("messageInput").style.height = "30px"; // Réinitialiser la hauteur
+                        fetchMessages(); // Mettre à jour les messages dynamiquement
+                    } else {
+                        console.error("Erreur lors de l'envoi du message :", response.statusText);
+                        alert("Échec de l'envoi du message. Veuillez réessayer !");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'envoi du message :", error);
+                    alert("Une erreur s'est produite.");
+                });
+        }
 
-                postDiv.innerHTML = `
+        // Function to fetch messages dynamically
+        function fetchMessages() {
+            const allPostsContainer = document.querySelector(".allPosts");
+            if (!allPostsContainer) {
+                console.error("Erreur : élément avec la classe 'allPosts' introuvable.");
+                return;
+            }
+
+            fetch('/fetch-messages')
+                .then(response => response.json())
+                .then(messages => {
+                    allPostsContainer.innerHTML = ""; // Vider les messages existants
+
+                    if (!Array.isArray(messages) || messages.length === 0) {
+                        allPostsContainer.innerHTML = "<p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>";
+                        return;
+                    }
+
+                    messages.forEach(msg => {
+                        const postDiv = document.createElement("div");
+                        postDiv.classList.add("post");
+
+                        postDiv.innerHTML = `
                     <div class="infoPost">
                         <img src="${msg.ImgUser}" class="photoProfil" alt="Avatar">
                         <div class="txtInfoPost">
@@ -192,23 +206,352 @@ function fetchMessages() {
                         <p>${msg.Message}</p>
                     </div>
                 `;
-                allPostsContainer.appendChild(postDiv);
-            });
-        })
-        .catch(error => console.error("Erreur lors de la récupération des messages :", error));
-}
+                        allPostsContainer.appendChild(postDiv);
+                    });
+                })
+                .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+        }
 
 
-// Poll every 4 seconds to update messages
-setInterval(fetchMessages, 4000);
+        // Poll every 4 seconds to update messages
+        setInterval(fetchMessages, 4000);
 
-// Initial load of messages
-fetchMessages();
+        // Initial load of messages
+        fetchMessages();
 
 
-        </script>
+    </script>
 
-    
+
 </body>
 
 </html>
+
+
+
+
+
+
+
+    <!-- Contenu principal -->
+    <section>
+        <div class="allPosts">
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="../static/img/avatar/avatarHomme1.png" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>Pseudo</h3>
+                            <h4>Date et heure</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                            eo quoque accedente quod et nomenclatores adsueti haec et talia 
+                            venditare, mercede accepta lucris quosdam et prandiis inserunt 
+                            subditicios ignobiles et obscuros.
+                        </p>
+                    </div>
+                    <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                </div>
+                <!-- <div class="commentaires" id="commentaires">
+                   <div class="commentaire">
+                            <div class="infoCom">
+                                <img src="../static/img/photoProfil.png" class="photoProfil">
+                                <div class="txtInfoCom">
+                                    <h3>Pseudo</h3>
+                                    <h4>Date et heure</h4>
+                                </div>
+                            </div>
+                            <img src="../static/img/coeur.png" class="iconLikeCom" id="iconLikeCom">
+                            <div class="messageCom">
+                                <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                                    eo quoque accedente quod et nomenclatores adsueti haec et talia 
+                                    venditare, mercede accepta lucris quosdam et prandiis inserunt 
+                                    subditicios ignobiles et obscuros.
+                                </p>
+                            </div>
+                   </div>
+                </div> -->
+
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="../static/img/avatar/avatarFemme1.png" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>Pseudo</h3>
+                            <h4>Date et heure</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                            .
+                        </p>
+                    </div>
+                    <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                </div>
+                    <div class="post">
+                        <div class="infoPost">
+                            <img src="../static/img/avatar/avatarHomme2.png" class="photoProfil">
+                            <div class="txtInfoPost">
+                                <h3>Pseudo</h3>
+                                <h4>Date et heure</h4>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                                .
+                            </p>
+                        </div>
+                        <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                    <!-- <div class="interactionPost">
+                        <img src="../static/img/bulle.png" class="iconCommentairePost" id ="iconCommentairePost" onclick="commentairePost()">
+                        <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                    </div> -->
+                </div>
+
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="../static/img/avatar/avatarFemme3.png" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>Pseudo</h3>
+                            <h4>Date et heure</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                            .
+                        </p>
+                    </div>
+                    <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                </div>
+
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="../static/img//avatar/avatarHomme4.png" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>Pseudo</h3>
+                            <h4>Date et heure</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>Homines enim eruditos et sobrios ut infaustos et inutiles vitant,
+                            .
+                        </p>
+                    </div>
+                    <img src="../static/img/coeur.png" class="iconLikePost" id="iconLikePost">
+                </div>
+        </div>
+
+
+        <div class="conainerWritePost">
+            <textarea placeholder="Tapez votre Post..." class="inputPost" oninput="adjustHeight(this)"></textarea>
+            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend">
+        </div>
+    </div>
+
+    </section>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
+
+<!--<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+        <meta name="author" content="Matias, Sara, Samuel, William">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <title>MyTripy</title>
+        <link rel="stylesheet" href="static/css/styles.css">
+        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+    </head>
+<body>
+
+    <header>
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+        </a>
+
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
+
+        <ul class="meta-ul">
+            <li class="meta-navigation">
+                <a class="meta-a" href="/mytripy-non">MyTripy</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/destinations">Destinations</a>
+            </li>
+
+            <li class="meta-navigation">
+                <a class="meta-a" href="/contact">Contactez-nous</a>
+            </li>
+
+            <li class="meta-navigation-btn-connexion">
+                <a class="btn" href="/profil">Mon Compte</a>
+            </li>
+        </ul>
+
+    </header>
+
+
+    {{if $.Username}}
+                    <div class="messages-coeur-container" data-msg-id="{{.MessageID}}">
+                        {{if .Liked}}
+                        <img src="static/img/coeur_rouge.png" alt="Liked" class="messages-coeur">
+                        {{else}}
+                        <img src="static/img/coeur.png" alt="Like" class="messages-coeur">
+                        {{end}}
+                    </div>
+                    {{end}} 
+    <section>
+        <div class="allPosts">
+            {{range .Messages}}
+                <div class="post">
+                    <div class="infoPost">
+                        <img src="{{.ImgUser}}" class="photoProfil">
+                        <div class="txtInfoPost">
+                            <h3>{{.Sender}}</h3>
+                            <h4>{{.TimeElapsed}}</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>{{.Message}}</p>
+                    </div>
+                    <img src="static/img/coeur.png" alt="Like" class="messages-coeur">
+                    {{if $.Username}}
+                    <div class="messages-coeur-container" data-msg-id="{{.MessageID}}">
+                        {{if .Liked}}
+                        <img src="static/img/coeur_rouge.png" alt="Liked" class="messages-coeur">
+                        {{else}}
+                        <img src="static/img/coeur.png" alt="Like" class="messages-coeur">
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>                
+                {{else}}
+        <p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>
+        {{end}}
+        </div>
+
+        <div class="conainerWritePost">
+            <textarea id="messageInput" placeholder="Tapez votre Post..." class="inputPost" oninput="adjustHeight(this)"></textarea>
+            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" onclick="sendMessage()">
+        </div>
+    </div>
+
+    </section>
+
+    <script>
+        // Function to dynamically adjust the height of the textarea
+        function adjustHeight(textarea) {
+            const scrollHeight = textarea.scrollHeight;
+            const minHeight = 30;  // Minimum height (in pixels)
+            const maxHeight = 50;  // Maximum height (in pixels)
+
+            if (scrollHeight <= maxHeight) {
+                textarea.style.height = scrollHeight + 'px';
+            } else {
+                textarea.style.height = maxHeight + 'px';
+                textarea.style.overflowY = 'auto'; // Enable vertical scrolling
+            }
+
+            if (textarea.value === "") {
+                textarea.style.height = minHeight + 'px'; // Reset height when empty
+            }
+        }
+
+        // Function to send the message via POST
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput").value.trim();
+
+            if (!messageInput) {
+                alert("Le message ne peut pas être vide !");
+                return;
+            }
+
+            fetch("/send-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `message=${encodeURIComponent(messageInput)}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Message envoyé avec succès !");
+                        document.getElementById("messageInput").value = ""; // Effacer la zone de texte
+                        document.getElementById("messageInput").style.height = "30px"; // Réinitialiser la hauteur
+                        fetchMessages(); // Mettre à jour les messages dynamiquement
+                    } else {
+                        console.error("Erreur lors de l'envoi du message :", response.statusText);
+                        alert("Échec de l'envoi du message. Veuillez réessayer !");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'envoi du message :", error);
+                    alert("Une erreur s'est produite.");
+                });
+        }
+
+        // Function to fetch messages dynamically
+        function fetchMessages() {
+            const allPostsContainer = document.querySelector(".allPosts");
+            if (!allPostsContainer) {
+                console.error("Erreur : élément avec la classe 'allPosts' introuvable.");
+                return;
+            }
+
+            fetch('/fetch-messages')
+                .then(response => response.json())
+                .then(messages => {
+                    allPostsContainer.innerHTML = ""; // Vider les messages existants
+
+                    if (!Array.isArray(messages) || messages.length === 0) {
+                        allPostsContainer.innerHTML = "<p>Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !</p>";
+                        return;
+                    }
+
+                    messages.forEach(msg => {
+                        const postDiv = document.createElement("div");
+                        postDiv.classList.add("post");
+
+                        postDiv.innerHTML = `
+                    <div class="infoPost">
+                        <img src="${msg.ImgUser}" class="photoProfil" alt="Avatar">
+                        <div class="txtInfoPost">
+                            <h3>${msg.Sender}</h3>
+                            <h4>${msg.TimeElapsed}</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>${msg.Message}</p>
+                    </div>
+                `;
+                        allPostsContainer.appendChild(postDiv);
+                    });
+                })
+                .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+        }
+
+
+        // Poll every 4 seconds to update messages
+        setInterval(fetchMessages, 4000);
+
+        // Initial load of messages
+        fetchMessages();
+
+
+    </script>
+
+    <script src="static/script.js"></script>
+</body>
+</html>-->

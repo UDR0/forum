@@ -1,21 +1,25 @@
-
-
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
-        <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
-        <meta name="author" content="Matias, Sara, Samuel, William">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-        <title>MyTripy</title>
-        <link rel="stylesheet" href="static/css/styles.css">
-        <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
-    </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+</head>
+
 <body>
 
     <!-- Header -->
@@ -61,18 +65,14 @@
 
     </header>
 
-    
+
 
 
     <!-- Contenu principal -->
     <section>
         <!-- Barre de recherche  (non so se metterla perché cerca le regioni soltanto non i chat, oppure faccio in modo che cerchi i post quando sono su questa regione)-->
         <div class="search-bar">
-            <input 
-                type="text" 
-                placeholder="Rechercher une destination..." 
-                id="searchBar" 
-                oninput="filterOptions()">
+            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
             <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown"></div>
@@ -82,19 +82,28 @@
             <div class="discussion-cree" onclick="selectChat('{{.MainChat.Name}}')">
                 <div class="discussion-cree-info">
                     <img src="{{.MainChat.ImageURL}}" alt="" class="discussion-cree-info-profil">
-                    
+
                     <div class="discussion-cree-info-texte">
                         <p class="discussion-cree-info-titre">{{.MainChat.Name}}</p>
                         <p class="discussion-cree-info-nom">MyTripy</p>
                     </div>
-                </div>                
+                </div>
 
                 <p class="discussion-cree-descriptif">{{.MainChat.Descri}}</p>
-                
+
                 <div class="discussion-cree-chat">
                     <img src="static/img/messager.png" alt="discussion">
                     <p>{{.MainChat.MessageCount}}</p>
                 </div>
+                {{if $.IsConnected}}
+                <div class="chat-coeur-container" data-chat="{{.MainChat.Name}}">
+                    {{if .MainChat.Liked}}
+                    <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                    {{else}}
+                    <img src="static/img/coeur.png" alt="Like" class="chat-coeur">
+                    {{end}}
+                </div>
+                {{end}}
             </div>
         </div>
 
@@ -104,12 +113,17 @@
         <div class="popupAjouterFil" id="popupAjouterFil">
             <img src="/static/img/fondPopupFil.png">
             <h3>Nouveau Fils</h3>
-            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil" required> 
-            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil" required> 
-            <div class="paramFil"> <h4>{{.Region}}</h4> </div>
+            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil" required>
+            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil"
+                required>
+            <div class="paramFil">
+                <h4>{{.Region}}</h4>
+                <input id="regionField" type="hidden" value="{{.Region}}">
+            </div>
             <button onclick="createChat()">Créer</button>
         </div>
-<!--       
+
+        <!--       
          <div class="popupAjouterFil" id="popupAjouterFil">
             <img src="/static/img/fondPopupFil.png">
             <h3>Nouveau Fils</h3>
@@ -132,114 +146,134 @@
             <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
                 <div class="discussion-cree-info">
                     <img src="{{.PhotoURL}}" alt="user photo" class="discussion-cree-info-profil">
-                    
+
                     <div class="discussion-cree-info-texte">
                         <p class="discussion-cree-info-titre">{{.Name}}</p>
                         <p class="discussion-cree-info-nom">{{.Creator}}</p>
                     </div>
-                </div>                
+                </div>
 
                 <p class="discussion-cree-descriptif">{{.Descri}}</p>
-                
+
                 <div class="discussion-cree-chat">
                     <img src="static/img/messager.png" alt="discussion">
                     <p>{{.MessageCount}}</p>
                 </div>
 
-                <!-- <div class="destination-coeur-container">
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
-                </div> -->
+                {{if $.IsConnected}}
+                <div class="chat-coeur-container" data-chat="{{.Name}}">
+                    {{if .Liked}}
+                    <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                    {{else}}
+                    <img src="static/img/coeur.png" alt="Like" class="chat-coeur">
+                    {{end}}
+                </div>
+                {{end}}
             </div>
             {{else}}
-            <p>No chats available in {{.Region}}. Create one below!</p>
-            {{end}}   
+            <p>Aucun chat n'a encore été créé dans {{.Region}}. Créé en un maintenant!</p>
+            {{end}}
         </div>
 
 
     </section>
 
     <script>
+        function PopupFils() {
+            const popupFils = document.getElementById("popupAjouterFil");
+            const imageBtnFils = document.getElementById("btnAjouterFil");
+
+            if (popupFils.style.display === "flex") {
+                document.getElementById("popupAjouterFil").style.display = "none";
+                document.getElementById("btnAjouterFil").src = "static/img/ajouter.png"
+            } else {
+                document.getElementById("popupAjouterFil").style.display = "flex";
+                document.getElementById("btnAjouterFil").src = "static/img/moin.png"
+            }
+        }
+
         function fetchChats(region) {
             fetch(`/fetch-chats?region=${region}`)
                 .then(response => response.json())
                 .then(chats => {
                     const chatList = document.getElementById("chat-list");
                     chatList.innerHTML = ""; // Clear current chats
-    
+
                     if (!Array.isArray(chats) || chats.length === 0) {
                         const noChatsMessage = document.createElement("p");
                         noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
                         chatList.appendChild(noChatsMessage);
                         return;
                     }
-    
+
                     chats.forEach(chat => {
                         const listItem = document.createElement("li");
                         const button = document.createElement("button");
-    
+
                         button.textContent = `${chat.Name} (${chat.Creator})`;
                         button.addEventListener("click", () => {
                             selectChat(chat.Name); // Function for handling chat selection
                         });
-    
+
                         listItem.appendChild(button);
                         chatList.appendChild(listItem);
                     });
                 })
                 .catch(error => console.error("Error fetching chats:", error));
         }
-    
-        function selectChat(chatName) {
-    fetch(`/select-chat?chatname=${chatName}`)
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
-            } else {
-                console.error("Failed to select chat:", response.statusText);
-            }
-        })
-        .catch(error => console.error("Error selecting chat:", error));
-}
 
-    
+        function selectChat(chatName) {
+            fetch(`/select-chat?chatname=${chatName}`)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
+                    } else {
+                        console.error("Failed to select chat:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting chat:", error));
+        }
+
+
         document.addEventListener("DOMContentLoaded", function () {
             fetchChats("{{.Region}}");
         });
 
         function createChat() {
-    const chatTitle = document.getElementById("chatTitle").value.trim();
-    const chatDescription = document.getElementById("chatDescription").value.trim(); // Fetch description
-    const region = document.getElementById("regionField").value;
+            const chatTitle = document.getElementById("chatTitle").value.trim();
+            const chatDescription = document.getElementById("chatDescription").value.trim(); // Fetch description
+            const region = document.getElementById("regionField").value;
 
-    if (!chatTitle || !region) {
-        alert("Le titre et la région sont obligatoires !");
-        return;
-    }
+            if (!chatTitle || !region) {
+                alert("Le titre et la région sont obligatoires !");
+                return;
+            }
 
-    // Send data via POST
-    fetch("/create-chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `chatname=${encodeURIComponent(chatTitle)}&description=${encodeURIComponent(chatDescription)}&region=${encodeURIComponent(region)}`
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.href = "/welcome"; // Redirect to welcome page
-        } else {
-            console.error("Failed to create chat:", response.statusText);
-            alert("Échec de la création du chat. Veuillez réessayer !");
+            // Send data via POST
+            fetch("/create-chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `chatname=${encodeURIComponent(chatTitle)}&description=${encodeURIComponent(chatDescription)}&region=${encodeURIComponent(region)}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/welcome"; // Redirect to welcome page
+                    } else {
+                        console.error("Failed to create chat:", response.statusText);
+                        alert("Échec de la création du chat. Veuillez réessayer !");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error creating chat:", error);
+                    alert("Une erreur s'est produite lors de la création du chat.");
+                });
         }
-    })
-    .catch(error => {
-        console.error("Error creating chat:", error);
-        alert("Une erreur s'est produite lors de la création du chat.");
-    });
-}
 
 
     </script>
     <script src="static/script.js"></script>
 </body>
+
 </html>

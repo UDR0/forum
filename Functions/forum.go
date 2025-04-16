@@ -219,13 +219,29 @@ func CheckCredentialsForConnection(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-// prende le info dal sql per mettere le info dello user nella pagina profilo
 func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	type Region struct {
 		RegionName  string `json:"region_name"`
 		RegionImg   string `json:"region_imgurl"`
 		RegionDescr string `json:"region_description"`
 	}
+
+	type ChatInfo struct {
+		Name         string `json:"name"`
+		MessageCount int    `json:"message_count"`
+		Description  string `json:"description"`
+		PhotoURL     string `json:"photo_url"`
+		Username     string `json:"username"`
+	}
+
+	type LikedChat struct {
+		Name         string `json:"name"`
+		Description  string `json:"description"`
+		MessageCount int    `json:"message_count"`
+		PhotoURL     string `json:"photo_url"`
+		Creator      string `json:"creator"`
+	}
+
 	var connected bool
 	session, _ := Store.Get(r, "session-name")
 	username, ok := session.Values["username"].(string)
@@ -242,6 +258,7 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Fetch user data
 	var pseudo, urlPhoto, biography string
 	err = db.QueryRow("SELECT USERNAME, PHOTO_URL, BIOGRAPHY FROM User WHERE USERNAME = ?", username).Scan(&pseudo, &urlPhoto, &biography)
 	if err != nil {
@@ -249,26 +266,25 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := `
+	// Fetch liked regions
+	queryRegions := `
         SELECT Region.REGION_NAME, Region.REGION_IMG_URL, Region.DESCRI
-		FROM Region
-		JOIN USER_LIKES ON Region.REGION_NAME = USER_LIKES.REGION_NAME
-		WHERE USER_LIKES.USER_ID = ? AND USER_LIKES.LIKED = TRUE;
+        FROM Region
+        JOIN USER_LIKES ON Region.REGION_NAME = USER_LIKES.REGION_NAME
+        WHERE USER_LIKES.USER_ID = ? AND USER_LIKES.LIKED = TRUE;
     `
-	rows, err := db.Query(query, username)
+	rowsRegions, err := db.Query(queryRegions, username)
 	if err != nil {
 		fmt.Println("Error executing query:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	defer rows.Close()
+	defer rowsRegions.Close()
 
-	// Slice to hold the regions
 	var regions []Region
-
-	for rows.Next() {
+	for rowsRegions.Next() {
 		var region Region
-		err := rows.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr)
+		err := rowsRegions.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -278,33 +294,110 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check for errors after iteration
-	if err = rows.Err(); err != nil {
+	if err = rowsRegions.Err(); err != nil {
 		fmt.Println("Error during row iteration:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	username, isConnected := session.Values["username"].(string)
-	if isConnected {
-		connected = true
-	} else {
-		connected = false
+	// Fetch chats created by the connected user
+	queryChats := `
+        SELECT c.name, COUNT(m.id) AS message_count, c.descri, u.PHOTO_URL, u.USERNAME
+        FROM chats c
+        LEFT JOIN messages m ON c.name = m.chat_name
+        LEFT JOIN User u ON c.creator = u.USERNAME
+        WHERE c.creator = ? -- Only chats created by the connected user
+        GROUP BY c.name, c.descri, u.PHOTO_URL, u.USERNAME;
+    `
+	rowsChats, err := db.Query(queryChats, username)
+	if err != nil {
+		fmt.Println("Error executing chat query:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer rowsChats.Close()
+
+	var chats []ChatInfo
+	for rowsChats.Next() {
+		var chat ChatInfo
+		err := rowsChats.Scan(&chat.Name, &chat.MessageCount, &chat.Description, &chat.PhotoURL, &chat.Username)
+		if err != nil {
+			fmt.Println("Error scanning chat row:", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		chats = append(chats, chat)
 	}
 
+	// Check for errors after iteration
+	if err = rowsChats.Err(); err != nil {
+		fmt.Println("Error during chat row iteration:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Fetch chats liked by the user
+	queryLikedChats := `
+       SELECT c.name, COUNT(m.id) AS message_count, c.descri, u.PHOTO_URL, u.USERNAME AS creator
+FROM chats c
+LEFT JOIN messages m ON c.name = m.chat_name
+LEFT JOIN Chat_Liked cl ON c.name = cl.chatID
+LEFT JOIN User u ON c.creator = u.USERNAME
+WHERE cl.Username = ? AND cl.liked = TRUE
+GROUP BY c.name, c.descri, u.PHOTO_URL, u.USERNAME;
+
+
+    `
+	rowsLikedChats, err := db.Query(queryLikedChats, username)
+	if err != nil {
+		fmt.Println("Error executing liked chat query:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer rowsLikedChats.Close()
+
+	var likedChats []LikedChat
+	for rowsLikedChats.Next() {
+		var likedChat LikedChat
+		err := rowsLikedChats.Scan(&likedChat.Name, &likedChat.MessageCount, &likedChat.Description, &likedChat.PhotoURL, &likedChat.Creator)
+		if err != nil {
+			fmt.Println("Error scanning liked chat row:", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		likedChats = append(likedChats, likedChat)
+	}
+
+	// Check for errors after iteration
+	if err = rowsLikedChats.Err(); err != nil {
+		fmt.Println("Error during liked chat row iteration:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Check session state
+	connected = ok && username != ""
+
+	// Prepare data for the template
 	data := struct {
 		Pseudo      string
 		PhotoURL    string
 		Biography   string
 		IsConnected bool
 		Regions     []Region
+		Chats       []ChatInfo
+		LikedChats  []LikedChat
 	}{
 		Pseudo:      pseudo,
 		PhotoURL:    urlPhoto,
 		Biography:   biography,
 		IsConnected: connected,
 		Regions:     regions,
+		Chats:       chats,
+		LikedChats:  likedChats,
 	}
 
+	// Render the template
 	t, err := template.ParseFiles("templates/profil.html")
 	if err != nil {
 		http.Error(w, "Erreur lors du chargement du template : "+err.Error(), http.StatusInternalServerError)
@@ -334,12 +427,81 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Simulez la mise à jour (par exemple, en sauvegardant dans une base de données)
-	// Exemple : updateDatabase(data.Pseudo, data.Bio)
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec(`UPDATE User SET BIOGRAPHY = ? WHERE USERNAME = ?;`,
+		data.Bio, data.Pseudo)
 
 	// Répondre avec un message de succès
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Profil mis à jour avec succès !"))
+}
+
+func UpdateAvatar(w http.ResponseWriter, r *http.Request) {
+	// Ensure the request method is POST
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	type AvatarData struct {
+		Avatar string `json:"avatar"`
+	}
+
+	// Decode the JSON request body
+	var data AvatarData
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Erreur lors du décodage du corps de la requête", http.StatusBadRequest)
+		return
+	}
+
+	session, err := Store.Get(r, "session-name")
+	if err != nil {
+		log.Println("Error retrieving session:", err)
+		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
+		return
+	}
+
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
+	// Validate the avatar URL
+	if data.Avatar == "" {
+		http.Error(w, "URL d'avatar non valide ou vide", http.StatusBadRequest)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec(`UPDATE User SET PHOTO_URL = ? WHERE USERNAME = ?;`,
+		data.Avatar, username)
+
+	// Simulate storing the avatar URL (e.g., in a database)
+	// Example: storeAvatarInDatabase(data.Avatar)
+
+	// Respond with a success message
+	response := map[string]string{
+		"message": "Avatar mis à jour avec succès !",
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 // deconessione dalla sessione, questo c'è ma non è uguale
@@ -350,7 +512,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/mytripy-non", http.StatusFound)
 }
 
-// ///////////////////////////////////////////////////////////////////////////////////////////:
+// /////////////////////////////// LIKES ////////////////////////////////////////////////////////////:
 type LikeRequest struct {
 	Region string `json:"region"` // Region name from the client
 	Liked  bool   `json:"liked"`  // Liked status from the client
@@ -422,47 +584,201 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+type LikeChatRequest struct {
+	Chat  string `json:"region"` // Region name from the client
+	Liked bool   `json:"liked"`  // Liked status from the client
+}
+
+func LikeChatHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var likeChatRequest LikeChatRequest
+	err := json.NewDecoder(r.Body).Decode(&likeChatRequest)
+	if err != nil {
+		http.Error(w, "Bad request: Unable to parse JSON", http.StatusBadRequest)
+		return
+	}
+
+	session, err := Store.Get(r, "session-name")
+	if err != nil {
+		log.Println("Error retrieving session:", err)
+		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
+		return
+	}
+
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Check if the user already liked this region
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM Chat_Liked WHERE Username = ? AND chatID = ?);`
+	err = db.QueryRow(query, username, likeChatRequest.Chat).Scan(&exists)
+	if err != nil {
+		fmt.Println("Error checking existing like:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if exists {
+		// Update the existing like record
+		_, err = db.Exec(`UPDATE Chat_Liked SET LIKED = ? WHERE Username = ? AND chatID = ?;`,
+			likeChatRequest.Liked, username, likeChatRequest.Chat)
+	} else {
+		// Insert a new like record
+		_, err = db.Exec(`INSERT INTO Chat_Liked (Username, chatID, LIKED) VALUES (?, ?, ?);`,
+			username, likeChatRequest.Chat, likeChatRequest.Liked)
+	}
+
+	if err != nil {
+		fmt.Println("Error executing SQL query:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": fmt.Sprintf("Chat '%s' liked status updated by user %d: %t", likeChatRequest.Chat, username, likeChatRequest.Liked),
+	})
+}
+
+type LikeMsgRequest struct {
+	MsgID int  `json:"msgId"` // Message ID from the client
+	Liked bool `json:"liked"` // Liked status from the client
+}
+
+func LikeMsgHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var likeMsgRequest LikeMsgRequest
+	err := json.NewDecoder(r.Body).Decode(&likeMsgRequest)
+	if err != nil {
+		log.Println("Error decoding JSON:", err)
+		http.Error(w, "Bad request: Unable to parse JSON", http.StatusBadRequest)
+		return
+	}
+
+	session, err := Store.Get(r, "session-name")
+	if err != nil {
+		log.Println("Error retrieving session:", err)
+		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
+		return
+	}
+
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		log.Println("Error: Username not found in session.")
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		log.Println("Error opening database:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Check if the user already liked this message
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = ?);`
+	err = db.QueryRow(query, username, likeMsgRequest.MsgID).Scan(&exists)
+	if err != nil {
+		log.Println("Error checking existing like:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if exists {
+		log.Printf("Updating like status for user '%s' on message ID '%d'.", username, likeMsgRequest.MsgID)
+		_, err = db.Exec(`UPDATE Msg_Liked SET liked = ? WHERE username = ? AND message_id = ?;`,
+			likeMsgRequest.Liked, username, likeMsgRequest.MsgID)
+	} else {
+		log.Printf("Inserting new like record for user '%s' on message ID '%d'.", username, likeMsgRequest.MsgID)
+		_, err = db.Exec(`INSERT INTO Msg_Liked (username, message_id, liked) VALUES (?, ?, ?);`,
+			username, likeMsgRequest.MsgID, likeMsgRequest.Liked)
+	}
+
+	if err != nil {
+		log.Println("Error executing SQL query:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("Like status updated: Message ID '%d', User '%s', Liked: %t", likeMsgRequest.MsgID, username, likeMsgRequest.Liked)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": fmt.Sprintf("Message '%d' like status updated for user '%s': %t", likeMsgRequest.MsgID, username, likeMsgRequest.Liked),
+	})
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // prende info di cui ha bisogno mytripy-non.html, da ridurre se possibile
 func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
+	// Retrieve session and username
 	session, _ := Store.Get(r, "session-name")
-	_, connected := session.Values["username"].(string)
+	username, connected := session.Values["username"].(string)
 
+	// Define RegionChat struct
 	type RegionChat struct {
 		RegionName  string
 		ChatCount   int
 		RegionImg   string
 		RegionDescr string
+		RegionLiked bool
 	}
 
+	// Prepare data for the template
 	data := struct {
 		IsConnected bool
 		Regions     []RegionChat
 	}{
-		IsConnected: connected,
+		IsConnected: connected, // Pass connection state to the template
 	}
 
 	// Fetch popular regions
-	db, err := sql.Open("sqlite3", "./forum.db") // Adjust connection details
+	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-
 		http.Error(w, "Erreur d'ouverture de la base de données.", http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
 	query := `
-        SELECT r.REGION_NAME, COUNT(c.CHAT_NAME) AS CHAT_COUNT, r.REGION_IMG_URL, r.DESCRI
+        SELECT r.REGION_NAME, 
+               COUNT(c.CHAT_NAME) AS CHAT_COUNT, 
+               r.REGION_IMG_URL, 
+               r.DESCRI,
+               COALESCE(ul.LIKED, FALSE) AS LIKED
         FROM Region r
         JOIN Department d ON r.REGION_NAME = d.REGION_NAME
         JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
+        LEFT JOIN USER_LIKES ul ON r.REGION_NAME = ul.REGION_NAME AND ul.USER_ID = ?
         GROUP BY r.REGION_NAME, r.REGION_IMG_URL, r.DESCRI
         ORDER BY CHAT_COUNT DESC
         LIMIT 3;
     `
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, username) // Query with user-specific likes (username may be empty)
 	if err != nil {
 		log.Println("Query error:", err)
 		http.Error(w, "Erreur lors de l'exécution de la requête.", http.StatusInternalServerError)
@@ -472,7 +788,7 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg, &region.RegionDescr); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.ChatCount, &region.RegionImg, &region.RegionDescr, &region.RegionLiked); err != nil {
 			http.Error(w, "Erreur lors du scan des résultats.", http.StatusInternalServerError)
 			return
 		}
@@ -490,27 +806,28 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// prende tutte le regioni di cui ha bisognio la pagina destinations.html (troppo simile a quella dentro MyTripyNonHandler)
+// AllRegions fetches all regions needed for destinations.html and handles connection state
 func AllRegions(w http.ResponseWriter, r *http.Request) {
-	var connected bool
 	session, _ := Store.Get(r, "session-name")
-	_, isConnected := session.Values["username"].(string)
-	connected = isConnected
+	username, isConnected := session.Values["username"].(string)
 
+	// Define RegionChat struct
 	type RegionChat struct {
 		RegionName  string
 		RegionImg   string
 		RegionDescr string
+		RegionLiked bool
 	}
 
+	// Prepare data for the template
 	data := struct {
 		IsConnected bool
 		Regions     []RegionChat
 	}{
-		IsConnected: connected,
+		IsConnected: isConnected, // Send connection state to the template
 	}
 
-	// Fetch regions from the database
+	// Open the database
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		http.Error(w, "Database error.", http.StatusInternalServerError)
@@ -518,11 +835,15 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Fetch all regions with like status
 	query := `
-        SELECT REGION_NAME, REGION_IMG_URL, DESCRI 
-        FROM Region;
+        SELECT Region.REGION_NAME, Region.REGION_IMG_URL, Region.DESCRI, 
+        COALESCE(USER_LIKES.LIKED, FALSE) AS LIKED
+        FROM Region
+        LEFT JOIN USER_LIKES 
+        ON Region.REGION_NAME = USER_LIKES.REGION_NAME AND USER_LIKES.USER_ID = ?;
     `
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, username) // `username` is empty for unauthenticated users
 	if err != nil {
 		http.Error(w, "Error querying database.", http.StatusInternalServerError)
 		return
@@ -531,7 +852,7 @@ func AllRegions(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var region RegionChat
-		if err := rows.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr); err != nil {
+		if err := rows.Scan(&region.RegionName, &region.RegionImg, &region.RegionDescr, &region.RegionLiked); err != nil {
 			http.Error(w, "Error scanning regions.", http.StatusInternalServerError)
 			return
 		}
@@ -619,24 +940,16 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
-		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
-		return
 	}
 
-	username, ok := session.Values["username"].(string)
-	if !ok || username == "" {
-		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
-		return
-	}
-
+	username, _ := session.Values["username"].(string)
 	region, ok := session.Values["region"].(string)
 	if !ok || region == "" {
 		http.Redirect(w, r, "/region-selection", http.StatusSeeOther)
 		return
 	}
 
-	// Fetch chats for the region...
-
+	// Open the database
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
@@ -644,24 +957,29 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Fetch main chat
-	queryMain := `SELECT 
-                      c.name AS chat_name, 
-                      COUNT(m.id) AS message_count, 
-                      c.descri, 
-                      r.REGION_IMG_URL
-                  FROM 
-                      chats c
-                  LEFT JOIN 
-                      messages m ON c.name = m.chat_name
-                  LEFT JOIN 
-                      Region r ON c.region = r.REGION_NAME
-                  WHERE 
-                      c.principal = TRUE 
-                      AND c.region = ?
-                  GROUP BY 
-                      c.name, c.descri, r.REGION_IMG_URL`
-	principal, err := db.Query(queryMain, region)
+	// Fetch main chat with liked status
+	queryMain := `
+        SELECT 
+            c.name AS chat_name, 
+            COUNT(m.id) AS message_count, 
+            c.descri, 
+            r.REGION_IMG_URL, 
+            COALESCE(cl.liked, FALSE) AS liked
+        FROM 
+            chats c
+        LEFT JOIN 
+            messages m ON c.name = m.chat_name
+        LEFT JOIN 
+            Region r ON c.region = r.REGION_NAME
+        LEFT JOIN 
+            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+        WHERE 
+            c.principal = TRUE 
+            AND c.region = ?
+        GROUP BY 
+            c.name, c.descri, r.REGION_IMG_URL, cl.liked;
+    `
+	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
@@ -673,11 +991,12 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		MessageCount int
 		Descri       string
 		ImageURL     string
+		Liked        bool
 	}
 
 	var mainChat MainChat
 	if principal.Next() {
-		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL)
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.Liked)
 		if err != nil {
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
@@ -687,48 +1006,49 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch user chats
-	queryChats := `SELECT 
-                       c.name, 
-                       COUNT(m.id) AS message_count, 
-                       c.descri, 
-                       u.PHOTO_URL, 
-                       u.USERNAME
-                   FROM 
-                       chats c
-                   LEFT JOIN 
-                       messages m ON c.name = m.chat_name
-                   LEFT JOIN 
-                       User u ON c.creator = u.USERNAME
-                   WHERE 
-                       c.principal = FALSE 
-                       AND c.region = ?
-                   GROUP BY 
-                       c.name, c.descri, u.PHOTO_URL, u.USERNAME`
-	rows, err := db.Query(queryChats, region)
+	// Fetch user chats with liked status
+	queryChats := `
+        SELECT 
+            c.name AS chat_name, 
+            COUNT(m.id) AS message_count, 
+            c.descri, 
+            u.PHOTO_URL, 
+            u.USERNAME, 
+            COALESCE(cl.liked, FALSE) AS liked
+        FROM 
+            chats c
+        LEFT JOIN 
+            messages m ON c.name = m.chat_name
+        LEFT JOIN 
+            User u ON c.creator = u.USERNAME
+        LEFT JOIN 
+            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+        WHERE 
+            c.principal = FALSE 
+            AND c.region = ?
+        GROUP BY 
+            c.name, c.descri, u.PHOTO_URL, u.USERNAME, cl.liked;
+    `
+	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
 		http.Error(w, "Server error while fetching chats", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
-	var chats []struct {
+	type UserChat struct {
 		Name         string
 		MessageCount int
 		Descri       string
 		PhotoURL     string
 		Creator      string
+		Liked        bool
 	}
 
+	var chats []UserChat
 	for rows.Next() {
-		var chat struct {
-			Name         string
-			MessageCount int
-			Descri       string
-			PhotoURL     string
-			Creator      string
-		}
-		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator); err != nil {
+		var chat UserChat
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.Liked); err != nil {
 			log.Println("Error scanning chat data:", err)
 			continue
 		}
@@ -737,21 +1057,17 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 
 	// Final data struct
 	data := struct {
-		Username string
-		Region   string
-		MainChat MainChat
-		Chats    []struct {
-			Name         string
-			MessageCount int
-			Descri       string
-			PhotoURL     string
-			Creator      string
-		}
+		IsConnected bool
+		Username    string
+		Region      string
+		MainChat    MainChat
+		Chats       []UserChat
 	}{
-		Username: username,
-		Region:   region,
-		MainChat: mainChat,
-		Chats:    chats,
+		IsConnected: username != "",
+		Username:    username,
+		Region:      region,
+		MainChat:    mainChat,
+		Chats:       chats,
 	}
 
 	if err := template.Must(template.ParseFiles("templates/welcome.html")).Execute(w, data); err != nil {
@@ -797,7 +1113,7 @@ func CreateChatHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// Adjust the SQL to include the description field
-	_, err = db.Exec("INSERT INTO chats (name, creator, region, descri, principal) VALUES (?, ?, ?, ?,?)", chatName, creator, region, chatDescription, "FALSE")
+	_, err = db.Exec("INSERT INTO chats (name, creator, region, descri, principal) VALUES (?, ?, ?, ?,?)", chatName, creator, region, chatDescription, 0)
 	if err != nil {
 		log.Printf("Chat creation failed: %v", err)
 		http.Error(w, "Chat creation failed", http.StatusInternalServerError)
@@ -849,6 +1165,9 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	session, _ := Store.Get(r, "session-name")
+	username, _ := session.Values["username"].(string) // No connection check or redirection
+
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
@@ -856,24 +1175,29 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Fetch main chat
-	queryMain := `SELECT 
-                      c.name AS chat_name, 
-                      COUNT(m.id) AS message_count, 
-                      c.descri, 
-                      r.REGION_IMG_URL
-                  FROM 
-                      chats c
-                  LEFT JOIN 
-                      messages m ON c.name = m.chat_name
-                  LEFT JOIN 
-                      Region r ON c.region = r.REGION_NAME
-                  WHERE 
-                      c.principal = TRUE 
-                      AND c.region = ?
-                  GROUP BY 
-                      c.name, c.descri, r.REGION_IMG_URL`
-	principal, err := db.Query(queryMain, region)
+	// Fetch main chat with liked status
+	queryMain := `
+        SELECT 
+            c.name AS chat_name, 
+            COUNT(m.id) AS message_count, 
+            c.descri, 
+            r.REGION_IMG_URL, 
+            COALESCE(cl.liked, FALSE) AS liked_status
+        FROM 
+            chats c
+        LEFT JOIN 
+            messages m ON c.name = m.chat_name
+        LEFT JOIN 
+            Region r ON c.region = r.REGION_NAME
+        LEFT JOIN 
+            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+        WHERE 
+            c.principal = TRUE 
+            AND c.region = ?
+        GROUP BY 
+            c.name, c.descri, r.REGION_IMG_URL, cl.liked;
+    `
+	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
@@ -885,11 +1209,12 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		MessageCount int
 		Descri       string
 		ImageURL     string
+		Liked        bool
 	}
 
 	var mainChat MainChat
 	if principal.Next() {
-		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL)
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.Liked)
 		if err != nil {
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
@@ -899,48 +1224,49 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch user chats
-	queryChats := `SELECT 
-                       c.name, 
-                       COUNT(m.id) AS message_count, 
-                       c.descri, 
-                       u.PHOTO_URL, 
-                       u.USERNAME
-                   FROM 
-                       chats c
-                   LEFT JOIN 
-                       messages m ON c.name = m.chat_name
-                   LEFT JOIN 
-                       User u ON c.creator = u.USERNAME
-                   WHERE 
-                       c.principal = FALSE 
-                       AND c.region = ?
-                   GROUP BY 
-                       c.name, c.descri, u.PHOTO_URL, u.USERNAME`
-	rows, err := db.Query(queryChats, region)
+	// Fetch user chats with liked status
+	queryChats := `
+        SELECT 
+            c.name AS chat_name, 
+            COUNT(m.id) AS message_count, 
+            c.descri, 
+            u.PHOTO_URL, 
+            u.USERNAME, 
+            COALESCE(cl.liked, FALSE) AS liked_status
+        FROM 
+            chats c
+        LEFT JOIN 
+            messages m ON c.name = m.chat_name
+        LEFT JOIN 
+            User u ON c.creator = u.USERNAME
+        LEFT JOIN 
+            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+        WHERE 
+            c.principal = FALSE 
+            AND c.region = ?
+        GROUP BY 
+            c.name, c.descri, u.PHOTO_URL, u.USERNAME, cl.liked;
+    `
+	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
 		http.Error(w, "Server error while fetching chats", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
-	var chats []struct {
+	type UserChat struct {
 		Name         string
 		MessageCount int
 		Descri       string
 		PhotoURL     string
 		Creator      string
+		Liked        bool
 	}
 
+	var chats []UserChat
 	for rows.Next() {
-		var chat struct {
-			Name         string
-			MessageCount int
-			Descri       string
-			PhotoURL     string
-			Creator      string
-		}
-		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator); err != nil {
+		var chat UserChat
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.Liked); err != nil {
 			log.Println("Error scanning chat data:", err)
 			continue
 		}
@@ -949,17 +1275,13 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Final data struct
 	data := struct {
-		MainChat MainChat
-		Chats    []struct {
-			Name         string
-			MessageCount int
-			Descri       string
-			PhotoURL     string
-			Creator      string
-		}
+		IsConnected bool
+		MainChat    MainChat
+		Chats       []UserChat
 	}{
-		MainChat: mainChat,
-		Chats:    chats,
+		IsConnected: username != "",
+		MainChat:    mainChat,
+		Chats:       chats,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -999,8 +1321,13 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		"SELECT m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL FROM messages m LEFT JOIN User u ON m.sender = u.USERNAME WHERE m.chat_name = ? ORDER BY m.timestamp ASC;",
-		chatName,
+		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL,
+                EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = m.id) AS liked
+         FROM messages m
+         LEFT JOIN User u ON m.sender = u.USERNAME
+         WHERE m.chat_name = ?
+         ORDER BY m.timestamp ASC;`,
+		username, chatName,
 	)
 	if err != nil {
 		http.Error(w, "Server error while fetching messages", http.StatusInternalServerError)
@@ -1010,14 +1337,18 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
+		MessageID   int
 		Sender      string
 		Message     string
-		TimeElapsed string // Contains calculated elapsed time
+		TimeElapsed string
 		ImgUser     string
+		Liked       bool
 	}
 	for rows.Next() {
+		var messageID int
 		var sender, message, timestamp, imgUser string
-		if err := rows.Scan(&sender, &message, &timestamp, &imgUser); err != nil {
+		var liked bool
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &liked); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
@@ -1030,15 +1361,19 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		messages = append(messages, struct {
+			MessageID   int
 			Sender      string
 			Message     string
 			TimeElapsed string
 			ImgUser     string
+			Liked       bool
 		}{
+			MessageID:   messageID,
 			Sender:      sender,
 			Message:     message,
 			TimeElapsed: elapsedTime,
 			ImgUser:     imgUser,
+			Liked:       liked,
 		})
 	}
 
@@ -1046,10 +1381,12 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		ChatName string
 		Username string
 		Messages []struct {
+			MessageID   int
 			Sender      string
 			Message     string
 			TimeElapsed string
 			ImgUser     string
+			Liked       bool
 		}
 	}{
 		ChatName: chatName,
@@ -1138,6 +1475,12 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
@@ -1146,8 +1489,13 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		"SELECT m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL FROM messages m LEFT JOIN User u ON m.sender = u.USERNAME WHERE m.chat_name = ? ORDER BY m.timestamp ASC;",
-		chatName,
+		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL,
+                EXISTS(SELECT 1 FROM Msg_Liked WHERE username = ? AND message_id = m.id) AS liked
+         FROM messages m
+         LEFT JOIN User u ON m.sender = u.USERNAME
+         WHERE m.chat_name = ?
+         ORDER BY m.timestamp ASC;`,
+		username, chatName,
 	)
 	if err != nil {
 		http.Error(w, "Server error while fetching messages", http.StatusInternalServerError)
@@ -1157,14 +1505,18 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
+		MessageID   int
 		Sender      string
 		Message     string
 		TimeElapsed string
 		ImgUser     string
+		Liked       bool
 	}
 	for rows.Next() {
+		var messageID int
 		var sender, message, timestamp, imgUser string
-		if err := rows.Scan(&sender, &message, &timestamp, &imgUser); err != nil {
+		var liked bool
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &liked); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
@@ -1177,18 +1529,23 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		messages = append(messages, struct {
+			MessageID   int
 			Sender      string
 			Message     string
 			TimeElapsed string
 			ImgUser     string
+			Liked       bool
 		}{
+			MessageID:   messageID,
 			Sender:      sender,
 			Message:     message,
 			TimeElapsed: elapsedTime,
 			ImgUser:     imgUser,
+			Liked:       liked,
 		})
 	}
 
+	// Send JSON response
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(messages)
 	if err != nil {

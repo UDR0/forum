@@ -668,41 +668,66 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&likeData)
 	if err != nil {
-		log.Println("Error decoding request body:", err)
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	// Here, update your database to reflect the like/unlike action
+	session, err := Store.Get(r, "session-name")
+	if err != nil {
+		log.Println("Error retrieving session:", err)
+		http.Error(w, `{"error": "Unauthorized. Please log in."}`, http.StatusUnauthorized)
+		w.Header().Set("Content-Type", "application/json")
+		return
+	}
+
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
+		return
+	}
+
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
-		http.Error(w, "Server error", http.StatusInternalServerError)
+		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 	defer db.Close()
 
-	if likeData.Liked {
-		_, err = db.Exec(`INSERT INTO Msg_Liked (message_id, username) VALUES (?, ?)`, likeData.MessageID, "current_user")
-		if err != nil {
-			log.Println("Error inserting like:", err)
-			http.Error(w, "Error updating database", http.StatusInternalServerError)
-			return
-		}
+	// Check if the user already liked this message
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE Username = ? AND message_id = ?);`
+	err = db.QueryRow(query, username, likeData.MessageID).Scan(&exists)
+	if err != nil {
+		log.Println("Error checking existing like:", err)
+		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		return
+	}
+
+	if exists {
+		// Update the existing like record
+		_, err = db.Exec(`UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`,
+			likeData.Liked, username, likeData.MessageID)
 	} else {
-		_, err = db.Exec(`DELETE FROM Msg_Liked WHERE message_id = ? AND username = ?`, likeData.MessageID, "current_user")
-		if err != nil {
-			log.Println("Error deleting like:", err)
-			http.Error(w, "Error updating database", http.StatusInternalServerError)
-			return
-		}
+		// Insert a new like record
+		_, err = db.Exec(`INSERT INTO Msg_Liked (Username, message_id, LIKED) VALUES (?, ?, ?);`,
+			username, likeData.MessageID, likeData.Liked)
+	}
+
+	if err != nil {
+		log.Println("Error executing SQL query:", err)
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		return
 	}
 
 	// Respond with success
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"status":     "success",
-		"message_id": fmt.Sprintf("%d", likeData.MessageID),
+		"message": fmt.Sprintf("Message ID '%d' liked status updated: %t", likeData.MessageID, likeData.Liked),
 	})
 }
 
@@ -1476,7 +1501,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		elapsedTime, err := formatElapsedTime(timestamp) // Custom function to format timestamps
+		elapsedTime, err := formatElapsedTime(timestamp)
 		if err != nil {
 			log.Println("Error formatting timestamp:", err)
 			continue

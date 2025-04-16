@@ -98,9 +98,6 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
 });
 
 
-
-
-
 // Gestion des avatars dans le pop-up de profil
 document.addEventListener("DOMContentLoaded", function () {
     const avatars = document.querySelectorAll(".imgAvatar img");
@@ -241,7 +238,7 @@ function selectOption(displayText, regionName) {
     dropdown.style.display = 'none';
 }
 
-
+// messages, searchbar
 document.addEventListener("DOMContentLoaded", () => {
     // Message-related elements
     const messageInput = document.getElementById("messageInput");
@@ -258,6 +255,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollToBottom(); // Ensure the view scrolls after messages are fetched
             });
         }, 4000);
+
+        // Use event delegation for heart icon clicks
+        messageContainer.addEventListener("click", (event) => {
+            if (event.target.classList.contains("msg-like")) {
+                heartMsg(event.target); // Call the heartMsg function
+            }
+        });
 
         // Function to send a message
         function sendMessage() {
@@ -304,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendButton?.addEventListener("click", sendMessage);
     }
 
+    // Function to fetch messages and update the container
     function fetchMessages() {
         return fetch('/fetch-messages?chatname=ChatNamePlaceholder')
             .then(response => response.json())
@@ -313,6 +318,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 messages.forEach(msg => {
                     const postDiv = document.createElement("div");
                     postDiv.className = "post";
+
+                    // Dynamically add data-message-id in msg-coeur-container
                     postDiv.innerHTML = `
                         <div class="infoPost">
                             <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
@@ -324,7 +331,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="message">
                             <p>${msg.message}</p>
                         </div>
-                        <img src="../static/img/coeur.png" class="msg-like" id="msg-like">
+                        <div class="msg-coeur-container" data-message-id="${msg.message_id}">
+                            <img src="static/img/coeur.png" alt="Like" class="msg-like">
+                        </div>
                     `;
                     messageContainer.appendChild(postDiv);
                 });
@@ -332,12 +341,55 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error("Erreur lors de la récupération des messages :", error));
     }
 
+    // Function to handle heart icon clicks (likes)
+    function heartMsg(heartIcon) {
+        console.log("Heart icon clicked!");
+
+        // Locate the container with the data-message-id attribute
+        const msgContainer = heartIcon.closest(".msg-coeur-container");
+        const messageId = msgContainer?.getAttribute("data-message-id"); // Get the message ID from the container
+
+        if (messageId) {
+            // Log the message ID for debugging
+            console.log(`Message ID: ${messageId}`);
+
+            // Optional: Toggle heart icon state
+            const isLiked = heartIcon.src.includes("coeur_rouge.png");
+            heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
+
+            // Send the like status to the server
+            fetch("/like-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message_id: parseInt(messageId, 10), liked: !isLiked }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to update like status on the server.");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(`Like status updated for message ${messageId}:`, data);
+                })
+                .catch((error) => {
+                    console.error("Error updating like status:", error);
+                });
+        } else {
+            console.error("Message ID not found for the clicked heart icon.");
+        }
+    }
+
     // Function to scroll to the bottom of the message container
     function scrollToBottom() {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
-});
 
+    // Fetch messages on page load
+    fetchMessages();
+});
 
 function redirectToRegion() {
     const searchValue = document.getElementById('searchBar')?.value.trim(); // Safely get the value

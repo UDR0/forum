@@ -78,7 +78,7 @@ func main() {
 
 	http.HandleFunc("/like", forum.LikeHandler)
 	http.HandleFunc("/likechat", forum.LikeChatHandler)
-	http.HandleFunc("/likemessage", forum.LikeMessageHandler)
+	http.HandleFunc("/like-message", forum.LikeMessageHandler)
 
 	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session")

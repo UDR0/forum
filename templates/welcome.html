@@ -97,13 +97,14 @@
                 </div>
                 {{if $.IsConnected}}
                 <div class="chat-coeur-container" data-chat="{{.MainChat.Name}}">
-                    {{if .MainChat.Liked}}
+                    {{if .MainChat.UserLiked}}
                     <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
                     {{else}}
                     <img src="static/img/coeur.png" alt="Like" class="chat-coeur">
                     {{end}}
                 </div>
                 {{end}}
+                <p>{{.MainChat.TotalLikes}} Likes</p>
             </div>
         </div>
 
@@ -162,13 +163,14 @@
 
                 {{if $.IsConnected}}
                 <div class="chat-coeur-container" data-chat="{{.Name}}">
-                    {{if .Liked}}
+                    {{if .UserLiked}}
                     <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
                     {{else}}
                     <img src="static/img/coeur.png" alt="Like" class="chat-coeur">
                     {{end}}
                 </div>
                 {{end}}
+                <p>{{.TotalLikes}} Likes</p>
             </div>
             {{else}}
             <p>Aucun chat n'a encore été créé dans {{.Region}}. Créé en un maintenant!</p>
@@ -193,34 +195,64 @@
         }
 
         function fetchChats(region) {
-            fetch(`/fetch-chats?region=${region}`)
-                .then(response => response.json())
-                .then(chats => {
-                    const chatList = document.getElementById("chat-list");
-                    chatList.innerHTML = ""; // Clear current chats
+    fetch(`/fetch-chats?region=${region}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatList = document.getElementById("chat-list");
+            chatList.innerHTML = ""; // Clear current chats
 
-                    if (!Array.isArray(chats) || chats.length === 0) {
-                        const noChatsMessage = document.createElement("p");
-                        noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
-                        chatList.appendChild(noChatsMessage);
-                        return;
-                    }
+            // Handle case when no chats are available
+            if (!data.Chats || data.Chats.length === 0) {
+                const noChatsMessage = document.createElement("p");
+                noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
+                chatList.appendChild(noChatsMessage);
+                return;
+            }
 
-                    chats.forEach(chat => {
-                        const listItem = document.createElement("li");
-                        const button = document.createElement("button");
+            // Display Principal Chat
+            if (data.MainChat) {
+                const principalChat = document.createElement("div");
+                principalChat.className = "principal-chat";
+                principalChat.innerHTML = `
+                    <h3>Principal Chat</h3>
+                    <p>Name: ${data.MainChat.Name}</p>
+                    <p>Description: ${data.MainChat.Descri}</p>
+                    <p>Messages: ${data.MainChat.MessageCount}</p>
+                    <p>Total Likes: ${data.MainChat.TotalLikes}</p>
+                    <img src="${data.MainChat.ImageURL}" alt="Region Image">
+                `;
+                chatList.appendChild(principalChat);
+            }
 
-                        button.textContent = `${chat.Name} (${chat.Creator})`;
-                        button.addEventListener("click", () => {
-                            selectChat(chat.Name); // Function for handling chat selection
-                        });
+            // Display User Chats
+            const userChatsTitle = document.createElement("h3");
+            userChatsTitle.textContent = "User Chats";
+            chatList.appendChild(userChatsTitle);
 
-                        listItem.appendChild(button);
-                        chatList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error("Error fetching chats:", error));
-        }
+            data.Chats.forEach(chat => {
+                const listItem = document.createElement("li");
+                listItem.className = "chat-item";
+
+                listItem.innerHTML = `
+                    <button>${chat.Name} (${chat.Creator})</button>
+                    <p>Description: ${chat.Descri}</p>
+                    <p>Messages: ${chat.MessageCount}</p>
+                    <p>Total Likes: ${chat.TotalLikes}</p>
+                    <img src="${chat.PhotoURL}" alt="Creator Image">
+                `;
+
+                // Event listener for chat selection
+                const button = listItem.querySelector("button");
+                button.addEventListener("click", () => {
+                    selectChat(chat.Name); // Function for handling chat selection
+                });
+
+                chatList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error("Error fetching chats:", error));
+}
+
 
         function selectChat(chatName) {
             fetch(`/select-chat?chatname=${chatName}`)

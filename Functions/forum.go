@@ -958,27 +958,37 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Fetch main chat with liked status
+	// Fetch main chat with total likes and liked status
 	queryMain := `
         SELECT 
             c.name AS chat_name, 
             COUNT(m.id) AS message_count, 
             c.descri, 
             r.REGION_IMG_URL, 
-            COALESCE(cl.liked, FALSE) AS liked
+            COALESCE(like_counts.total_likes, 0) AS total_likes,
+            COALESCE(cl.liked, FALSE) AS user_liked
         FROM 
             chats c
         LEFT JOIN 
             messages m ON c.name = m.chat_name
         LEFT JOIN 
             Region r ON c.region = r.REGION_NAME
+        LEFT JOIN (
+            SELECT 
+                chatID, 
+                COUNT(*) AS total_likes
+            FROM 
+                Chat_Liked
+            GROUP BY 
+                chatID
+        ) like_counts ON c.name = like_counts.chatID
         LEFT JOIN 
             Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
         WHERE 
             c.principal = TRUE 
             AND c.region = ?
         GROUP BY 
-            c.name, c.descri, r.REGION_IMG_URL, cl.liked;
+            c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
     `
 	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
@@ -992,12 +1002,13 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		MessageCount int
 		Descri       string
 		ImageURL     string
-		Liked        bool
+		TotalLikes   int
+		UserLiked    bool
 	}
 
 	var mainChat MainChat
 	if principal.Next() {
-		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.Liked)
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.TotalLikes, &mainChat.UserLiked)
 		if err != nil {
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
@@ -1007,7 +1018,7 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch user chats with liked status
+	// Fetch user chats with total likes and liked status
 	queryChats := `
         SELECT 
             c.name AS chat_name, 
@@ -1015,20 +1026,30 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
             c.descri, 
             u.PHOTO_URL, 
             u.USERNAME, 
-            COALESCE(cl.liked, FALSE) AS liked
+            COALESCE(like_counts.total_likes, 0) AS total_likes,
+            COALESCE(cl.liked, FALSE) AS user_liked
         FROM 
             chats c
         LEFT JOIN 
             messages m ON c.name = m.chat_name
         LEFT JOIN 
             User u ON c.creator = u.USERNAME
+        LEFT JOIN (
+            SELECT 
+                chatID, 
+                COUNT(*) AS total_likes
+            FROM 
+                Chat_Liked
+            GROUP BY 
+                chatID
+        ) like_counts ON c.name = like_counts.chatID
         LEFT JOIN 
             Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
         WHERE 
             c.principal = FALSE 
             AND c.region = ?
         GROUP BY 
-            c.name, c.descri, u.PHOTO_URL, u.USERNAME, cl.liked;
+            c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `
 	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
@@ -1043,13 +1064,14 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 		Descri       string
 		PhotoURL     string
 		Creator      string
-		Liked        bool
+		TotalLikes   int
+		UserLiked    bool
 	}
 
 	var chats []UserChat
 	for rows.Next() {
 		var chat UserChat
-		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.Liked); err != nil {
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.TotalLikes, &chat.UserLiked); err != nil {
 			log.Println("Error scanning chat data:", err)
 			continue
 		}
@@ -1167,8 +1189,9 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session, _ := Store.Get(r, "session-name")
-	username, _ := session.Values["username"].(string) // No connection check or redirection
+	username, _ := session.Values["username"].(string)
 
+	// Open the database
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur d'ouverture de la base de données.")
@@ -1176,27 +1199,37 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Fetch main chat with liked status
+	// Fetch principal chat with total likes and user liked status
 	queryMain := `
         SELECT 
             c.name AS chat_name, 
             COUNT(m.id) AS message_count, 
             c.descri, 
             r.REGION_IMG_URL, 
-            COALESCE(cl.liked, FALSE) AS liked_status
+            COALESCE(like_counts.total_likes, 0) AS total_likes,
+            COALESCE(cl.liked, FALSE) AS user_liked
         FROM 
             chats c
         LEFT JOIN 
             messages m ON c.name = m.chat_name
         LEFT JOIN 
             Region r ON c.region = r.REGION_NAME
+        LEFT JOIN (
+            SELECT 
+                chatID, 
+                COUNT(*) AS total_likes
+            FROM 
+                Chat_Liked
+            GROUP BY 
+                chatID
+        ) like_counts ON c.name = like_counts.chatID
         LEFT JOIN 
             Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
         WHERE 
             c.principal = TRUE 
             AND c.region = ?
         GROUP BY 
-            c.name, c.descri, r.REGION_IMG_URL, cl.liked;
+            c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
     `
 	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
@@ -1210,12 +1243,13 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		MessageCount int
 		Descri       string
 		ImageURL     string
-		Liked        bool
+		TotalLikes   int
+		UserLiked    bool
 	}
 
 	var mainChat MainChat
 	if principal.Next() {
-		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.Liked)
+		err := principal.Scan(&mainChat.Name, &mainChat.MessageCount, &mainChat.Descri, &mainChat.ImageURL, &mainChat.TotalLikes, &mainChat.UserLiked)
 		if err != nil {
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
@@ -1225,7 +1259,7 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch user chats with liked status
+	// Fetch user chats with total likes and user liked status
 	queryChats := `
         SELECT 
             c.name AS chat_name, 
@@ -1233,20 +1267,30 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
             c.descri, 
             u.PHOTO_URL, 
             u.USERNAME, 
-            COALESCE(cl.liked, FALSE) AS liked_status
+            COALESCE(like_counts.total_likes, 0) AS total_likes,
+            COALESCE(cl.liked, FALSE) AS user_liked
         FROM 
             chats c
         LEFT JOIN 
             messages m ON c.name = m.chat_name
         LEFT JOIN 
             User u ON c.creator = u.USERNAME
+        LEFT JOIN (
+            SELECT 
+                chatID, 
+                COUNT(*) AS total_likes
+            FROM 
+                Chat_Liked
+            GROUP BY 
+                chatID
+        ) like_counts ON c.name = like_counts.chatID
         LEFT JOIN 
             Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
         WHERE 
             c.principal = FALSE 
             AND c.region = ?
         GROUP BY 
-            c.name, c.descri, u.PHOTO_URL, u.USERNAME, cl.liked;
+            c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `
 	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
@@ -1261,20 +1305,21 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 		Descri       string
 		PhotoURL     string
 		Creator      string
-		Liked        bool
+		TotalLikes   int
+		UserLiked    bool
 	}
 
 	var chats []UserChat
 	for rows.Next() {
 		var chat UserChat
-		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.Liked); err != nil {
+		if err := rows.Scan(&chat.Name, &chat.MessageCount, &chat.Descri, &chat.PhotoURL, &chat.Creator, &chat.TotalLikes, &chat.UserLiked); err != nil {
 			log.Println("Error scanning chat data:", err)
 			continue
 		}
 		chats = append(chats, chat)
 	}
 
-	// Final data struct
+	// Final data structure
 	data := struct {
 		IsConnected bool
 		MainChat    MainChat
@@ -1301,6 +1346,7 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username, _ := session.Values["username"].(string)
 	chatName, ok := session.Values["chatname"].(string)
 	if !ok || chatName == "" {
 		http.Error(w, "Chat not selected. Please go back and select a chat.", http.StatusBadRequest)
@@ -1317,12 +1363,30 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL
-         FROM messages m
-         LEFT JOIN User u ON m.sender = u.USERNAME
-         WHERE m.chat_name = ?
-         ORDER BY m.timestamp ASC;`,
-		chatName,
+		`SELECT 
+            m.id, 
+            m.sender, 
+            m.message, 
+            strftime('%Y-%m-%d %H:%M:%S', m.timestamp) AS timestamp, 
+            u.PHOTO_URL, 
+            COALESCE(like_count, 0) AS number_of_likes,
+            CASE WHEN ul.message_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
+        FROM 
+            messages m
+        LEFT JOIN 
+            User u ON m.sender = u.USERNAME
+        LEFT JOIN (
+            SELECT message_id, COUNT(*) AS like_count
+            FROM Msg_Liked
+            GROUP BY message_id
+        ) likes ON m.id = likes.message_id
+        LEFT JOIN 
+            Msg_Liked ul ON m.id = ul.message_id AND ul.username = ?
+        WHERE 
+            m.chat_name = ?
+        ORDER BY 
+            m.timestamp ASC;`,
+		username, chatName,
 	)
 	if err != nil {
 		log.Println("Error fetching messages:", err)
@@ -1332,16 +1396,22 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
-		MessageID   int
-		Sender      string
-		Message     string
-		TimeElapsed string
-		ImgUser     string
+		MessageID     int
+		Sender        string
+		Message       string
+		TimeElapsed   string
+		ImgUser       string
+		NumberOfLikes int
+		UserLiked     bool
 	}
+
 	for rows.Next() {
 		var messageID int
 		var sender, message, timestamp, imgUser string
-		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser); err != nil {
+		var numberOfLikes int
+		var userLiked bool
+
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &numberOfLikes, &userLiked); err != nil {
 			log.Println("Error scanning message row:", err)
 			continue
 		}
@@ -1354,28 +1424,34 @@ func FilMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		messages = append(messages, struct {
-			MessageID   int
-			Sender      string
-			Message     string
-			TimeElapsed string
-			ImgUser     string
+			MessageID     int
+			Sender        string
+			Message       string
+			TimeElapsed   string
+			ImgUser       string
+			NumberOfLikes int
+			UserLiked     bool
 		}{
-			MessageID:   messageID,
-			Sender:      sender,
-			Message:     message,
-			TimeElapsed: elapsedTime,
-			ImgUser:     imgUser,
+			MessageID:     messageID,
+			Sender:        sender,
+			Message:       message,
+			TimeElapsed:   elapsedTime,
+			ImgUser:       imgUser,
+			NumberOfLikes: numberOfLikes,
+			UserLiked:     userLiked,
 		})
 	}
 
 	data := struct {
 		ChatName string
 		Messages []struct {
-			MessageID   int
-			Sender      string
-			Message     string
-			TimeElapsed string
-			ImgUser     string
+			MessageID     int
+			Sender        string
+			Message       string
+			TimeElapsed   string
+			ImgUser       string
+			NumberOfLikes int
+			UserLiked     bool
 		}
 	}{
 		ChatName: chatName,
@@ -1456,6 +1532,7 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username, _ := session.Values["username"].(string)
 	chatName, ok := session.Values["chatname"].(string)
 	if !ok || chatName == "" {
 		http.Error(w, "Chat not selected. Please go back and select a chat.", http.StatusBadRequest)
@@ -1472,12 +1549,30 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	rows, err := db.Query(
-		`SELECT m.id, m.sender, m.message, strftime('%Y-%m-%d %H:%M:%S', m.timestamp), u.PHOTO_URL
-         FROM messages m
-         LEFT JOIN User u ON m.sender = u.USERNAME
-         WHERE m.chat_name = ?
-         ORDER BY m.timestamp ASC;`,
-		chatName,
+		`SELECT 
+            m.id, 
+            m.sender, 
+            m.message, 
+            strftime('%Y-%m-%d %H:%M:%S', m.timestamp) AS timestamp, 
+            u.PHOTO_URL, 
+            COALESCE(like_count, 0) AS number_of_likes,
+            CASE WHEN ul.message_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
+        FROM 
+            messages m
+        LEFT JOIN 
+            User u ON m.sender = u.USERNAME
+        LEFT JOIN (
+            SELECT message_id, COUNT(*) AS like_count
+            FROM Msg_Liked
+            GROUP BY message_id
+        ) likes ON m.id = likes.message_id
+        LEFT JOIN 
+            Msg_Liked ul ON m.id = ul.message_id AND ul.username = ?
+        WHERE 
+            m.chat_name = ?
+        ORDER BY 
+            m.timestamp ASC;`,
+		username, chatName,
 	)
 	if err != nil {
 		log.Println("Error fetching messages:", err)
@@ -1487,16 +1582,22 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var messages []struct {
-		MessageID   int    `json:"message_id"`
-		Sender      string `json:"sender"`
-		Message     string `json:"message"`
-		TimeElapsed string `json:"time_elapsed"`
-		ImgUser     string `json:"img_user"`
+		MessageID     int    `json:"message_id"`
+		Sender        string `json:"sender"`
+		Message       string `json:"message"`
+		TimeElapsed   string `json:"time_elapsed"`
+		ImgUser       string `json:"img_user"`
+		NumberOfLikes int    `json:"number_of_likes"`
+		UserLiked     bool   `json:"user_liked"`
 	}
+
 	for rows.Next() {
 		var messageID int
 		var sender, message, timestamp, imgUser string
-		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser); err != nil {
+		var numberOfLikes int
+		var userLiked bool
+
+		if err := rows.Scan(&messageID, &sender, &message, &timestamp, &imgUser, &numberOfLikes, &userLiked); err != nil {
 			log.Println("Error scanning message data:", err)
 			continue
 		}
@@ -1508,17 +1609,21 @@ func FetchMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		messages = append(messages, struct {
-			MessageID   int    `json:"message_id"`
-			Sender      string `json:"sender"`
-			Message     string `json:"message"`
-			TimeElapsed string `json:"time_elapsed"`
-			ImgUser     string `json:"img_user"`
+			MessageID     int    `json:"message_id"`
+			Sender        string `json:"sender"`
+			Message       string `json:"message"`
+			TimeElapsed   string `json:"time_elapsed"`
+			ImgUser       string `json:"img_user"`
+			NumberOfLikes int    `json:"number_of_likes"`
+			UserLiked     bool   `json:"user_liked"`
 		}{
-			MessageID:   messageID,
-			Sender:      sender,
-			Message:     message,
-			TimeElapsed: elapsedTime,
-			ImgUser:     imgUser,
+			MessageID:     messageID,
+			Sender:        sender,
+			Message:       message,
+			TimeElapsed:   elapsedTime,
+			ImgUser:       imgUser,
+			NumberOfLikes: numberOfLikes,
+			UserLiked:     userLiked,
 		})
 	}
 

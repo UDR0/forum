@@ -310,16 +310,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to fetch messages and update the container
     function fetchMessages() {
-        return fetch('/fetch-messages?chatname=ChatNamePlaceholder')
+        return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Replace "ChatNamePlaceholder" with the actual chat name
             .then(response => response.json())
             .then(messages => {
+                const messageContainer = document.getElementById("message-container");
                 messageContainer.innerHTML = ""; // Clear current messages
-
+    
                 messages.forEach(msg => {
                     const postDiv = document.createElement("div");
                     postDiv.className = "post";
-
-                    // Dynamically add data-message-id in msg-coeur-container
+    
+                    // Dynamically create the HTML structure for each message
                     postDiv.innerHTML = `
                         <div class="infoPost">
                             <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
@@ -332,14 +333,21 @@ document.addEventListener("DOMContentLoaded", () => {
                             <p>${msg.message}</p>
                         </div>
                         <div class="msg-coeur-container" data-message-id="${msg.message_id}">
-                            <img src="static/img/coeur.png" alt="Like" class="msg-like">
+                            ${msg.user_liked
+                                ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
+                                : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
+                            }
+                            <p>${msg.number_of_likes} Likes</p>
                         </div>
                     `;
+    
+                    // Append the new message to the container
                     messageContainer.appendChild(postDiv);
                 });
             })
             .catch(error => console.error("Erreur lors de la récupération des messages :", error));
     }
+    
 
     // Function to handle heart icon clicks (likes)
     function heartMsg(heartIcon) {

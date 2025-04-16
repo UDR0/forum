@@ -61,6 +61,7 @@
     <section>
         <div id="message-container" class="allPosts">
             {{range .Messages}}
+            
             <div class="post">
                 <div class="infoPost">
                     <img src="{{.ImgUser}}" class="photoProfil" alt="Photo de profil">
@@ -77,47 +78,49 @@
             {{end}}
         </div>
     </section>
+
         <div class="conainerWritePost">
-            <textarea placeholder="Tapez votre Post..." class="inputPost" oninput="adjustHeight(this)"></textarea>
-            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend"  alt="like button">
+            <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
+            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
         </div>
    
 
     <script>
         function fetchMessages() {
-            fetch('/fetch-messages?chatname={{.ChatName}}')
-                .then(response => response.json())
-                .then(messages => {
-                    const messageList = document.getElementById("message-list");
-                    messageList.innerHTML = ""; // Clear current messages
+    fetch('/fetch-messages?chatname={{.ChatName}}')
+        .then(response => response.json())
+        .then(messages => {
+            const messageContainer = document.getElementById("message-container");
+            messageContainer.innerHTML = ""; // Clear current messages
 
-                    if (!Array.isArray(messages) || messages.length === 0) {
-                        const noMessagesMessage = document.createElement("p");
-                        noMessagesMessage.textContent = "Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !";
-                        messageList.appendChild(noMessagesMessage);
-                        return;
-                    }
+            if (!Array.isArray(messages) || messages.length === 0) {
+                const noMessagesMessage = document.createElement("p");
+                noMessagesMessage.textContent = "Aucun message dans ce chat pour le moment. Soyez le premier à en envoyer un !";
+                messageContainer.appendChild(noMessagesMessage);
+                return;
+            }
 
-                    messages.forEach(msg => {
-                        const listItem = document.createElement("li");
-                        listItem.setAttribute("data-message-id", msg.MessageID);
-                        listItem.innerHTML = `
-                            <strong>${msg.Sender}:</strong> ${msg.Message}
-                            <span style="float: right;">${msg.TimeElapsed}</span>
-                            <img src="/static/img/coeur${msg.Liked ? "-filled" : ""}.png" class="iconLikePost" alt="Like Icon" onclick="toggleLike(${msg.MessageID})" alt="like button">
-                        `;
-                        messageList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error("Erreur lors de la récupération des messages :", error));
-        }
-
-
-        // Refresh messages every 4 seconds
-        const chatName = "my-chat"; // Replace with the current chat name
-        setInterval(() => {
-            fetchMessages(chatName);
-        }, 4000);
+            messages.forEach(msg => {
+                const postDiv = document.createElement("div");
+                postDiv.className = "post";
+                postDiv.innerHTML = `
+                    <div class="infoPost">
+                        <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
+                        <div class="txtInfoPost">
+                            <h3>${msg.sender}</h3>
+                            <h4>${msg.time_elapsed}</h4>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p>${msg.message}</p>
+                    </div>
+                    <img src="../static/img/coeur.png" class="msg-like" id="msg-like">
+                `;
+                messageContainer.appendChild(postDiv);
+            });
+        })
+        .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+}
 
     </script>
     <script src="static/script.js"></script>

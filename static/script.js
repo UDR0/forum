@@ -242,23 +242,113 @@ function selectOption(displayText, regionName) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const searchBar = document.getElementById('searchBar');
-    const searchButton = document.querySelector('.search-icon');
+document.addEventListener("DOMContentLoaded", () => {
+    // Message-related elements
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const messageContainer = document.getElementById("message-container");
 
-    searchBar.addEventListener('keydown',(event) => {
-        if (event.key === 'Enter') {
+    if (messageContainer) {
+        // Automatically scroll to the bottom after the page reloads
+        scrollToBottom();
 
-        redirectToRegion();
+        // Automatically fetch messages every 4 seconds
+        setInterval(() => {
+            fetchMessages().then(() => {
+                scrollToBottom(); // Ensure the view scrolls after messages are fetched
+            });
+        }, 4000);
+
+        // Function to send a message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+
+            if (message === "") {
+                alert("Le message ne peut pas être vide.");
+                return;
+            }
+
+            fetch("/send-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `message=${encodeURIComponent(message)}`,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur lors de l'envoi du message.");
+                    }
+                    messageInput.value = ""; // Clear the textarea after sending
+
+                    // Reload messages immediately after sending a new one
+                    return fetchMessages();
+                })
+                .then(() => {
+                    scrollToBottom(); // Ensure scroll happens after new messages are appended
+                })
+                .catch(error => {
+                    console.error("Erreur :", error);
+                });
         }
 
-        
-    });
+        // Add event listener for Enter key
+        messageInput?.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault(); // Prevent adding a new line
+                sendMessage();
+            }
+        });
 
-    searchButton.addEventListener('click', () => {
-        redirectToRegion();
-    });
+        // Add event listener for Send button
+        sendButton?.addEventListener("click", sendMessage);
+    }
+
+    function fetchMessages() {
+        return fetch('/fetch-messages?chatname=ChatNamePlaceholder')
+            .then(response => response.json())
+            .then(messages => {
+                messageContainer.innerHTML = ""; // Clear current messages
+
+                messages.forEach(msg => {
+                    const postDiv = document.createElement("div");
+                    postDiv.className = "post";
+                    postDiv.innerHTML = `
+                        <div class="infoPost">
+                            <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
+                            <div class="txtInfoPost">
+                                <h3>${msg.sender}</h3>
+                                <h4>${msg.time_elapsed}</h4>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <p>${msg.message}</p>
+                        </div>
+                        <img src="../static/img/coeur.png" class="msg-like" id="msg-like">
+                    `;
+                    messageContainer.appendChild(postDiv);
+                });
+            })
+            .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+    }
+
+    // Function to scroll to the bottom of the message container
+    function scrollToBottom() {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
 });
+
+
+function redirectToRegion() {
+    const searchValue = document.getElementById('searchBar')?.value.trim(); // Safely get the value
+    if (searchValue.includes(',')) {
+        const regionName = searchValue.split(',')[1].trim(); // Extract region name after the comma
+        window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Navigate to the desired URL
+    } else {
+        alert('Veuillez sélectionner une option valide !'); // Feedback for invalid input
+    }
+}
+
 
 function redirectToRegion() {
     const searchValue = searchBar.value.trim(); // Get the value from the search bar

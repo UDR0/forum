@@ -90,34 +90,7 @@
                 </form>
             </div>
         </section>
-        <script>
-           document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
 
-    const email = document.getElementById("Email").value;
-    const username = document.getElementById("Pseudo").value;
-    const newPassword = document.getElementById("NouveauMotDePasse").value;
-    const confirmPassword = document.getElementById("ConfirmeMotDePasse").value;
-
-    try {
-        const response = await fetch("/api/password-reset", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, username, newPassword, confirmPassword }),
-        });
-
-        if (response.ok) {
-            alert("Mot de passe réinitialisé avec succès !");
-            window.location.href = "/SeConnecter";
-        } else {
-            const errorText = await response.text();
-            alert("Erreur : " + errorText);
-        }
-    } catch (error) {
-        alert("Erreur réseau : " + error.message);
-    }
-});
-        </script>
         <script src="static/script.js"></script>
     </body>
 </html>

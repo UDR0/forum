@@ -43,16 +43,12 @@ func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
 	var id int
 
 	// Étape 1 : Vérifier l'existence de l'e-mail
-	log.Println("Vérification de l'email dans la base de données...")
 	err := db.QueryRow("SELECT EMAIL FROM User WHERE EMAIL = ?", email).Scan(&emailInDB)
 	if err == nil {
 		if emailInDB == email {
-			log.Println("L'email existe :", emailInDB)
 		}
 	} else if err == sql.ErrNoRows {
-		log.Println("Email non trouvé.")
 	} else {
-		log.Println("Erreur lors de la vérification de l'email :", err)
 		return false, false, err
 	}
 
@@ -61,11 +57,8 @@ func CheckUserExists(db *sql.DB, email, pseudo string) (bool, bool, error) {
 	err = db.QueryRow("SELECT rowid FROM User WHERE USERNAME = ?", pseudo).Scan(&id)
 	if err == nil {
 		pseudoExists = true
-		log.Println("Le pseudo existe :", pseudoExists)
 	} else if err == sql.ErrNoRows {
-		log.Println("Pseudo non trouvé.")
 	} else {
-		log.Println("Erreur lors de la vérification du pseudo :", err)
 		return false, false, err
 	}
 
@@ -721,7 +714,7 @@ func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		renderError(w, "mot-de-passe-oublie", "Méthode non autorisée.")
 		return
 	}
 
@@ -733,53 +726,48 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {
-		http.Error(w, "Requête invalide", http.StatusBadRequest)
+		renderError(w, "mot-de-passe-oublie", "Requête invalide.")
 		return
 	}
 
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		http.Error(w, "Erreur lors de la connexion à la base de données.", http.StatusInternalServerError)
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la connexion à la base de données.")
 		return
 	}
 	defer db.Close()
 
-	// Utiliser la nouvelle fonction pour vérifier et récupérer les détails utilisateur
-	emailExists, pseudoExists, emailInDB, pseudoInDB, err := GetUserDetails(db, requestData.Email, requestData.Username)
+	emailExists, pseudoExists, err := CheckUserExists(db, requestData.Email, requestData.Username)
 	if err != nil {
-		http.Error(w, "Utilisateur introuvable.", http.StatusInternalServerError)
+		renderError(w, "mot-de-passe-oublie", "Erreur interne lors de la vérification de l'utilisateur.")
 		return
 	}
 	if !emailExists || !pseudoExists {
-		http.Error(w, "Utilisateur introuvable.", http.StatusBadRequest)
+		renderError(w, "mot-de-passe-oublie", "Email ou nom d'utilisateur incorrect.")
 		return
 	}
 
-	// Validation des mots de passe
 	if requestData.NewPassword != requestData.ConfirmPassword {
-		http.Error(w, "Les mots de passe ne correspondent pas.", http.StatusBadRequest)
-		return
-	}
-	if !isValidPassword(requestData.NewPassword) {
-		http.Error(w, "Le mot de passe ne respecte pas les critères de sécurité.\nune majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.", http.StatusBadRequest)
+		renderError(w, "mot-de-passe-oublie", "Les mots de passe ne correspondent pas.")
 		return
 	}
 
-	// Hacher le nouveau mot de passe
+	if !isValidPassword(requestData.NewPassword) {
+		renderError(w, "mot-de-passe-oublie", "Le mot de passe doit contenir au moins : une majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.")
+		return
+	}
+
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(requestData.NewPassword), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "Erreur lors du hachage du mot de passe.", http.StatusInternalServerError)
+		renderError(w, "mot-de-passe-oublie", "Erreur lors du hachage du mot de passe.")
 		return
 	}
 
-	// Mettre à jour le mot de passe dans la base de données
-	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", passwordHash, emailInDB, pseudoInDB)
+	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", passwordHash, requestData.Email, requestData.Username)
 	if err != nil {
-		http.Error(w, "Erreur lors de la mise à jour du mot de passe.", http.StatusInternalServerError)
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la mise à jour du mot de passe.")
 		return
 	}
 
-	// Répondre avec succès
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Mot de passe réinitialisé avec succès."))
+	renderError(w, "mot-de-passe-oublie", "Mot de passe réinitialisé avec succès. Veuillez vous connecter.")
 }

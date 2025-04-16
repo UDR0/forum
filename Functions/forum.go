@@ -798,7 +798,7 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// définit la structure pour le payload de la requête
+	// Définit la structure pour le payload
 	var likeData struct {
 		MessageID int  `json:"message_id"`
 		Liked     bool `json:"liked"`
@@ -807,55 +807,59 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&likeData)
 	if err != nil {
 		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	session, err := Store.Get(r, "session-name") // récupère la session
+	// Récupère la session utilisateur
+	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
 		http.Error(w, `{"error": "Unauthorized. Please log in."}`, http.StatusUnauthorized)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	username, ok := session.Values["username"].(string) // récupère l'utilisateur
+	username, ok := session.Values["username"].(string)
 	if !ok || username == "" {
 		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
-	db, err := sql.Open("sqlite3", "./forum.db") // connecte à la base de données
+	// Connexion à la base de données
+	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
 		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 	defer db.Close()
 
-	// vérifie si un enregistrement like existe déjà pour un message
+	// Vérifie si un like existe déjà pour le message
 	queryExists := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE Username = ? AND message_id = ?);`
 	exists, err := recordExists(db, queryExists, username, likeData.MessageID)
 	if err != nil {
 		log.Println("Error checking existing like:", err)
 		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	// Insère ou met à jour un enregistrement like pour un message
-	insertQuery := `INSERT INTO Msg_Liked (Username, message_id, LIKED) VALUES (?, ?, ?);`
-	updateQuery := `UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`
-	err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeData.MessageID, likeData.Liked})
+	if likeData.Liked {
+		// Si "like", insère ou met à jour le statut "LIKED".
+		insertQuery := `INSERT INTO Msg_Liked (Username, message_id, LIKED) VALUES (?, ?, ?);`
+		updateQuery := `UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`
+		err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeData.MessageID, likeData.Liked})
+	} else {
+		// Si "dislike", supprime l'enregistrement de la base de données.
+		deleteQuery := `DELETE FROM Msg_Liked WHERE Username = ? AND message_id = ?;`
+		_, err = db.Exec(deleteQuery, username, likeData.MessageID)
+	}
+
 	if err != nil {
 		log.Println("Error executing SQL query:", err)
 		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	// envoie un message de succès
+	// Répond avec un message de succès
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"message": fmt.Sprintf("Message ID '%d' liked status updated: %t", likeData.MessageID, likeData.Liked),

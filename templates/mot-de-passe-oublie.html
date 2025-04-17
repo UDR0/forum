@@ -22,6 +22,7 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -46,14 +47,6 @@
             <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
         </li>
 
-        {{if .IsConnected}}
-
-        <li class="meta-navigation-btn-connexion">
-            <a class="btn" href="/profil">Mon Compte</a>
-        </li>
-
-        {{else}}
-
         <li class="meta-navigation-btn-seconnecter">
             <a class="btn" href="/SeConnecter">Se connecter</a>
 </li>
@@ -62,10 +55,13 @@
             <a class="btn" href="/CreerCompte">Créer mon compte</a>
         </li>
 
-        {{end}}
     </ul>
 
     </header>
+
+    
+
+
 
     <section>
         <div class="card">
@@ -74,36 +70,39 @@
             </div>
 
             <div class="card-titre">
-                <h3 class="titre-mot-de-passe-oublie">Mot de passe oublié ?</h3>
-                <p class="sous-titre-SeConnecter">Renseigne ton adresse e-mail pour réinitialiser ton mot de passe</p>
-            </div>            
-
-            <div class="ConteneurMotDePasseOublie">
-                <h4>Votre Email</h4>
-                <div class="ConteneurEmail">
-                    <input type="email" id="Email" placeholder="nom@email.com" required>
-                    <img src="/static/img/icon/email.png" alt="Icône email">
-                </div>
-
-                <h4>Votre pseudo</h4>
-                <div class="ConteneurEmail">
-                    <input type="text" id="Pseudo" placeholder="Votre pseudo" required>
-                    <img src="/static/img/icon/utilisateur.png" alt="Icône utilisateur">
-                </div>
-
-                <h4>Nouveau mot de passe</h4>
-                <div class="ConteneurEmail">
-                    <input type="password" id="NouveauMotDePasse" placeholder="Mot de passe" required>
-                    <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
-                </div>
-                <div class="ConteneurMotDePasse">
-                    <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe" required>
-                    <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
-                </div>  
+                <h3 class="titre-mot-de-passe-oublie">Réinitialisation du mot de passe</h3>
+                <p class="sous-titre-SeConnecter">Renseignez les informations ci-dessous pour réinitialiser votre mot de passe</p>
             </div>
 
-            <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
-        </form>
+            <!-- Formulaire -->
+            <form id="resetPasswordForm" action="/MotDePasseOublie" method="POST">
+                <div class="ConteneurMotDePasseOublie">
+                    <h4>Votre Email</h4>
+                    <div class="ConteneurEmail">
+                        <input type="email" id="Email" name="email" placeholder="nom@email.com" required>
+                        <img src="/static/img/icon/email.png" alt="Icône email">
+                    </div>
+
+                    <h4>Votre pseudo</h4>
+                    <div class="ConteneurEmail">
+                        <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
+                        <img src="/static/img/icon/utilisateur.png" alt="Icône utilisateur">
+                    </div>
+                
+                    <h4>Nouveau mot de passe</h4>
+                    <div class="ConteneurEmail">
+                        <input type="password" id="NouveauMotDePasse" name="password" placeholder="Mot de passe" required>
+                        <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
+                    </div>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="ConfirmeMotDePasse" name="confirmPassword" placeholder="Confirmer votre mot de passe" required>
+                        <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
+                    </div>
+                </div>
+                <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
+
+                <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
+            </form>
         </div>
     </section>
 

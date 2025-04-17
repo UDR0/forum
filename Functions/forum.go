@@ -655,12 +655,29 @@ func LikeChatHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func recordExists(db *sql.DB, query string, args ...interface{}) (bool, error) {
+	var exists bool
+	err := db.QueryRow(query, args...).Scan(&exists) // exécute la requête SQL et scanne le résultat dans "exists" avec args... qui sépare les valeurs de type ...interface{}
+	return exists, err
+}
+
+// insérer ou mettre à jour un enregistrement dans la base de données
+func insertOrUpdateRecord(db *sql.DB, insertQuery string, updateQuery string, exists bool, args []interface{}) error {
+	var err error
+	if exists {
+		_, err = db.Exec(updateQuery, args...) // Si l'enregistrement existe, exécute une mise à jour avec args... qui sépare les valeurs de type ...interface{}
+	} else {
+		_, err = db.Exec(insertQuery, args...) // Sinon, insère un nouvel enregistrement avec args... qui sépare les valeurs de type ...interface{}
+	}
+	return err
+}
 func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
+	// Définit la structure pour le payload
 	var likeData struct {
 		MessageID int  `json:"message_id"`
 		Liked     bool `json:"liked"`
@@ -669,15 +686,14 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&likeData)
 	if err != nil {
 		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
+	// Récupère la session utilisateur
 	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
 		http.Error(w, `{"error": "Unauthorized. Please log in."}`, http.StatusUnauthorized)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
@@ -687,44 +703,42 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Connexion à la base de données
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Println("Error opening database:", err)
 		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 	defer db.Close()
 
-	// Check if the user already liked this message
-	var exists bool
-	query := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE Username = ? AND message_id = ?);`
-	err = db.QueryRow(query, username, likeData.MessageID).Scan(&exists)
+	// Vérifie si un like existe déjà pour le message
+	queryExists := `SELECT EXISTS(SELECT 1 FROM Msg_Liked WHERE Username = ? AND message_id = ?);`
+	exists, err := recordExists(db, queryExists, username, likeData.MessageID)
 	if err != nil {
 		log.Println("Error checking existing like:", err)
-		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
 		return
 	}
 
-	if exists {
-		// Update the existing like record
-		_, err = db.Exec(`UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`,
-			likeData.Liked, username, likeData.MessageID)
+	if likeData.Liked {
+		// Si "like", insère ou met à jour le statut "LIKED".
+		insertQuery := `INSERT INTO Msg_Liked (Username, message_id, liked) VALUES (?, ?, ?);`
+		updateQuery := `UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`
+		err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeData.MessageID, likeData.Liked})
 	} else {
-		// Insert a new like record
-		_, err = db.Exec(`INSERT INTO Msg_Liked (Username, message_id, LIKED) VALUES (?, ?, ?);`,
-			username, likeData.MessageID, likeData.Liked)
+		// Si "dislike", supprime l'enregistrement de la base de données.
+		deleteQuery := `DELETE FROM Msg_Liked WHERE Username = ? AND message_id = ?;`
+		_, err = db.Exec(deleteQuery, username, likeData.MessageID)
 	}
 
 	if err != nil {
 		log.Println("Error executing SQL query:", err)
 		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
 		return
 	}
 
-	// Respond with success
+	// Répond avec un message de succès
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"message": fmt.Sprintf("Message ID '%d' liked status updated: %t", likeData.MessageID, likeData.Liked),

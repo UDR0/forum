@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
         <!-- Navigation -->
@@ -75,8 +75,8 @@
     <section>
         <!-- Barre de recherche -->
         <div class="search-bar">
-            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
-            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off">
+            <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown"></div>
 
@@ -92,9 +92,9 @@
                 {{if $.IsConnected}}
                 <div class="destination-coeur-container" data-region="{{.RegionName}}">
                     {{if .RegionLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+                    <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="destination-coeur">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    <img src="static/img/icon/coeur.png" alt="Like" class="destination-coeur">
                     {{end}}
                 </div>
                 {{end}}
@@ -108,11 +108,11 @@
 
     <script>
         function selectRegion(regionName) {
-            console.log(`You clicked on region: ${regionName}`); // Debugging
+            console.log(`You clicked on region: ${regionName}`);
             fetch(`/region?name=${regionName}`, { method: 'GET' })
                 .then(response => {
                     if (response.ok) {
-                        console.log(`Region ${regionName} successfully selected`); // Debugging
+                        console.log(`Region ${regionName} successfully selected`);
                         window.location.href = "/welcome";
                     } else {
                         console.error("Failed to select region:", response.statusText);

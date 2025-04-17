@@ -75,6 +75,14 @@ func main() {
 		renderTemplate(w, "mot-de-passe-oublie", nil)
 	})
 
+	http.HandleFunc("/MotDePasseOublie", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			forum.ForgotPasswordHandler(w, r)
+		} else {
+			renderTemplate(w, "SeConnecter", nil)
+		}
+	})
+
 	http.HandleFunc("/profil", forum.ProfilPage)
 	http.HandleFunc("/updateProfile", forum.UpdateProfile)
 	http.HandleFunc("/updateAvatar", forum.UpdateAvatar)

@@ -146,12 +146,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailChiffre, err := bcrypt.GenerateFromPassword([]byte(email), bcrypt.DefaultCost)
-	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors du chiffrement de l'email.")
-		return
-	}
-
 	// Utilisez l'URL de l'avatar choisi ou une URL de photo par défaut
 	if photoURL == "" {
 		photoURL = "static/img/avatar/avatarFemme1.png"
@@ -161,7 +155,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	biographie := ""
 
-	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, photoURL, biographie)
+	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, email, photoURL, biographie)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
 		return
@@ -1732,4 +1726,74 @@ func RegionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+// /////////////////////////// OUBLIE DE MOT DE PASSE //////////////////////////////////////
+func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	email := r.FormValue("email")
+	pseudo := r.FormValue("username")
+	motDePasse := r.FormValue("password")
+	confirmeMotDePasse := r.FormValue("confirmPassword")
+
+	if motDePasse != confirmeMotDePasse {
+		renderError(w, "mot-de-passe-oublie", "Les mots de passe ne correspondent pas.")
+		return
+	}
+
+	if !isValidPassword(motDePasse) {
+		renderError(w, "mot-de-passe-oublie", "Le mot de passe doit contenir au minimum\nune majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.")
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	emailExists, pseudoExists, err := CheckUserExists(db, email, pseudo)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la vérification des utilisateurs existants.")
+		return
+	}
+	if !emailExists {
+		renderError(w, "mot-de-passe-oublie", "L'email n'existe pas.")
+		return
+	}
+	if !pseudoExists {
+		renderError(w, "mot-de-passe-oublie", "Le pseudo n'existe pas.")
+		return
+	}
+
+	var count int
+	err = db.QueryRow("SELECT COUNT(*) FROM User WHERE EMAIL = ? AND USERNAME = ?", email, pseudo).Scan(&count)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la vérification des identifiants.")
+		return
+	}
+	if count == 0 {
+		renderError(w, "mot-de-passe-oublie", "Les identifiants ne sont pas compatibles.")
+		return
+	}
+
+	motDePasseChiffre, err := bcrypt.GenerateFromPassword([]byte(motDePasse), bcrypt.DefaultCost)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors du chiffrement du mot de passe.")
+		return
+	}
+
+	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", motDePasseChiffre, email, pseudo)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la création du compte.")
+		return
+	}
+
+	// Rediriger vers la page mytripy-non après la création du compte
+	http.Redirect(w, r, "/SeConnecter", http.StatusFound)
 }

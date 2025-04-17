@@ -82,12 +82,29 @@
             <div class="ConteneurMotDePasseOublie">
                 <h4>Votre Email</h4>
                 <div class="ConteneurEmail">
-                    <input type="password" id="Email" placeholder="nom@email.com">
+                    <input type="email" id="Email" placeholder="nom@email.com" required>
                     <img src="/static/img/email.png" alt="Icône email">
                 </div>
+
+                <h4>Votre pseudo</h4>
+                <div class="ConteneurEmail">
+                    <input type="text" id="Pseudo" placeholder="Votre pseudo" required>
+                    <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                </div>
+
+                <h4>Nouveau mot de passe</h4>
+                <div class="ConteneurEmail">
+                    <input type="password" id="NouveauMotDePasse" placeholder="Mot de passe" required>
+                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                </div>
+                <div class="ConteneurMotDePasse">
+                    <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe" required>
+                    <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                </div>  
             </div>
-                
-            <a class="btn-recevoir-lien" href="#">Recevoir le lien</a>
+
+            <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
+        </form>
         </div>
     </section>
 

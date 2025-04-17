@@ -677,54 +677,67 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var likeRequest LikeRequest
+	// Parse the request body
+	var likeRequest struct {
+		Region string `json:"region"`
+		Liked  bool   `json:"liked"`
+	}
 	err := json.NewDecoder(r.Body).Decode(&likeRequest)
 	if err != nil {
-		http.Error(w, "Bad request: Unable to parse JSON", http.StatusBadRequest) // décode le corps de la requête JSON dans likeRequest
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
 		return
 	}
 
-	session, err := Store.Get(r, "session-name") // récupère la session
+	// Retrieve user session
+	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
-		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
+		http.Error(w, `{"error": "Unauthorized. Please log in."}`, http.StatusUnauthorized)
 		return
 	}
 
-	username, ok := session.Values["username"].(string) // récupère le nom d'utilisateur depuis la session
+	username, ok := session.Values["username"].(string)
 	if !ok || username == "" {
-		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther) // redirige l'utilisateur vers la page de connexion s'il n'est pas connecté
+		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
-	db, err := sql.Open("sqlite3", "./forum.db") // connecte à la base de données
+	// Connect to the database
+	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		fmt.Println("Error opening database:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error opening database:", err)
+		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	// vérifie si le like existe déjà dans la base de données
+	// Check if the like record already exists
 	queryExists := `SELECT EXISTS(SELECT 1 FROM USER_LIKES WHERE USER_ID = ? AND REGION_NAME = ?);`
 	exists, err := recordExists(db, queryExists, username, likeRequest.Region)
 	if err != nil {
-		fmt.Println("Error checking existing like:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error checking existing like:", err)
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
 		return
 	}
 
-	// insère ou met à jour le like dans la base de données
-	insertQuery := `INSERT INTO USER_LIKES (USER_ID, REGION_NAME, LIKED) VALUES (?, ?, ?);`
-	updateQuery := `UPDATE USER_LIKES SET LIKED = ? WHERE USER_ID = ? AND REGION_NAME = ?;`
-	err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeRequest.Region, likeRequest.Liked})
+	if likeRequest.Liked {
+		// Insert or update the like status
+		insertQuery := `INSERT INTO USER_LIKES (USER_ID, REGION_NAME, LIKED) VALUES (?, ?, ?);`
+		updateQuery := `UPDATE USER_LIKES SET LIKED = ? WHERE USER_ID = ? AND REGION_NAME = ?;`
+		err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeRequest.Region, likeRequest.Liked})
+	} else {
+		// Delete the record if disliked
+		deleteQuery := `DELETE FROM USER_LIKES WHERE USER_ID = ? AND REGION_NAME = ?;`
+		_, err = db.Exec(deleteQuery, username, likeRequest.Region)
+	}
+
 	if err != nil {
-		fmt.Println("Error executing SQL query:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error executing SQL query:", err)
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
 		return
 	}
 
-	// réponse avec un message de succès
+	// Respond with a success message
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"message": fmt.Sprintf("Region '%s' liked status updated: %t", likeRequest.Region, likeRequest.Liked),
@@ -738,57 +751,70 @@ func LikeChatHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var likeChatRequest LikeChatRequest
+	// Parse the request body
+	var likeChatRequest struct {
+		ChatID string `json:"chat_id"`
+		Liked  bool   `json:"liked"`
+	}
 	err := json.NewDecoder(r.Body).Decode(&likeChatRequest)
 	if err != nil {
-		http.Error(w, "Bad request: Unable to parse JSON", http.StatusBadRequest)
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
 		return
 	}
 
-	session, err := Store.Get(r, "session-name") // prend la session
+	// Retrieve user session
+	session, err := Store.Get(r, "session-name")
 	if err != nil {
 		log.Println("Error retrieving session:", err)
-		http.Error(w, "Unauthorized. Please log in.", http.StatusUnauthorized)
+		http.Error(w, `{"error": "Unauthorized. Please log in."}`, http.StatusUnauthorized)
 		return
 	}
 
-	username, ok := session.Values["username"].(string) // prend le nom de l'utilisateur en fonction de la session
+	username, ok := session.Values["username"].(string)
 	if !ok || username == "" {
 		http.Redirect(w, r, "/SeConnecter", http.StatusSeeOther)
 		return
 	}
 
+	// Connect to the database
 	db, err := sql.Open("sqlite3", "./forum.db")
 	if err != nil {
-		fmt.Println("Error opening database:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error opening database:", err)
+		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	// vérifie si le like sur le chat existe déjà dans la base de données
+	// Check if the like record already exists
 	queryExists := `SELECT EXISTS(SELECT 1 FROM Chat_Liked WHERE Username = ? AND chatID = ?);`
-	exists, err := recordExists(db, queryExists, username, likeChatRequest.Chat)
+	exists, err := recordExists(db, queryExists, username, likeChatRequest.ChatID)
 	if err != nil {
-		fmt.Println("Error checking existing like:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error checking existing like:", err)
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
 		return
 	}
 
-	// insère ou met à jour le like dans la base de données
-	insertQuery := `INSERT INTO Chat_Liked (Username, chatID, LIKED) VALUES (?, ?, ?);`
-	updateQuery := `UPDATE Chat_Liked SET LIKED = ? WHERE Username = ? AND chatID = ?;`
-	err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeChatRequest.Chat, likeChatRequest.Liked})
+	if likeChatRequest.Liked {
+		// Insert or update the like status
+		insertQuery := `INSERT INTO Chat_Liked (Username, chatID, liked) VALUES (?, ?, ?);`
+		updateQuery := `UPDATE Chat_Liked SET liked = ? WHERE Username = ? AND chatID = ?;`
+		err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeChatRequest.ChatID, likeChatRequest.Liked})
+	} else {
+		// Delete the record if disliked
+		deleteQuery := `DELETE FROM Chat_Liked WHERE Username = ? AND chatID = ?;`
+		_, err = db.Exec(deleteQuery, username, likeChatRequest.ChatID)
+	}
+
 	if err != nil {
-		fmt.Println("Error executing SQL query:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error executing SQL query:", err)
+		http.Error(w, `{"error": "Database error occurred"}`, http.StatusInternalServerError)
 		return
 	}
 
-	// renvoie un message de succès
+	// Respond with a success message
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"message": fmt.Sprintf("Chat '%s' liked status updated: %t", likeChatRequest.Chat, likeChatRequest.Liked),
+		"message": fmt.Sprintf("Chat ID '%s' liked status updated: %t", likeChatRequest.ChatID, likeChatRequest.Liked),
 	})
 }
 
@@ -844,7 +870,7 @@ func LikeMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	if likeData.Liked {
 		// Si "like", insère ou met à jour le statut "LIKED".
-		insertQuery := `INSERT INTO Msg_Liked (Username, message_id, LIKED) VALUES (?, ?, ?);`
+		insertQuery := `INSERT INTO Msg_Liked (Username, message_id, liked) VALUES (?, ?, ?);`
 		updateQuery := `UPDATE Msg_Liked SET LIKED = ? WHERE Username = ? AND message_id = ?;`
 		err = insertOrUpdateRecord(db, insertQuery, updateQuery, exists, []interface{}{username, likeData.MessageID, likeData.Liked})
 	} else {

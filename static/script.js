@@ -397,27 +397,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch messages on page load
     fetchMessages();
-});
 
-function redirectToRegion() {
-    const searchValue = document.getElementById('searchBar')?.value.trim(); // Safely get the value
-    if (searchValue.includes(',')) {
-        const regionName = searchValue.split(',')[1].trim(); // Extract region name after the comma
-        window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Navigate to the desired URL
-    } else {
-        alert('Veuillez sélectionner une option valide !'); // Feedback for invalid input
-    }
-}
+    // Handle search actions
+    const searchBar = document.getElementById("searchBar");
+    const searchIcon = document.getElementById("search-icon");
 
-
-function redirectToRegion() {
-    const searchValue = searchBar.value.trim(); // Get the value from the search bar
-    
+    // Function to redirect to region
+    function redirectToRegion() {
+        const searchValue = searchBar.value.trim(); // Safely get the value from the search bar
+        
         // Check if the input follows the expected format "DepartmentName, RegionName"
         if (searchValue.includes(',')) {
             const regionName = searchValue.split(',')[1].trim(); // Extract region name after the comma
             window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Navigate to the desired URL
         } else {
-            alert('Veuillez sélectionner une option valide !'); // User feedback for invalid input
+            alert('Veuillez sélectionner une option valide !'); // Feedback for invalid input
         }
-}
+    }
+
+    // Add event listener for Enter key in the search bar
+    searchBar.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") { // Check for "Enter" key press
+            event.preventDefault(); // Prevent form submission or default behavior
+            redirectToRegion();
+        }
+    });
+
+    // Add event listener for search icon click
+    searchIcon.addEventListener("click", redirectToRegion);
+});

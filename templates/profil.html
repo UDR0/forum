@@ -47,13 +47,14 @@
             </li>
 
             <li class="meta-navigation">
-                <a class="meta-a" href="/contact">Contactez-nous</a>
+                <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
             </li>
         </ul>
 
     </header>
 
 
+    <!-- Contenu principal -->
     <!-- Contenu principal -->
     <section>
         <div class="card">
@@ -66,12 +67,13 @@
 
             <!-- Pseudo et Bio -->
             <p id="pseudo" class="pseudo">{{.Pseudo}}</p>
-            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
 
             <div class="ConteneurProfil">
                 <h4>Bio</h4>
                 <p id="bio" class="bio">{{.Biography}}</p>
             </div>
+
+            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
 
             <!-- Régions Favorites -->
             <h3 class="titre-favorite-region">Régions favorites</h3>
@@ -85,13 +87,13 @@
                             <div class="destination-description-favorites">{{.RegionDescr}}</div>
                         </div>
                     </div>
-                {{end}}
             </div>
+            {{end}}
         
 
             <!-- Fil discussion créés -->
             <h3 class="titre-favorite-region">Mes fils de discussion créés</h3>
-            <div class="discussion">
+            <!-- <div class="discussion"> -->
                 {{range .Chats}}
                 <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
                     <div class="discussion-cree-info">
@@ -110,12 +112,12 @@
                     </div>
                 </div>
                 {{end}}
-            </div>
+            <!-- </div> -->
 
 
             <!-- Fil discussion Favorites -->
             <h3 class="titre-favorite-region">Mes fils de discussion favorites</h3>
-            <div class="discussion">
+            <!-- <div class="discussion"> -->
                 {{range .LikedChats}}
                 <div class="discussion-cree">
                     <div class="discussion-cree-info">
@@ -135,11 +137,10 @@
                     </div>
                 </div>
                 {{end}}
-            </div>
-
-        </section>
-
+            <!-- </div> -->
             <a class="btn-deconnexion" href="/logout">Déconnexion</a>
+        </div>
+    </section>
             
    
 

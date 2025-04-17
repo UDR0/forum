@@ -49,7 +49,9 @@
         </li>
 
         <li class="meta-navigation">
-            <a class="meta-a" href="/contact">Contactez-nous</a>
+            <li class="meta-navigation">
+                <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
+            </li>
         </li>
 
         {{if .IsConnected}}
@@ -60,9 +62,9 @@
 
         {{else}}
 
-        <li class="meta-navigation-btn-connexion">
+        <li class="meta-navigation-btn-seconnecter">
             <a class="btn" href="/SeConnecter">Se connecter</a>
-        </li>
+</li>
 
         <li class="meta-navigation-btn-creer-compte">
             <a class="btn" href="/CreerCompte">Créer mon compte</a>
@@ -81,8 +83,9 @@
             <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
             <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
         </div>
-        <div id="dropdown" class="dropdown"></div>
-        
+        <div id="dropdown" class="dropdown">
+            <img src="../static/img/outil.png">
+        </div>
 
         <!-- MAP France -->
         <div class="map-france" id="map">
@@ -127,7 +130,7 @@
                                 d="M579.428,571.32l1.212,-2.684l4.629,-2.552l-5.575,-0.665l-0.282,-2.294l-4.816,0.044l2.977,-1.996l-0.768,-1.431l2.479,-0.521l1.3,-4.659l-2.279,-2.106l-5.829,2.195l-0.627,-3.975l2.316,-0.194l0.486,-2.438l3.615,-2.072l-1.968,-3.494l-4.952,-0.881l-0.328,-5.581l-1.37,-0.52l6.427,-1.638l-3.757,-2.175l0.436,-2.467l-2.578,0.89l-0.345,-2.312l4.596,-2.252l1.029,-3.004l-1.295,-0.544l2.973,-2.62l0.232,-3.336l2.615,1.747l0.552,-2.741l8.848,-2.176l4.554,-5.081l4.031,-0.208l3.188,3.298l1.914,-3.338l-1.47,-5.473l2.15,-5.131l-0.876,-3.951l3.449,-0.979l1.682,1.414l1.221,10.136l-1.951,7.417l3.604,7.144l1.079,19.747l-0.395,5.127l-5.699,8.352l-1.055,17.061l-4.467,2.722l0.373,1.184l1.274,-1.664l2.122,0.586l-3.961,3.532l0.195,3.655l-2.877,2.809l2.092,-0.017l-3.313,2.734l-3.587,-1.648l1.125,-2.404l-2.104,-0.364l0.395,-2.025l-1.657,1.347l-1.702,-1.838l-3.254,0.05l-3.222,-1.585l0.456,-1.613l-2.765,-0.492L579.428,571.32z" />
                         </a>
 
-                        <a id="FR-IDF" xlink:title="Île-de-France" xlink:href="/region?name=île-de-France">
+                        <a id="FR-IDF" xlink:title="Île-de-France" xlink:href="/region?name=Île-de-France">
                             <path
                                 d="M285.855,120.07L287.96,123.631L291.31,124.346L298.23,123.612L301.514,121.427L305.234,124.391L307.223,123.39L307.82,125.169L311.171,122.94L318.502,127.991L321.08,126.839L322.367,129.659L324.422,127.852L328.615,130.847L331.704,128.585L333.514,130.253L338.367,128.907L339.147,130.203L342.428,129.312L342.568,127.301L345.408,127.991L347.566,131.529L346.596,133.922L350.635,138.551L352.3,137.927L353.296,140.485L354.902,139.213L355.538,142.765L358.784,144.922L359.784,143.998L359.784,143.998L359.855,146.4L356.385,146.727L358.045,147.877L356.007,149.88L359.074,151.148L358.356,157.588L361.814,156.886L362.856,158.753L358.921,161.625L359.59,163.433L356.497,164.289L357.805,166.626L355.538,167.3L356.85,172.909L356.85,172.909L341.618,174.828L340.289,178.209L341.622,181.654L337.047,187.033L337.047,187.033L332.165,189.093L331.317,186.679L328.719,186.803L329.462,188.131L327.437,189.489L316.567,189.458L319.636,186.785L319.615,183.14L315.741,181.039L314.928,177.556L311.752,176.479L308.318,178.632L306.571,175.793L304.927,178.626L297.001,179.279L297.653,174.616L297.205,172.248L295.15,171.974L295.246,168.786L292.738,169.828L289.907,168.193L289.309,162.757L281.637,155.783L281.487,144.815L277.46,138.463L277.46,138.463L277.46,138.463L277.46,138.463L277.46,138.463L277.46,138.463L278.204,136.055L276.182,136.219L275.26,131.321L276.934,131.504L277.81,129.299L282.479,129.299z" />
                         </a>
@@ -153,7 +156,7 @@
                         </a>
 
                         <a id="FR-PAC" xlink:title="Provence-Alpes-Côte d'Azur"
-                            xlink:href="/region?name=Provence-Alpes-Côte-d'Azur">
+                            xlink:href="/region?name=Provence-Alpes-Côte d'Azur">
                             <path
                                 d="M436.874,480.46l1.332,-4.562l-2.686,-3.759l-3.347,1.86l-7.41,0.216l-3.317,-5.708l-5.87,-0.257l1.366,1.601l-1.577,0.233l0.515,1.218l1.776,1.145l-1.743,1.615l-10.562,-1.854l0.349,-3.513l-2.379,-1.715l-12.575,-0.455l0,0l0.44,-2.247l9.146,-5.165l0.432,-1.319l-1.901,-0.663l2.475,-4.186l5.912,0.67l1.64,-9.12l-1.071,-1.251l8.411,-7.048l-2.408,-4.407l-2.735,-0.91l0.045,-6.104l-2.988,-4.798l0,0l0.05,-3.439l5.729,0.966l1.262,4.957l10.001,-4.634l2.018,1.74l2.425,-2.162l-0.606,4.796l8.424,1.033l1.158,3.41l2.989,2.075l3.591,-0.767l2.499,-3.386l1.719,1.143l1.794,-1.425l0.008,-4.088l-3.263,-2.271l0.884,-1.579l-5.649,-0.242l-2.607,-2.147l-0.47,-2.912l3.268,-0.695l-1.665,-3.589l6.477,1.606l2.071,-1.786l-2.777,-2.414l1.91,-6.258l6.082,-0.093l1.702,-2.153l-1.308,-0.931l1.166,-3.093l5.152,-0.058l1.212,-1.23l-1.278,-1.358l2.831,-1.796l1.611,1.143l3.217,-2.818l4.708,0.724l1.831,-1.284l2.669,1.109l-1.324,-8.409l-4.961,-1.018l1.71,-6.122l3.642,-0.159l1.308,3.106l3.578,1.066l2.466,-3.363l4.995,0.018l0,0l1.756,5.301l2.939,0.328l0.277,6.368l4.675,3.217l2.993,-0.683l3.6,2.258l-0.938,2l3.164,6.156l-4.729,0.355l0.216,3.35l-4.662,5.227l3.856,5.718l-2.309,0.48l-0.224,3.422l4.952,7.324l7.494,1.985l7.045,4.954l13.575,-3.431l0.884,7.641l-8.659,9.747l1.444,5.184l-7.95,4.02l-0.972,0.344l-6.58,3.049l-1.461,3.783l-0.972,0.908l-2.482,2.043l-3.146,-0.399l-2.969,6.443l-6.057,0.336l-1.191,4.263l-5.879,4.304l5.086,0.318l-2.089,5.625l-3.554,-1.225l-2.689,2.172l-4.646,0.368l-0.852,3.293l-7.348,-1.62l-1.316,4.994l-2.491,-0.119l1.208,-2.848l-4.28,0.063l-4.089,-2.629l-1.656,1.259l2.765,1.953l-4.965,1.025l-1.474,-1.07l0.635,-2.628l-4.699,-1.61l-0.382,-2.053l-2.682,-0.38l-0.735,1.509l-2.844,-3.092L436.874,480.46z" />
                         </a>
@@ -230,37 +233,34 @@
 
 
     <!-- Pied de page -->
-    <footer>
-        <div class="conteneurFooter">
-            <div class="coordonés">
-                <h4>Coordonées</h4>
-                <p>Pl. Sophie Laffitte Immeuble AGORA, <br>06560 Valbonne</p>
-                <p>mytripy@ynov.com</p>
-                <p>08 00 60 06 33</p>
-            </div>
-            <div class="navigation">
-                <h4>Navigation</h4>
-                <p>Acceuil</p>
-                <p>Destinations</p>
-                <p>Favoris</p>
-            </div>
-            <div class="nosReseaux">
-                <h4>Nos Réseaux</h4>
-                <div class="instagram">
-                    <img src="../static/img/instagram.png">
-                    <p>@mytripy</p>
-                </div>
-                <div class="facebook">
-                    <img src="../static/img/facebook.png">
-                    <p>@mytripy</p>
-                </div>
-                <div class="twitter">
-                    <img src="../static/img/twitter.png">
-                    <p>@mytripy</p>
-                </div>
-            </div>
+    <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-section">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="/mytripy-non">Accueil</a></li>
+              <li><a href="/destinations">Déstinations</a></li>
+              <li><a href="/apropos">À propos</a></li>
+              <li><a href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a></li>
+              <li><a href="/mentions-legales">Mentions legales</a></li>
+            </ul>
+          </div>
+      
+          <div class="footer-section">
+            <h4>Suivez-nous</h4>
+            <!-- <div class="footer-socials">
+              <a href="#"><img src="static/img/icons/instagram.svg" alt="Instagram"></a>
+              <a href="#"><img src="static/img/icons/facebook.svg" alt="Facebook"></a>
+              <a href="#"><img src="static/img/icons/twitter.svg" alt="Twitter"></a>
+            </div> -->
+          </div>
+      
+          <div class="footer-section">
+            <h4>Contact</h4>
+            <p>forumvoyage@gmail.com</p>
+            <p>&copy; 2025 Mytripy. Tous droits réservés.</p>
+          </div>
         </div>
-        <h4 class="mentions">Contacts | Mentions Légales | Modération | Politique de Confidentialité | Cookies </h4>
     </footer>
 
     <script>

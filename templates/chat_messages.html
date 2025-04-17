@@ -47,7 +47,7 @@
             </li>
 
             <li class="meta-navigation">
-                <a class="meta-a" href="/contact">Contactez-nous</a>
+                <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
             </li>
 
             <li class="meta-navigation-btn-connexion">
@@ -70,17 +70,18 @@
                         <h4>{{.TimeElapsed}}</h4>
                     </div>
                 </div>
-                <div class="message">
-                    <p>{{.Message}}</p>
-                </div>
 
                 <div class="msg-coeur-container" data-message-id="{{.MessageID}}">
+                    <p>{{.NumberOfLikes}}</p>
                     {{if .UserLiked}}
                     <img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">
                     {{else}}
                     <img src="static/img/coeur.png" alt="Like" class="msg-like">
                     {{end}}
-                    <p>{{.NumberOfLikes}} Likes</p>
+                </div>
+
+                <div class="message">
+                    <p>{{.Message}}</p>
                 </div>
             </div>
             {{end}}

@@ -310,6 +310,7 @@ section h2 {
     font-size: 16px;
     border-radius: 25px;
     padding-right: 50px; /* Ajoute un espace pour ne pas que le texte touche le bouton */
+    font-weight: bold;
 }
 
 /* Change la couleur du texte de la barre de recherche */
@@ -474,6 +475,30 @@ section h2 {
 }
 
 
+/*////////////////// DROPDOWN ////////////////////////*/
+.dropdown {
+    border: 2px solid #ccc;
+    width: 80%;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+
+}
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    color:  #1f1f1f;
+
+  }
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
 
 
 
@@ -809,7 +834,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    margin-top: 15px;
+    /* margin-top: 15px; */
     margin-bottom: 20px;
     color: #026d90;
     text-decoration: none;
@@ -830,6 +855,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     margin-top: 25px;
+    margin-bottom: 15px;
     color: #fff;
     text-decoration: none;
     background-color: #34A0A4; /* Couleur de fond des boutons */
@@ -865,7 +891,7 @@ section h2 {
 }
 
 .photo {
-    position: absolute;
+    /* position: absolute; */
     width: 150px;
     height: 150px;
     background: #fff;
@@ -874,9 +900,11 @@ section h2 {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    top: calc(20% - 55px);
+    margin-left: auto;
+    margin-right: auto;
+    /* top: calc(20% - 55px);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); */
 }
 
 .photoProfil {
@@ -889,7 +917,7 @@ section h2 {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 12%;
+    /* margin-top: 12%; */
     text-align: center;
     width: 90%;
     color: #026d90;
@@ -930,13 +958,14 @@ section h2 {
     max-width: 600px;  /* Limite de la largeur du pop-up */
     z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
     overflow: hidden;
+    color: white;
 }
 
-.popup h1 {
+/* .popup h1 {
     color: white;
     font-weight: bolder;
     margin-bottom: 5%;
-}
+} */
 
 /* Image dans le pop-up */
 .imgAvatar img {
@@ -1441,7 +1470,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     width: 80% !important;
-    top : 43%;
+    top : 41%;
     font-weight: bold;
     font-family: "Open Sans", sans-serif !important;
 }
@@ -1449,7 +1478,7 @@ section h2 {
 .paramFil {
     display: flex;
     flex-wrap: wrap;
-    top:62%;
+    top:59%;
     width: 80%;
     gap : 3%;
     align-items: center;
@@ -1481,7 +1510,7 @@ section h2 {
 }
 
 .popupAjouterFil button{
-    top:77%;
+    top:73%;
     padding: 2%;
     margin-top: 2%;
     width: 48%;
@@ -1612,12 +1641,11 @@ section h2 {
 .discussion-cree-chat {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* aligne le contenu à droite */
+    justify-content: flex-end;
     margin-top: 10px;
     gap: 4px;
-    border: #777 1px solid;
-    border-radius: 25px;
     padding: 5px;
+    padding-left: 0px;
 }
 
 .discussion-cree-chat img {
@@ -1630,7 +1658,29 @@ section h2 {
     color: #777;
 }
 
+.chat-coeur-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    border: #777 1px solid;
+    border-radius: 25px;
+    padding: 6px;
+}
 
+.discussionFil {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    border: #777 1px solid;
+    border-radius: 25px;
+    padding: 6px;
+}
+
+.chat-coeur-container.active {
+    background-color: #fff;
+}
 
 
 
@@ -1703,6 +1753,23 @@ section h2 {
     margin: 5%;
     text-align: justify;
     width: 90%;
+}
+
+.msg-coeur-container {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    margin-top: 4%;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    flex-direction: row-reverse;
+    width: 100%;
+    margin-right: 4%;
+    gap: 1%;
+}
+
+.msg-like{
+    width: 3vh;
 }
 
 /* .interactionPost {
@@ -2023,57 +2090,4 @@ section h2 {
 /* ######################## Tablette ######################## */
 @media (max-width: 768px) {
 
-}
-
-
-
-
-/*////////////////// DROPDOWN ////////////////////////*/
-.dropdown {
-    border: 1px solid #ccc;
-    width: 300px;
-    display: none;
-    max-height: 150px;
-    overflow-y: auto;
-  }
-  .dropdown-item {
-    padding: 10px;
-    cursor: pointer;
-  }
-  .dropdown-item:hover {
-    background-color: #f0f0f0;
-  }
-
-  .chat-coeur-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
-    padding: 9px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.chat-coeur {
-    width: 17px;
-    height: 17px;
-}
-
-.chat-coeur-container.active {
-    background-color: #fff;
-}
-
-
-.msg-like{
-    position: absolute;
-    width: 4%;
-    top:0px;
-    right: 2%;
-    margin-top: 2%;
 }

@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
                                 : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
                             }
-                            <p>${msg.number_of_likes} Likes</p>
+                            <p>${msg.number_of_likes}</p>
                         </div>
                     `;
     

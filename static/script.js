@@ -33,7 +33,7 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
         const liked = !img.src.includes('coeur_rouge.png'); // True if switching to red heart
 
         // Optimistically toggle the heart icon
-        img.src = liked ? 'static/img/coeur_rouge.png' : 'static/img/coeur.png';
+        img.src = liked ? 'static/img/icon/coeur_rouge.png' : 'static/img/icon/coeur.png';
 
         // Send the like status to the server
         fetch('/like', {
@@ -54,7 +54,7 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
             console.error('Error communicating with the server:', error);
 
             // Revert the heart icon if the request fails
-            img.src = liked ? 'static/img/coeur.png' : 'static/img/coeur_rouge.png';
+            img.src = liked ? 'static/img/icon/coeur.png' : 'static/img/icon/coeur_rouge.png';
         });
     });
 });
@@ -72,10 +72,10 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
         
         // Toggle heart icon
         if (liked) {
-            img.src = 'static/img/coeur_rouge.png'; // Change to red heart
+            img.src = 'static/img/icon/coeur_rouge.png'; // Change to red heart
             console.log(`Liked region: ${chatName}`);
         } else {
-            img.src = 'static/img/coeur.png'; // Change back to normal heart
+            img.src = 'static/img/icon/coeur.png'; // Change back to normal heart
             console.log(`Unliked region: ${chatName}`);
         }
 
@@ -334,8 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <div class="msg-coeur-container" data-message-id="${msg.message_id}">
                             ${msg.user_liked
-                                ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
-                                : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
+                                ? `<img src="static/img/icon/coeur_rouge.png" alt="Liked" class="msg-like">`
+                                : `<img src="static/img/icon/coeur.png" alt="Like" class="msg-like">`
                             }
                             <p>${msg.number_of_likes}</p>
                         </div>
@@ -363,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Optional: Toggle heart icon state
             const isLiked = heartIcon.src.includes("coeur_rouge.png");
-            heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
+            heartIcon.src = isLiked ? "static/img/icon/coeur.png" : "static/img/icon/coeur_rouge.png";
 
             // Send the like status to the server
             fetch("/like-message", {
@@ -426,3 +426,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add event listener for search icon click
     searchIcon.addEventListener("click", redirectToRegion);
 });
+
+/////////////////////////// Chat //////////////////////////
+
+function adjustHeight(textarea) {
+
+    // Calculer la hauteur du texte en fonction du contenu
+    const scrollHeight = textarea.scrollHeight;
+    const minHeight = 30;  // Hauteur minimale (en pixels, équivalent à environ 1 ligne)
+    const maxHeight = 50;  // Hauteur maximale (en pixels, équivalent à environ 3 lignes)
+
+    // Appliquer la hauteur du textarea en fonction du contenu
+    if (scrollHeight <= maxHeight) {
+        // Si la hauteur du texte est inférieure à la hauteur maximale, ajuster la hauteur
+        textarea.style.height = scrollHeight + 'px';
+    } else {
+        // Si la hauteur dépasse la hauteur maximale, on applique un scroll
+        textarea.style.height = maxHeight + 'px';
+        textarea.style.overflowY = 'auto'; // Activer le scroll vertical
+    }
+
+    // Ne pas descendre sous la hauteur minimale
+    if (textarea.value == "") {
+        textarea.style.height = 1.5 + 'em';
+    }
+}

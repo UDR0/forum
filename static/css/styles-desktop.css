@@ -382,6 +382,34 @@
         margin-bottom: 2%;
     }
 
+    .popupAjouterFil h3 {
+        top: -3%;
+        margin-top: 5%;
+    }
+
+    .nomFil{
+        font-size: 80% !important;
+        width: 80% !important;
+        top : 25%;
+    }
+
+    .descriptionFil{
+        font-size: 80% !important;
+        width: 80% !important;
+        top : 41%;
+    }
+
+    .paramFil {
+        display: flex;
+        top:59%;
+        width: 80%;
+    }
+
+    .popupAjouterFil button{
+        top:73%;
+        width: 48%;
+    }
+
     /* ###################### Page : Chat ########################### */
 
     .returnFil {

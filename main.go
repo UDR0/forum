@@ -57,7 +57,6 @@ func main() {
 			session, _ := store.Get(r, "session")
 			session.Values["user"] = r.FormValue("username")
 			session.Save(r, w)
-			http.Redirect(w, r, "/profil", http.StatusFound)
 		} else {
 			renderTemplate(w, "SeConnecter", nil)
 		}
@@ -73,6 +72,14 @@ func main() {
 
 	http.HandleFunc("/mot-de-passe-oublie", func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "mot-de-passe-oublie", nil)
+	})
+
+	http.HandleFunc("/MotDePasseOublie", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			forum.ForgotPasswordHandler(w, r)
+		} else {
+			renderTemplate(w, "SeConnecter", nil)
+		}
 	})
 
 	http.HandleFunc("/profil", forum.ProfilPage)

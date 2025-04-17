@@ -50,81 +50,48 @@
                 <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
             </li>
 
-            {{if .IsConnected}}
             <li class="meta-navigation-btn-connexion">
                 <a class="btn" href="/profil">Mon Compte</a>
             </li>
-
-            {{else}}
-            <li class="meta-navigation-btn-seconnecter">
-                <a class="btn" href="/SeConnecter">Se connecter</a>
-    </li>
-
-            <li class="meta-navigation-btn-creer-compte">
-                <a class="btn" href="/CreerCompte">Créer mon compte</a>
-            </li>
-            {{end}}
         </ul>
 
     </header>
 
-
-
-
     <!-- Contenu principal -->
     <section>
-        <!-- Barre de recherche -->
-        <div class="search-bar">
-            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
-            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
-        </div>
-        <div id="dropdown" class="dropdown"></div>
-
-
-        <div class="destinations">
-            {{range .Regions}}
-            <div class="destination-region" onclick="selectRegion('{{.RegionName}}')">
-                <img src="{{.RegionImg}}" alt="{{.RegionName}}" class="destination-image">
-                <div class="destination-details">
-                    <div class="destination-region-name">{{.RegionName}}</div>
-                    <div class="destination-description">{{.RegionDescr}}</div>
+        <div id="message-container" class="allPosts">
+            {{range .Messages}}
+            
+            <div class="post">
+                <div class="infoPost">
+                    <img src="{{.ImgUser}}" class="photoProfil" alt="Photo de profil">
+                    <div class="txtInfoPost">
+                        <h3>{{.Sender}}</h3>
+                        <h4>{{.TimeElapsed}}</h4>
+                    </div>
                 </div>
-                {{if $.IsConnected}}
-                <div class="destination-coeur-container" data-region="{{.RegionName}}">
-                    {{if .RegionLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+
+                <div class="msg-coeur-container" data-message-id="{{.MessageID}}">
+                    <p>{{.NumberOfLikes}}</p>
+                    {{if .UserLiked}}
+                    <img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    <img src="static/img/coeur.png" alt="Like" class="msg-like">
                     {{end}}
                 </div>
-                {{end}}
+
+                <div class="message">
+                    <p>{{.Message}}</p>
+                </div>
             </div>
             {{end}}
         </div>
-
-
-
     </section>
 
-    <script>
-        function selectRegion(regionName) {
-            console.log(`You clicked on region: ${regionName}`); // Debugging
-            fetch(`/region?name=${regionName}`, { method: 'GET' })
-                .then(response => {
-                    if (response.ok) {
-                        console.log(`Region ${regionName} successfully selected`); // Debugging
-                        window.location.href = "/welcome";
-                    } else {
-                        console.error("Failed to select region:", response.statusText);
-                    }
-                })
-                .catch(error => console.error("Error selecting region:", error));
-        }
-    </script>
-
-
-
-
+        <div class="conainerWritePost">
+            <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
+            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
+        </div>
     <script src="static/script.js"></script>
 </body>
 

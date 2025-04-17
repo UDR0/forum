@@ -14,83 +14,98 @@
         <link rel="stylesheet" href="static/css/styles.css">
         <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
     </head>
-    <body>
-        <!-- Header -->
-        <header>
-            <!-- Logo -->
-            <a href="/mytripy-non" class="logo">
-                <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
-                <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            </a>
+<body>
 
-            <!-- Menu Burger -->
-            <button class="burger-menu" id="burger">
-                <img src="static/img/menu-black.png" alt="menu">
-            </button>
-        </header>
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
 
-        <!-- Navigation -->
-        <ul class="meta-ul">
-            <li class="meta-navigation">
-                <a class="meta-a" href="/mytripy-non">MyTripy</a>
-            </li>
-            <li class="meta-navigation">
-                <a class="meta-a" href="/destinations">Destinations</a>
-            </li>
-            <li class="meta-navigation">
-                <a class="meta-a" href="/contact">Contactez-nous</a>
-            </li>
-            <li class="meta-navigation-btn-seconnecter">
-                <a class="btn" href="/SeConnecter">Se connecter</a>
-            </li>
-            <li class="meta-navigation-btn-creer-compte">
-                <a class="btn" href="/CreerCompte">Créer mon compte</a>
-            </li>
-        </ul>
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/menu-black.png" alt="menu">
+        </button>
 
-        <!-- Conteneur Principal -->
-        <section>
-            <div class="card">
-                <div class="card-img">
-                    <img src="static/img/fond-profil-3.png" alt="fond profil">
-                </div>
+    </header>
 
-                <div class="card-titre">
-                    <h3 class="titre-mot-de-passe-oublie">Réinitialisation du mot de passe</h3>
-                    <p class="sous-titre-SeConnecter">Renseignez les informations ci-dessous pour réinitialiser votre mot de passe</p>
-                </div>
 
-                <!-- Formulaire -->
-                <form id="resetPasswordForm">
-                    <div class="ConteneurMotDePasseOublie">
-                        <h4>Votre Email</h4>
-                        <div class="ConteneurEmail">
-                            <input type="email" id="Email" placeholder="nom@email.com" required>
-                            <img src="/static/img/email.png" alt="Icône email">
-                        </div>
+    <!-- Navigation -->
+    <ul class="meta-ul">
+        <li class="meta-navigation">
+            <a class="meta-a" href="/mytripy-non">MyTripy</a>
+        </li>
 
-                        <h4>Votre pseudo</h4>
-                        <div class="ConteneurEmail">
-                            <input type="text" id="Pseudo" placeholder="Votre pseudo" required>
-                            <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
-                        </div>
-                    
-                        <h4>Nouveau mot de passe</h4>
-                        <div class="ConteneurEmail">
-                            <input type="password" id="NouveauMotDePasse" placeholder="Mot de passe" required>
-                            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-                        </div>
-                        <div class="ConteneurMotDePasse">
-                            <input type="password" id="ConfirmeMotDePasse" placeholder="Confirmer votre mot de passe" required>
-                            <img src="/static/img/cadenas.png" alt="Icône cadenas">
-                        </div>
+        <li class="meta-navigation">
+            <a class="meta-a" href="/destinations">Destinations</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
+        </li>
+
+        <li class="meta-navigation-btn-seconnecter">
+            <a class="btn" href="/SeConnecter">Se connecter</a>
+</li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="/CreerCompte">Créer mon compte</a>
+        </li>
+
+    </ul>
+
+    </header>
+
+    
+
+
+
+    <section>
+        <div class="card">
+            <div class="card-img">
+                <img src="static/img/fond-profil-3.png" alt="fond profil">
+            </div>
+
+            <div class="card-titre">
+                <h3 class="titre-mot-de-passe-oublie">Réinitialisation du mot de passe</h3>
+                <p class="sous-titre-SeConnecter">Renseignez les informations ci-dessous pour réinitialiser votre mot de passe</p>
+            </div>
+
+            <!-- Formulaire -->
+            <form id="resetPasswordForm" action="/MotDePasseOublie" method="POST">
+                <div class="ConteneurMotDePasseOublie">
+                    <h4>Votre Email</h4>
+                    <div class="ConteneurEmail">
+                        <input type="email" id="Email" name="email" placeholder="nom@email.com" required>
+                        <img src="/static/img/email.png" alt="Icône email">
                     </div>
 
-                    <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
-                </form>
-            </div>
-        </section>
+                    <h4>Votre pseudo</h4>
+                    <div class="ConteneurEmail">
+                        <input type="text" id="Pseudo" name="username" placeholder="Votre pseudo" required>
+                        <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                    </div>
+                
+                    <h4>Nouveau mot de passe</h4>
+                    <div class="ConteneurEmail">
+                        <input type="password" id="NouveauMotDePasse" name="password" placeholder="Mot de passe" required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+                    <div class="ConteneurMotDePasse">
+                        <input type="password" id="ConfirmeMotDePasse" name="confirmPassword" placeholder="Confirmer votre mot de passe" required>
+                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                    </div>
+                </div>
+                <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
 
-        <script src="static/script.js"></script>
-    </body>
+                <button type="submit" class="btn-SeConnecter">Réinitialiser</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="static/script.js"></script>
+</body>
 </html>

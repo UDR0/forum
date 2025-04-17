@@ -22,6 +22,7 @@ body {
 
 
 
+
 /* ######################## Header ######################## */
 
 header {
@@ -74,7 +75,6 @@ header {
 
 
 
-
 /* ######################## MENU BURGER ######################## */
 .burger-menu {
     background-color: transparent; /* Couleur du fond du bouton */
@@ -102,6 +102,54 @@ header {
     background-color: #64d6df;
     border: 1px solid #64d6df;
 }
+
+
+
+
+
+
+/* ######################## Header juste le X ######################## */
+.header-chp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #fff;
+    /* box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4); */
+}
+
+
+.sortir {
+    margin-left: auto;
+    background-color: transparent; /* Couleur du fond du bouton */
+    border: none;
+    padding: 5px; /* Taille du bouton */
+    border-radius: 50%; /* Rendre le bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid #1E6091;
+    width: 40px;
+    height: 40px;
+}
+
+/* Image du menu burger */
+.sortir img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Effet de survol pour le bouton */
+.sortir:hover {
+    background-color: #64d6df;
+    border: 1px solid #64d6df;
+}
+
+
+
 
 
 
@@ -214,7 +262,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre floue */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     /*transform: rotate(-4deg);  Rotation de -3 degrés */
     /*display: inline-block;  Pour éviter que la rotation affecte le flux du texte */
     /*padding: 5px 20px;  Espacement autour du texte */
@@ -262,6 +310,7 @@ section h2 {
     font-size: 16px;
     border-radius: 25px;
     padding-right: 50px; /* Ajoute un espace pour ne pas que le texte touche le bouton */
+    font-weight: bold;
 }
 
 /* Change la couleur du texte de la barre de recherche */
@@ -426,6 +475,30 @@ section h2 {
 }
 
 
+/*////////////////// DROPDOWN ////////////////////////*/
+.dropdown {
+    border: 2px solid #ccc;
+    width: 80%;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+
+}
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    color:  #1f1f1f;
+
+  }
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
 
 
 
@@ -547,15 +620,6 @@ section h2 {
     object-fit: cover;
 }
 
-.destination-link-popular {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
 .coeur-container {
     position: absolute;
     top: 10px;
@@ -620,6 +684,8 @@ section h2 {
     height: auto;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: 0.3s box-shadow;
+    cursor: pointer;
 }
 
 .description img {
@@ -768,7 +834,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    margin-top: 15px;
+    /* margin-top: 15px; */
     margin-bottom: 20px;
     color: #026d90;
     text-decoration: none;
@@ -789,6 +855,7 @@ section h2 {
     margin-left: auto;
     margin-right: auto;
     margin-top: 25px;
+    margin-bottom: 15px;
     color: #fff;
     text-decoration: none;
     background-color: #34A0A4; /* Couleur de fond des boutons */
@@ -824,7 +891,7 @@ section h2 {
 }
 
 .photo {
-    position: absolute;
+    /* position: absolute; */
     width: 150px;
     height: 150px;
     background: #fff;
@@ -833,9 +900,11 @@ section h2 {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    top: calc(20% - 55px);
+    margin-left: auto;
+    margin-right: auto;
+    /* top: calc(20% - 55px);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); */
 }
 
 .photoProfil {
@@ -848,7 +917,7 @@ section h2 {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 12%;
+    /* margin-top: 12%; */
     text-align: center;
     width: 90%;
     color: #026d90;
@@ -868,14 +937,16 @@ section h2 {
     top: 0px;
     left: 0px;
     width: 100%;
+    height: 100%;
     position: fixed;
-    z-index: -1; /* Laisser cette valeur mais s'assurer que le pop-up a un z-index supérieur */
+    z-index: -1;
+    object-fit: cover;
 }
 
 /* Style général pour le pop-up */
 .popup {
     display: none;
-    position: fixed; /* Utiliser fixed pour qu'il reste visible même en scrollant */
+    position: fixed; /* Pour qu'il reste visible même en scrollant */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -883,16 +954,18 @@ section h2 {
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    width: 90%;  /* Tu peux ajuster la largeur ici */
+    width: 90%;
     max-width: 600px;  /* Limite de la largeur du pop-up */
     z-index: 10000; /* S'assurer que le pop-up est au-dessus de tous les autres éléments */
+    overflow: hidden;
+    color: white;
 }
 
-.popup h1 {
+/* .popup h1 {
     color: white;
     font-weight: bolder;
     margin-bottom: 5%;
-}
+} */
 
 /* Image dans le pop-up */
 .imgAvatar img {
@@ -1135,7 +1208,7 @@ section h2 {
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: 0.3s box-shadow;
     cursor: pointer;
     text-align: left;
 }
@@ -1212,15 +1285,19 @@ section h2 {
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:0.3s box-shadow;
     cursor: pointer;
     text-align: left;
 }
 
+
 .destination-image {
     width: 40%;
     height: 150px;
+    object-fit: cover;
+    transition: width 0.3s ease;
 }
+
 
 .destination-details {
     flex: 1;
@@ -1230,7 +1307,8 @@ section h2 {
     font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 600;
-    width: 70%;
+    width: 75%;
+    /* white-space: nowrap; */
 }
 
 .destination-description {
@@ -1266,14 +1344,6 @@ section h2 {
 }
 
 
-.destination-link {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
 
 
 
@@ -1282,80 +1352,6 @@ section h2 {
 
 
 /* ######################## Page : Fils de Discussion ######################## */
-
-.filPrincipal {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 9%;
-    /* gap: 15px; */
-    width: 100%;
-}
-
-.filPrincipal-region {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    height: 100px;
-    position: relative;
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    text-align: left;
-}
-
-.filPrincipal-image {
-    width: 40%;
-    height: 150px;
-}
-
-.filPrincipal-details {
-    flex: 1;
-}
-
-.filPrincipal-name {
-    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    width: 70%;
-}
-
-.filPrincipal-sous-name {
-    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
-    margin-top: 0px;
-    font-size: 12px;
-    color: #777;
-}
-
-.filPrincipal-nb-chat {
-    position: absolute;
-    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
-    color: #777;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    right: 15px;
-    bottom: 10px;
-    gap: 2px;
-}
-
-.filPrincipal-nb-chat img {
-    width: 11px;
-    height: 11px;
-}
-
-.filPrincipal-nb-chat p{
-    font-size: 12px;
-}
-
-
-
 
 /* .titreFilRegion {
     margin-top: 5%;
@@ -1442,13 +1438,14 @@ section h2 {
     position: relative;
     width: 95%;
     border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.popupAjouterFil h3,.paramFil, .popupAjouterFil input, .popupAjouterFil button{
+.popupAjouterFil h3,.paramFil, .nomFil, .descriptionFil, .popupAjouterFil button{
     position: absolute;
     text-shadow: none !important;
     margin: 0px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 .popupAjouterFil h3 {
@@ -1456,20 +1453,32 @@ section h2 {
     margin-top: 5%;
 }
 
-.popupAjouterFil input{
-    font-size: 80%;
+.nomFil{
+    font-size: 80% !important;
     color: #000000;
     margin-left: auto;
     margin-right: auto;
-    width: 80%;
-    top : 33%;
+    width: 80% !important;
+    top : 25%;
     font-weight: bold;
+    font-family: "Open Sans", sans-serif !important;
+}
+
+.descriptionFil{
+    font-size: 80% !important;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80% !important;
+    top : 41%;
+    font-weight: bold;
+    font-family: "Open Sans", sans-serif !important;
 }
 
 .paramFil {
     display: flex;
     flex-wrap: wrap;
-    top:56%;
+    top:59%;
     width: 80%;
     gap : 3%;
     align-items: center;
@@ -1501,7 +1510,7 @@ section h2 {
 }
 
 .popupAjouterFil button{
-    top:71%;
+    top:73%;
     padding: 2%;
     margin-top: 2%;
     width: 48%;
@@ -1632,12 +1641,11 @@ section h2 {
 .discussion-cree-chat {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* aligne le contenu à droite */
+    justify-content: flex-end;
     margin-top: 10px;
     gap: 4px;
-    border: #777 1px solid;
-    border-radius: 25px;
     padding: 5px;
+    padding-left: 0px;
 }
 
 .discussion-cree-chat img {
@@ -1650,83 +1658,261 @@ section h2 {
     color: #777;
 }
 
+.chat-coeur-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    border: #777 1px solid;
+    border-radius: 25px;
+    padding: 6px;
+}
 
+.discussionFil {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    border: #777 1px solid;
+    border-radius: 25px;
+    padding: 6px;
+}
+
+.chat-coeur-container.active {
+    background-color: #fff;
+}
 
 
 
 /* ######################## Page : Forum ######################## */
 
 .allPosts {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 10px;
-    overflow-y: auto;
-    height: 66vh;
+    overflow-y: scroll;
+    height: auto;
+    max-height: 75vh;
+    scrollbar-width: none;
+    border-bottom: 0.4vh solid #D9D9D9;
 }
 
 .post {
-    background-color: #D9D9D9;
+    background-color: #ffffff;
+    border: 0.4vh solid #D9D9D9;
+    border-radius: 25px;
     width: 95%;
-    box-sizing: border-box;
-}
-
-.enterPost {
-    position: fixed;
-    bottom: 0%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #D9D9D9;
-    border-radius: 20px;
-    padding: 1%;
-    width: 95%;
-}
-
-.conainerWritePost {
-    border-radius: 20px;
-    background-color: #FFF;
-}
-
-.inputPost {
-    height: auto; 
-    margin-top: 2%;
-    width: 94%;
-    border: none;
-    border-radius: 5px;
-    padding: 2%;
-    overflow: hidden;
-    resize: none;
-    box-sizing: border-box;
-    line-height: 1.4;
-    font-family: "Open Sans", sans-serif;
-    font-weight: bold;
-}
-
-.gras, .italic, .souligne, .texteBarre {
-    width: 7%;
-    padding: 1%;
-    transition: 0.3s background-color;
-    border-radius: 100%;
-}
-
-.gras:hover, .italic:hover, .souligne:hover, .texteBarre:hover {
-    background-color: #D9D9D9;
-    border-radius: 100%;
-    padding: 1%;
+    margin-bottom: 0;
+    margin-bottom: 2.5%;
+    margin-top: 2.5%;
+    position: relative;
+    z-index: 5;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
+    transition: 0.3s box-shadow;
     cursor: pointer;
 }
 
-.gras {
+.post:hover {
+    box-shadow: 0 4px 8px rgba(60, 60, 60, 0.5);
+}
+
+.infoPost {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5%;
+}
+
+.infoPost img {
+    width: 17%;
+    height: auto;
+    object-fit: cover;
+    margin: 0px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.txtInfoPost {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    margin-left: 3%;
+}
+
+.txtInfoPost h4 {
+    font-size: 1.8vh;
+    color: #777;
+    font-weight: normal;
+}
+
+.message {
+    margin: 5%;
+    text-align: justify;
+    width: 90%;
+}
+
+.msg-coeur-container {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    margin-top: 4%;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    flex-direction: row-reverse;
+    width: 100%;
+    margin-right: 4%;
+    gap: 1%;
+}
+
+.msg-like{
+    width: 3vh;
+}
+
+/* .interactionPost {
+    margin-right: 5%;
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1%;
+    margin-bottom: 1%;
+} */
+
+
+/* .iconCommentairePost {
+    margin-left: 74%;
+}
+
+.commentaires {
+    display: none;
+    background-color: #D9D9D9;
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -5px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 2%;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    max-height: 50vh;
+}
+
+.commentaire {
+    background-color: #ffffff;
+    width: 93%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.infoCom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.infoCom img {
+    position: absolute;
+    top: 5%;
+    width: 8%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 0px;
+    border: none;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.txtInfoCom {
+    position: absolute;
+    top: 5%;
+    left: 13%;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    margin-left: 3%;
+    margin-top: 5%;
+}
+
+.iconLikeCom {
+    position:absolute;
+    right: 5%;
+    top: 5%;
+    width: 7%;
+    height: auto;
+    object-fit: cover;
+    margin-top: 5%;
+    cursor: pointer;
+}
+
+.messageCom {
+    margin-top: 15%;
+    width: 90%;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.messageCom p{
+    font-size: 2vh;
+    text-align: justify;
+    margin: 5%;
+} */
+
+.conainerWritePost {
+    position: fixed;
+    bottom: 4%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 95%;
+    border-radius: 25px;
+    border: 0.4vh solid #D9D9D9;
+    background-color: #FFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2%;
+    z-index: 999;
+    justify-content: space-between;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.inputPost {
+    height: 1.5em;
+    width: 85%;
+    border: none;
+    outline: none;
+    border-radius: 5px;
     margin-left: 2%;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 1%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    resize: none;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(0, 0, 0);
 }
 
 .iconSend {
-    width: 8%;
-    height: auto;
-    background-color: #FFF;
-    border-radius: 100%;
-    margin-left: 50%;
+    width: 10%;
+    object-fit: contain;
     cursor: pointer;
 }
 
@@ -1794,7 +1980,110 @@ section h2 {
     transform: scale(1.2);
   }
 
+
+
+
+/* ######################## Mentions Legales ######################## */
+.mentions-legales {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mentions-legales h1 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 15px;
+    /* background-color: #e2e2e2;
+    width: 100%;
+    padding: 20px; */
+    /* border-bottom: #777 1px solid; */
+}
+
+.mentions-legales h3 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 15px;
+    width: 90%;
+}
+
+.mentions-legales p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: left;
+    margin-top: 5px;
+    width: 90%;
+    border-bottom: #777 1px solid; 
+    padding-bottom: 25px;
+}
   
+
+/* ######################## À Propos ######################## */
+.apropos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.apropos h1 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #000;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.apropos h3 {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #000;
+    text-align: left;
+    margin-top: 20px;
+    border-bottom: 2px solid #777;
+    text-shadow: none;
+    /* margin-left: 5%; */
+    width: 90%;
+}
+
+.apropos p {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: justify;
+    margin-top: 10px;
+    width: 90%;
+    line-height: 1.6;
+    margin-bottom: 3%;
+}
+
+.apropos ul {
+    font-family: 'Sen', Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    text-align: left;
+    margin-top: 10px;
+    width: 90%;
+    padding-left: 10%;
+    list-style-type: disc;
+}
+
+.apropos ul li {
+    margin-top: 5px;
+}
 
 
 
@@ -1802,4 +2091,3 @@ section h2 {
 @media (max-width: 768px) {
 
 }
-

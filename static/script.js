@@ -7,8 +7,6 @@ burgerMenu.addEventListener("click", () => {
     navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
 });
 
-
-
 document.querySelectorAll(".destination-region-popular", ".filPrincipal-region").forEach((card) => {
     card.addEventListener("click", function () {
         const targetUrl = card.getAttribute("data-link");
@@ -18,23 +16,86 @@ document.querySelectorAll(".destination-region-popular", ".filPrincipal-region")
     });
 });
 
-document.querySelectorAll(".destination-coeur-container").forEach((container) => {
+document.querySelectorAll('.destination-coeur-container').forEach(container => {
     container.addEventListener("click", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
+        event.stopPropagation(); // Prevent parent element click
+        event.preventDefault(); // Prevent default action
 
-        const coeur = container.querySelector(".destination-coeur"); // récupère l’image dans le container
+        const img = this.querySelector('.destination-coeur');
+        const regionName = this.getAttribute('data-region'); // Get region name
 
-        if (coeur.src.includes("coeur_rouge.png")) {
-            coeur.src = "static/img/coeur.png";
-        } else {
-            coeur.src = "static/img/coeur_rouge.png";
+        if (!img || !regionName) {
+            console.error('Error: Missing heart icon or region name.');
+            return;
         }
+
+        // Determine liked status
+        const liked = !img.src.includes('coeur_rouge.png'); // True if switching to red heart
+
+        // Optimistically toggle the heart icon
+        img.src = liked ? 'static/img/coeur_rouge.png' : 'static/img/coeur.png';
+
+        // Send the like status to the server
+        fetch('/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ region: regionName, liked }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update like status on the server.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Server response:`, data); // Log successful server response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
+
+            // Revert the heart icon if the request fails
+            img.src = liked ? 'static/img/coeur.png' : 'static/img/coeur_rouge.png';
+        });
     });
 });
 
 
+document.querySelectorAll('.chat-coeur-container').forEach(container => {
+    container.addEventListener("click", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        const img = this.querySelector('.chat-coeur');
+        const chatName = this.getAttribute('data-chat'); // Get region name
+        
+        // Determine liked status
+        const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
+        
+        // Toggle heart icon
+        if (liked) {
+            img.src = 'static/img/coeur_rouge.png'; // Change to red heart
+            console.log(`Liked region: ${chatName}`);
+        } else {
+            img.src = 'static/img/coeur.png'; // Change back to normal heart
+            console.log(`Unliked region: ${chatName}`);
+        }
 
+        // Send data to the server
+        fetch('/likechat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ region: chatName, liked }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`Server response:`, data); // Log server's response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
+        });
+    });
+});
 
 
 // Gestion des avatars dans le pop-up de profil
@@ -51,27 +112,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
 // ------------------- Profil ---------------------------//
 
-// Ouvrir le pop-up pour modifier la photo de profil
+
+// Function to open the pop-up to modify the profile photo
 function openPopupProfil() {
     document.getElementById("overlay-profil").style.display = "block";
     document.getElementById("popup-profil").style.display = "block";
 }
 
-// Fermer le pop-up de la photo de profil
+// Function to close the pop-up for the profile photo
 function closePopupProfil() {
     document.getElementById("overlay-profil").style.display = "none";
     document.getElementById("popup-profil").style.display = "none";
 }
 
-// Fermer le pop-up en cliquant sur l'overlay
-document.getElementById("overlay-profil").onclick = closePopupProfil;
+// ------------------- Modifications Pop-up ---------------------------//
 
-
-
-
-// Ouvrir le pop-up avec overlay sombre
+// Function to open the pop-up with overlay for modifying the profile
 function openPopupModif() {
     document.getElementById("overlay-modif").style.display = "block";
     document.getElementById("nouveauPseudo").value = document.getElementById("pseudo").innerText;
@@ -79,265 +138,304 @@ function openPopupModif() {
     document.getElementById("popup-modif").style.display = "block";
 }
 
-// Fermer le pop-up et l'overlay
+// Function to close the pop-up and overlay
 function closePopupModif() {
+    // CHANGED: Fixed invalid "null" to "none"
     document.getElementById("overlay-modif").style.display = "none";
     document.getElementById("popup-modif").style.display = "none";
 }
 
-// Sauvegarder les modifications
+// Function to save modifications and update the content
 function sauverModifications() {
     const nouveauPseudo = document.getElementById("nouveauPseudo").value;
     const nouvelleBio = document.getElementById("nouvelleBio").value;
 
+    // Mettre à jour l'affichage local
     document.getElementById("pseudo").innerText = nouveauPseudo;
     document.getElementById("bio").innerText = nouvelleBio;
 
-    closePopupModif();
-}
-
-// Fermer le pop-up en cliquant sur l'overlay
-document.getElementById("overlay-modif").onclick = closePopupModif;
-
-
-function PopupFils() {
-    const popupFils = document.getElementById("popupAjouterFil");
-    const imageBtnFils = document.getElementById("btnAjouterFil");
-
-    if (popupFils.style.display === "flex") {
-        document.getElementById("popupAjouterFil").style.display = "none";
-        document.getElementById("btnAjouterFil").src = "static/img/ajouter.png"
-    } else {
-        document.getElementById("popupAjouterFil").style.display = "flex";
-        document.getElementById("btnAjouterFil").src = "static/img/moin.png"
-    }
-}
-
-
-
-
-/* it is not working
-    // ------------------- SEARCH ---------------------------//
-
-    var searchInput = document.getElementById("search-input");
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            const query = this.value;
-            const autocomBox = document.getElementById('autocom-box');
-            
-            if (autocomBox) {
-                if (query.length < 2) {
-                    autocomBox.innerHTML = '';
-                    autocomBox.classList.remove('active');
-                    return;
-                }
-
-                fetch(`/search-suggestions?q=${encodeURIComponent(query)}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.text(); // Get the response as text
-                    })
-                    .then(text => {
-                        try {
-                            return JSON.parse(text); // Attempt to parse the text as JSON
-                        } catch (error) {
-                            throw new Error('Failed to parse response as JSON: ' + text);
-                        }
-                    })
-                    .then(data => {
-                        autocomBox.innerHTML = '';
-                        
-                        data.forEach(suggestion => {
-                            const li = document.createElement('li');
-                            li.textContent = `${suggestion.department_name}, ${suggestion.region_name}`;
-                            
-                            li.addEventListener('click', () => {
-                                document.getElementById('search-input').value = li.textContent;
-                                autocomBox.innerHTML = '';
-                                autocomBox.classList.remove('active');
-                            });
-                            
-                            autocomBox.appendChild(li);
-                        });
-
-                        autocomBox.classList.add('active');
-                    })
-                    .catch(error => console.error('Error fetching suggestions:', error));
-            }
-        });
-    } else {
-        console.error("Element with ID 'search-input' not found.");
-    }
-    */
-
-// ------------------- WebSocket ---------------------------//
-
-let ws;
-
-function connectWebSocket() {
-    ws = new WebSocket('ws://localhost:8080/ws');
-
-    ws.onopen = () => {
-        console.log('Connecté au serveur WebSocket');
-    };
-
-    ws.onmessage = (event) => {
-        const messages = document.getElementById('messages');
-        const message = document.createElement('li');
-        message.textContent = event.data;
-        messages.appendChild(message);
-    };
-
-    ws.onclose = (event) => {
-        if (event.wasClean) {
-            console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
-        } else {
-            console.error('Connection died');
-        }
-    };
-
-    ws.onerror = (error) => {
-        console.error(`WebSocket error: ${error}`);
-    };
-}
-
-window.onload = () => {
-    if (window.location.pathname === '/profil') {
-        connectWebSocket();
-    }
-};
-
-function updateAvatar(avatarURL) {
-    if (!avatarURL || avatarURL.trim() === "") {
-        console.error("URL d'avatar invalide ou vide !");
-        return;
-    }
-
+    // Envoyer les données au serveur
     fetch('/updateProfile', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            avatar: avatarURL, // Assurez-vous que l'URL est correctement envoyée
-            pseudo: "", // Gardez vide si aucun changement
-            bio: "" // Gardez vide si aucun changement
+            pseudo: nouveauPseudo,
+            bio: nouvelleBio
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Mise à jour réussie !");
+        } else {
+            console.error("Erreur lors de la mise à jour.");
+        }
+    })
+    .catch(error => {
+        console.error("Erreur de connexion :", error);
+    });
+
+    closePopupModif();
+}
+
+
+// ------------------- Pop-up for Additional Features ---------------------------//
+function updateAvatar(avatarURL) {
+    fetch('/updateAvatar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            avatar: avatarURL
         })
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Erreur lors de la mise à jour de l\'avatar');
+            throw new Error('Errore durante l\'aggiornamento dell\'avatar.');
         }
         return response.json();
     })
     .then(data => {
         console.log(data.message);
-        // Mettre à jour l'avatar sur la page sans rechargement
-        document.getElementById('photoProfil').src = avatarURL;
-        // Fermer le pop-up
-        document.getElementById('popup-profil').style.display = 'none';
+
+        // Ricarica la pagina
+        window.location.reload();
     })
-    .catch(error => console.error(error));
+    .catch(error => console.error("Errore:", error));
 }
 
 
-// Fonction pour sauvegarder les modifications et fermer le pop-up
-function updateProfile() {
-    const pseudoInput = document.getElementById('nouveauPseudo');
-    const bioInput = document.getElementById('nouvelleBio');
-    const pseudo = pseudoInput ? pseudoInput.value : null;
-    const bio = bioInput ? bioInput.value : null;
+////////////////////////////////// SEARCHBAR ///////////////////////////////////////// Define functions globally
 
-    if (!pseudo || !bio) {
-        console.error("Pseudo ou bio manquant !");
-        return;
+function filterOptions() {
+    const dropdown = document.getElementById('dropdown');
+    const searchBar = document.getElementById('searchBar');
+    const input = searchBar.value.toLowerCase();
+    dropdown.innerHTML = ''; // Clear previous results
+    if (input.length >= 2) {
+        fetch(`/search?q=${input}`)
+            .then(response => response.json())
+            .then(filteredOptions => {
+                filteredOptions.forEach(option => {
+                    const displayText = `${option.departmentName}, ${option.regionName}`;
+                    const item = document.createElement('div');
+                    item.textContent = displayText;
+                    item.className = 'dropdown-item';
+                    item.onclick = () => selectOption(displayText, option.regionName);
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = filteredOptions.length > 0 ? 'block' : 'none';
+            });
+    } else {
+        dropdown.style.display = 'none';
     }
+}
 
-    fetch('/updateProfile', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            pseudo: pseudo,
-            bio: bio
-        })
-    })
-    .then(response => {
-        console.log("Statut de la réponse :", response.status);
+function selectOption(displayText, regionName) {
+    searchBar.value = displayText; // Update search bar with selected option
+    dropdown.style.display = 'none';
+}
 
-        // Vérifiez si le statut est 204 ou si le corps est vide
-        if (response.status === 204) {
-            console.log("Pas de contenu retourné par le serveur.");
-            return {}; // Retourne un objet vide
-        }
+// messages, searchbar
+document.addEventListener("DOMContentLoaded", () => {
+    // Message-related elements
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const messageContainer = document.getElementById("message-container");
 
-        if (!response.ok) {
-            throw new Error('Erreur lors de la mise à jour du profil');
-        }
+    if (messageContainer) {
+        // Automatically scroll to the bottom after the page reloads
+        scrollToBottom();
 
-        // Vérifiez si la réponse est JSON valide
-        return response.text().then(text => {
-            try {
-                return JSON.parse(text); // Analysez le texte comme JSON
-            } catch (error) {
-                console.warn("Réponse non JSON reçue :", text);
-                return {}; // Retourne un objet vide si le parsing échoue
+        // Automatically fetch messages every 4 seconds
+        setInterval(() => {
+            fetchMessages().then(() => {
+                scrollToBottom(); // Ensure the view scrolls after messages are fetched
+            });
+        }, 4000);
+
+        // Use event delegation for heart icon clicks
+        messageContainer.addEventListener("click", (event) => {
+            if (event.target.classList.contains("msg-like")) {
+                heartMsg(event.target); // Call the heartMsg function
             }
         });
-    })
-    .then(data => {
-        console.log("Données reçues :", data);
 
-        // Mettre à jour les informations sur la page
-        const pseudoElement = document.getElementById('pseudo');
-        const bioElement = document.getElementById('bio');
+        // Function to send a message
+        function sendMessage() {
+            const message = messageInput.value.trim();
 
-        if (pseudoElement) pseudoElement.innerText = pseudo;
-        if (bioElement) bioElement.innerText = bio;
+            if (message === "") {
+                alert("Le message ne peut pas être vide.");
+                return;
+            }
 
-        // Fermer le pop-up
-        closePopupModif();
-    })
-    .catch(error => console.error("Erreur :", error));
-}
+            fetch("/send-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `message=${encodeURIComponent(message)}`,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur lors de l'envoi du message.");
+                    }
+                    messageInput.value = ""; // Clear the textarea after sending
 
-// Écouter le clic sur le bouton "Sauvegarder"
-document.addEventListener('DOMContentLoaded', () => {
-    const saveButton = document.getElementById('save-button');
-    if (saveButton) {
-        saveButton.addEventListener('click', updateProfile);
-    } else {
-        console.error("Bouton 'Sauvegarder' introuvable !");
-    }
-});
+                    // Reload messages immediately after sending a new one
+                    return fetchMessages();
+                })
+                .then(() => {
+                    scrollToBottom(); // Ensure scroll happens after new messages are appended
+                })
+                .catch(error => {
+                    console.error("Erreur :", error);
+                });
+        }
 
-// ------------------- Mot de passe oublié ----------------------- //
-document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const email = document.getElementById("Email").value;
-    const username = document.getElementById("Pseudo").value;
-    const newPassword = document.getElementById("NouveauMotDePasse").value;
-    const confirmPassword = document.getElementById("ConfirmeMotDePasse").value;
-
-    try {
-        const response = await fetch("/api/password-reset", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, username, newPassword, confirmPassword }),
+        // Add event listener for Enter key
+        messageInput?.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault(); // Prevent adding a new line
+                sendMessage();
+            }
         });
 
-        if (response.ok) {
-            alert("Mot de passe réinitialisé avec succès !");
-            window.location.href = "/SeConnecter";
-        } else {
-            const errorText = await response.text();
-            alert("Erreur : " + errorText);
-        }
-    } catch (error) {
-        alert("Erreur réseau : " + error.message);
+        // Add event listener for Send button
+        sendButton?.addEventListener("click", sendMessage);
     }
+
+    // Function to fetch messages and update the container
+    function fetchMessages() {
+        return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Replace "ChatNamePlaceholder" with the actual chat name
+            .then(response => response.json())
+            .then(messages => {
+                const messageContainer = document.getElementById("message-container");
+                messageContainer.innerHTML = ""; // Clear current messages
+    
+                messages.forEach(msg => {
+                    const postDiv = document.createElement("div");
+                    postDiv.className = "post";
+    
+                    // Dynamically create the HTML structure for each message
+                    postDiv.innerHTML = `
+                        <div class="infoPost">
+                            <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
+                            <div class="txtInfoPost">
+                                <h3>${msg.sender}</h3>
+                                <h4>${msg.time_elapsed}</h4>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <p>${msg.message}</p>
+                        </div>
+                        <div class="msg-coeur-container" data-message-id="${msg.message_id}">
+                            ${msg.user_liked
+                                ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
+                                : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
+                            }
+                            <p>${msg.number_of_likes}</p>
+                        </div>
+                    `;
+    
+                    // Append the new message to the container
+                    messageContainer.appendChild(postDiv);
+                });
+            })
+            .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+    }
+    
+
+    // Function to handle heart icon clicks (likes)
+    function heartMsg(heartIcon) {
+        console.log("Heart icon clicked!");
+
+        // Locate the container with the data-message-id attribute
+        const msgContainer = heartIcon.closest(".msg-coeur-container");
+        const messageId = msgContainer?.getAttribute("data-message-id"); // Get the message ID from the container
+
+        if (messageId) {
+            // Log the message ID for debugging
+            console.log(`Message ID: ${messageId}`);
+
+            // Optional: Toggle heart icon state
+            const isLiked = heartIcon.src.includes("coeur_rouge.png");
+            heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
+
+            // Send the like status to the server
+            fetch("/like-message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message_id: parseInt(messageId, 10), liked: !isLiked }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to update like status on the server.");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(`Like status updated for message ${messageId}:`, data);
+                })
+                .catch((error) => {
+                    console.error("Error updating like status:", error);
+                });
+        } else {
+            console.error("Message ID not found for the clicked heart icon.");
+        }
+    }
+
+    // Function to scroll to the bottom of the message container
+    function scrollToBottom() {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    // Fetch messages on page load
+    fetchMessages();
+
+    // Handle search actions
+    const searchBar = document.getElementById("searchBar");
+    const searchIcon = document.getElementById("search-icon");
+
+    // Function to redirect to region
+    function redirectToRegion() {
+        const searchValue = searchBar.value.trim(); // Safely get the value from the search bar
+        
+        // Check if the input follows the expected format "DepartmentName, RegionName"
+        if (searchValue.includes(',')) {
+            const regionName = searchValue.split(',')[1].trim(); // Extract region name after the comma
+            window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Navigate to the desired URL
+        } else {
+            alert('Veuillez sélectionner une option valide !'); // Feedback for invalid input
+        }
+    }
+
+    // Add event listener for Enter key in the search bar
+    searchBar.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") { // Check for "Enter" key press
+            event.preventDefault(); // Prevent form submission or default behavior
+            redirectToRegion();
+        }
+    });
+
+    // Add event listener for search icon click
+    searchIcon.addEventListener("click", redirectToRegion);
 });
+
+/////////////////////////////////// mot de passe oublie //////////////////////////////////////
+/*
+document.getElementById("forgotPasswordForm").addEventListener("submit", function (event) {
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (newPassword !== confirmPassword) {
+        event.preventDefault();
+        const errorContainer = document.getElementById("errorContainer");
+        errorContainer.textContent = "Les mots de passe ne correspondent pas.";
+    }
+});*/

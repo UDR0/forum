@@ -57,7 +57,6 @@ func main() {
 			session, _ := store.Get(r, "session")
 			session.Values["user"] = r.FormValue("username")
 			session.Save(r, w)
-			http.Redirect(w, r, "/profil", http.StatusFound)
 		} else {
 			renderTemplate(w, "SeConnecter", nil)
 		}

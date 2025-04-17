@@ -146,12 +146,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailChiffre, err := bcrypt.GenerateFromPassword([]byte(email), bcrypt.DefaultCost)
-	if err != nil {
-		renderError(w, "CreerCompte", "Erreur lors du chiffrement de l'email.")
-		return
-	}
-
 	// Utilisez l'URL de l'avatar choisi ou une URL de photo par défaut
 	if photoURL == "" {
 		photoURL = "static/img/avatar/avatarFemme1.png"
@@ -161,7 +155,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	biographie := ""
 
-	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, emailChiffre, photoURL, biographie)
+	_, err = db.Exec("INSERT INTO User (USERNAME, PASSWORD, EMAIL, PHOTO_URL, BIOGRAPHY) VALUES (?, ?, ?, ?, ?)", pseudo, motDePasseChiffre, email, photoURL, biographie)
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors de la création du compte.")
 		return
@@ -338,13 +332,22 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch chats liked by the user
 	queryLikedChats := `
-       SELECT c.name, COUNT(m.id) AS message_count, c.descri, u.PHOTO_URL, u.USERNAME AS creator
+       SELECT 
+    c.name, 
+    COUNT(m.id) AS message_count, 
+    c.descri, 
+    CASE 
+        WHEN c.principal = 1 THEN r.REGION_IMG_URL 
+        ELSE u.PHOTO_URL 
+    END AS PHOTO_URL, 
+    c.creator AS creator
 FROM chats c
 LEFT JOIN messages m ON c.name = m.chat_name
 LEFT JOIN Chat_Liked cl ON c.name = cl.chatID
 LEFT JOIN User u ON c.creator = u.USERNAME
-WHERE cl.Username = ? AND cl.liked = TRUE
-GROUP BY c.name, c.descri, u.PHOTO_URL, u.USERNAME;
+LEFT JOIN Region r ON c.region = r.REGION_NAME
+WHERE cl.Username = 'sara' AND cl.liked = TRUE
+GROUP BY c.name, c.descri, c.creator, r.REGION_IMG_URL, u.PHOTO_URL;
 
 
     `
@@ -780,17 +783,16 @@ func MyTripyNonHandler(w http.ResponseWriter, r *http.Request) {
 
 	query := `
         SELECT r.REGION_NAME, 
-               COUNT(c.CHAT_NAME) AS CHAT_COUNT, 
-               r.REGION_IMG_URL, 
-               r.DESCRI,
-               COALESCE(ul.LIKED, FALSE) AS LIKED
-        FROM Region r
-        JOIN Department d ON r.REGION_NAME = d.REGION_NAME
-        JOIN Chat c ON d.DEPARTMENT_NAME = c.DEPARTMENT_NAME
-        LEFT JOIN USER_LIKES ul ON r.REGION_NAME = ul.REGION_NAME AND ul.USER_ID = ?
-        GROUP BY r.REGION_NAME, r.REGION_IMG_URL, r.DESCRI
-        ORDER BY CHAT_COUNT DESC
-        LIMIT 3;
+       COUNT(c.name) AS CHAT_COUNT, 
+       r.REGION_IMG_URL, 
+       r.DESCRI,
+       COALESCE(ul.LIKED, FALSE) AS LIKED
+FROM Region r
+JOIN chats c ON r.REGION_NAME = c.region  -- Directly join Region with chats using the region column.
+LEFT JOIN USER_LIKES ul ON r.REGION_NAME = ul.REGION_NAME AND ul.USER_ID = ?
+GROUP BY r.REGION_NAME, r.REGION_IMG_URL, r.DESCRI
+ORDER BY CHAT_COUNT DESC
+LIMIT 3;
     `
 
 	rows, err := db.Query(query, username) // Query with user-specific likes (username may be empty)
@@ -975,34 +977,36 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 	// Fetch main chat with total likes and liked status
 	queryMain := `
         SELECT 
-            c.name AS chat_name, 
-            COUNT(m.id) AS message_count, 
-            c.descri, 
-            r.REGION_IMG_URL, 
-            COALESCE(like_counts.total_likes, 0) AS total_likes,
-            COALESCE(cl.liked, FALSE) AS user_liked
-        FROM 
-            chats c
-        LEFT JOIN 
-            messages m ON c.name = m.chat_name
-        LEFT JOIN 
-            Region r ON c.region = r.REGION_NAME
-        LEFT JOIN (
-            SELECT 
-                chatID, 
-                COUNT(*) AS total_likes
-            FROM 
-                Chat_Liked
-            GROUP BY 
-                chatID
-        ) like_counts ON c.name = like_counts.chatID
-        LEFT JOIN 
-            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
-        WHERE 
-            c.principal = TRUE 
-            AND c.region = ?
-        GROUP BY 
-            c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
+    c.name AS chat_name,
+    COUNT(m.id) AS message_count,
+    c.descri AS chat_description,
+    r.REGION_IMG_URL AS region_image,
+    COALESCE(like_counts.total_likes, 0) AS total_likes,
+    COALESCE(cl.liked, FALSE) AS user_liked
+FROM 
+    chats c
+LEFT JOIN 
+    messages m ON c.name = m.chat_name
+LEFT JOIN 
+    Region r ON c.region = r.REGION_NAME
+LEFT JOIN (
+    SELECT 
+        chatID, 
+        COUNT(*) AS total_likes
+    FROM 
+        Chat_Liked
+    WHERE 
+        liked = 1
+    GROUP BY 
+        chatID
+) like_counts ON c.name = like_counts.chatID
+LEFT JOIN 
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+WHERE 
+    c.principal = TRUE
+    AND c.region = ?
+GROUP BY 
+    c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
     `
 	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
@@ -1034,36 +1038,38 @@ func FileDiscussion(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch user chats with total likes and liked status
 	queryChats := `
-        SELECT 
-            c.name AS chat_name, 
-            COUNT(m.id) AS message_count, 
-            c.descri, 
-            u.PHOTO_URL, 
-            u.USERNAME, 
-            COALESCE(like_counts.total_likes, 0) AS total_likes,
-            COALESCE(cl.liked, FALSE) AS user_liked
-        FROM 
-            chats c
-        LEFT JOIN 
-            messages m ON c.name = m.chat_name
-        LEFT JOIN 
-            User u ON c.creator = u.USERNAME
-        LEFT JOIN (
-            SELECT 
-                chatID, 
-                COUNT(*) AS total_likes
-            FROM 
-                Chat_Liked
-            GROUP BY 
-                chatID
-        ) like_counts ON c.name = like_counts.chatID
-        LEFT JOIN 
-            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
-        WHERE 
-            c.principal = FALSE 
-            AND c.region = ?
-        GROUP BY 
-            c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
+       SELECT 
+    c.name AS chat_name, 
+    COUNT(m.id) AS message_count, 
+    c.descri, 
+    u.PHOTO_URL, 
+    u.USERNAME, 
+    COALESCE(like_counts.total_likes, 0) AS total_likes,
+    COALESCE(cl.liked, FALSE) AS user_liked
+FROM 
+    chats c
+LEFT JOIN 
+    messages m ON c.name = m.chat_name
+LEFT JOIN 
+    User u ON c.creator = u.USERNAME
+LEFT JOIN (
+    SELECT 
+        chatID, 
+        COUNT(*) AS total_likes
+    FROM 
+        Chat_Liked
+    WHERE 
+        liked = 1
+    GROUP BY 
+        chatID
+) like_counts ON c.name = like_counts.chatID
+LEFT JOIN 
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+WHERE 
+    c.principal = FALSE 
+    AND c.region = ?
+GROUP BY 
+    c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `
 	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
@@ -1216,34 +1222,36 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	// Fetch principal chat with total likes and user liked status
 	queryMain := `
         SELECT 
-            c.name AS chat_name, 
-            COUNT(m.id) AS message_count, 
-            c.descri, 
-            r.REGION_IMG_URL, 
-            COALESCE(like_counts.total_likes, 0) AS total_likes,
-            COALESCE(cl.liked, FALSE) AS user_liked
-        FROM 
-            chats c
-        LEFT JOIN 
-            messages m ON c.name = m.chat_name
-        LEFT JOIN 
-            Region r ON c.region = r.REGION_NAME
-        LEFT JOIN (
-            SELECT 
-                chatID, 
-                COUNT(*) AS total_likes
-            FROM 
-                Chat_Liked
-            GROUP BY 
-                chatID
-        ) like_counts ON c.name = like_counts.chatID
-        LEFT JOIN 
-            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
-        WHERE 
-            c.principal = TRUE 
-            AND c.region = ?
-        GROUP BY 
-            c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
+    c.name AS chat_name,
+    COUNT(m.id) AS message_count,
+    c.descri AS chat_description,
+    r.REGION_IMG_URL AS region_image,
+    COALESCE(like_counts.total_likes, 0) AS total_likes,
+    COALESCE(cl.liked, FALSE) AS user_liked
+FROM 
+    chats c
+LEFT JOIN 
+    messages m ON c.name = m.chat_name
+LEFT JOIN 
+    Region r ON c.region = r.REGION_NAME
+LEFT JOIN (
+    SELECT 
+        chatID, 
+        COUNT(*) AS total_likes
+    FROM 
+        Chat_Liked
+    WHERE 
+        liked = 1
+    GROUP BY 
+        chatID
+) like_counts ON c.name = like_counts.chatID
+LEFT JOIN 
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
+WHERE 
+    c.principal = TRUE
+    AND c.region = ?
+GROUP BY 
+    c.name, c.descri, r.REGION_IMG_URL, like_counts.total_likes, cl.liked;
     `
 	principal, err := db.Query(queryMain, username, region)
 	if err != nil {
@@ -1276,35 +1284,37 @@ func FetchChatsHandler(w http.ResponseWriter, r *http.Request) {
 	// Fetch user chats with total likes and user liked status
 	queryChats := `
         SELECT 
-            c.name AS chat_name, 
-            COUNT(m.id) AS message_count, 
-            c.descri, 
-            u.PHOTO_URL, 
-            u.USERNAME, 
-            COALESCE(like_counts.total_likes, 0) AS total_likes,
-            COALESCE(cl.liked, FALSE) AS user_liked
-        FROM 
-            chats c
-        LEFT JOIN 
-            messages m ON c.name = m.chat_name
-        LEFT JOIN 
-            User u ON c.creator = u.USERNAME
-        LEFT JOIN (
-            SELECT 
-                chatID, 
-                COUNT(*) AS total_likes
-            FROM 
-                Chat_Liked
-            GROUP BY 
-                chatID
-        ) like_counts ON c.name = like_counts.chatID
-        LEFT JOIN 
-            Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
-        WHERE 
-            c.principal = FALSE 
-            AND c.region = ?
-        GROUP BY 
-            c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
+    c.name AS chat_name, 
+    COUNT(m.id) AS message_count, 
+    c.descri, 
+    u.PHOTO_URL, 
+    u.USERNAME, 
+    COALESCE(like_counts.total_likes, 0) AS total_likes,
+    COALESCE(cl.liked, FALSE) AS user_liked
+FROM 
+    chats c
+LEFT JOIN 
+    messages m ON c.name = m.chat_name
+LEFT JOIN 
+    User u ON c.creator = u.USERNAME
+LEFT JOIN (
+    SELECT 
+        chatID, 
+        COUNT(*) AS total_likes
+    FROM 
+        Chat_Liked
+    WHERE 
+        liked = 1
+    GROUP BY 
+        chatID
+) like_counts ON c.name = like_counts.chatID
+LEFT JOIN 
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = 'sara'
+WHERE 
+    c.principal = FALSE 
+    AND c.region = 'Hauts-de-France'
+GROUP BY 
+    c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `
 	rows, err := db.Query(queryChats, username, region)
 	if err != nil {
@@ -1716,4 +1726,74 @@ func RegionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+// /////////////////////////// OUBLIE DE MOT DE PASSE //////////////////////////////////////
+func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+		return
+	}
+
+	email := r.FormValue("email")
+	pseudo := r.FormValue("username")
+	motDePasse := r.FormValue("password")
+	confirmeMotDePasse := r.FormValue("confirmPassword")
+
+	if motDePasse != confirmeMotDePasse {
+		renderError(w, "mot-de-passe-oublie", "Les mots de passe ne correspondent pas.")
+		return
+	}
+
+	if !isValidPassword(motDePasse) {
+		renderError(w, "mot-de-passe-oublie", "Le mot de passe doit contenir au minimum\nune majuscule, une minuscule, un caractère spécial, un chiffre, et au minimum 6 caractères.")
+		return
+	}
+
+	db, err := sql.Open("sqlite3", "./forum.db")
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur d'ouverture de la base de données.")
+		return
+	}
+	defer db.Close()
+
+	emailExists, pseudoExists, err := CheckUserExists(db, email, pseudo)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la vérification des utilisateurs existants.")
+		return
+	}
+	if !emailExists {
+		renderError(w, "mot-de-passe-oublie", "L'email n'existe pas.")
+		return
+	}
+	if !pseudoExists {
+		renderError(w, "mot-de-passe-oublie", "Le pseudo n'existe pas.")
+		return
+	}
+
+	var count int
+	err = db.QueryRow("SELECT COUNT(*) FROM User WHERE EMAIL = ? AND USERNAME = ?", email, pseudo).Scan(&count)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la vérification des identifiants.")
+		return
+	}
+	if count == 0 {
+		renderError(w, "mot-de-passe-oublie", "Les identifiants ne sont pas compatibles.")
+		return
+	}
+
+	motDePasseChiffre, err := bcrypt.GenerateFromPassword([]byte(motDePasse), bcrypt.DefaultCost)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors du chiffrement du mot de passe.")
+		return
+	}
+
+	_, err = db.Exec("UPDATE User SET PASSWORD = ? WHERE EMAIL = ? AND USERNAME = ?", motDePasseChiffre, email, pseudo)
+	if err != nil {
+		renderError(w, "mot-de-passe-oublie", "Erreur lors de la création du compte.")
+		return
+	}
+
+	// Rediriger vers la page mytripy-non après la création du compte
+	http.Redirect(w, r, "/SeConnecter", http.StatusFound)
 }

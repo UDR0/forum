@@ -197,34 +197,6 @@
         <button onclick="sauverModifications()">Sauvegarder</button>
     </div>
 
-    <script>
-        function selectChat(chatName) {
-            fetch(`/select-chat?chatname=${chatName}`)
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
-                    } else {
-                        console.error("Failed to select chat:", response.statusText);
-                    }
-                })
-                .catch(error => console.error("Error selecting chat:", error));
-        }
-
-        function selectRegion(regionName) {
-            console.log(`You clicked on region: ${regionName}`); // Debugging
-            fetch(`/region?name=${regionName}`, { method: 'GET' })
-                .then(response => {
-                    if (response.ok) {
-                        console.log(`Region ${regionName} successfully selected`); // Debugging
-                        window.location.href = "/welcome";
-                    } else {
-                        console.error("Failed to select region:", response.statusText);
-                    }
-                })
-                .catch(error => console.error("Error selecting region:", error));
-        }
-
-    </script>
     <script src="static/script.js"></script>
 </body>
 

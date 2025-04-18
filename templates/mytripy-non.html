@@ -262,22 +262,6 @@
           </div>
         </div>
     </footer>
-
-    <script>
-        function selectRegion(regionName) {
-            console.log(`You clicked on region: ${regionName}`); // Debugging
-            fetch(`/region?name=${regionName}`, { method: 'GET' })
-                .then(response => {
-                    if (response.ok) {
-                        console.log(`Region ${regionName} successfully selected`); // Debugging
-                        window.location.href = "/welcome";
-                    } else {
-                        console.error("Failed to select region:", response.statusText);
-                    }
-                })
-                .catch(error => console.error("Error selecting region:", error));
-        }
-    </script>
 </body>
 <script src="static/script.js"></script>
 

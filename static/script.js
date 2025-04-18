@@ -47,9 +47,6 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
             }
             return response.json();
         })
-        .then(data => {
-            console.log(`Server response:`, data); // Log successful server response
-        })
         .catch(error => {
             console.error('Error communicating with the server:', error);
 
@@ -64,20 +61,12 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
     container.addEventListener("click", function(event) {
         event.stopPropagation();
         event.preventDefault();
+
         const img = this.querySelector('.chat-coeur');
         const chatName = this.getAttribute('data-chat'); // Get region name
-        
+
         // Determine liked status
         const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
-        
-        // Toggle heart icon
-        if (liked) {
-            img.src = 'static/img/coeur_rouge.png'; // Change to red heart
-            console.log(`Liked region: ${chatName}`);
-        } else {
-            img.src = 'static/img/coeur.png'; // Change back to normal heart
-            console.log(`Unliked region: ${chatName}`);
-        }
 
         // Send data to the server
         fetch('/likechat', {
@@ -89,13 +78,14 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(`Server response:`, data); // Log server's response
+            location.reload(); 
         })
         .catch(error => {
             console.error('Error communicating with the server:', error);
         });
     });
 });
+
 
 
 // Gestion des avatars dans le pop-up de profil
@@ -167,7 +157,6 @@ function sauverModifications() {
     })
     .then(response => {
         if (response.ok) {
-            console.log("Mise à jour réussie !");
         } else {
             console.error("Erreur lors de la mise à jour.");
         }
@@ -202,8 +191,6 @@ function updateAvatar(avatarURL) {
         return response.json();
     })
     .then(data => {
-        console.log(data.message);
-
         // Ricarica la pagina
         window.location.reload();
     })
@@ -212,7 +199,7 @@ function updateAvatar(avatarURL) {
 
 
 ////////////////////////////////// SEARCHBAR ///////////////////////////////////////// Define functions globally
-
+/*
 function filterOptions() {
     const dropdown = document.getElementById('dropdown');
     const searchBar = document.getElementById('searchBar');
@@ -235,7 +222,38 @@ function filterOptions() {
     } else {
         dropdown.style.display = 'none';
     }
+}*/
+function filterOptions() {
+    const dropdown = document.getElementById('dropdown');
+    const searchBar = document.getElementById('searchBar');
+    const input = searchBar.value.toLowerCase();
+    dropdown.innerHTML = ''; // Clear previous results
+
+    if (input.length >= 2) {
+        fetch(`/search?q=${input}`)
+            .then(response => response.json())
+            .then(filteredOptions => {
+                // Ensure filteredOptions is valid before calling .forEach
+                if (filteredOptions && Array.isArray(filteredOptions)) {
+                    filteredOptions.forEach(option => {
+                        const displayText = `${option.departmentName}, ${option.regionName}`;
+                        const item = document.createElement('div');
+                        item.textContent = displayText;
+                        item.className = 'dropdown-item';
+                        item.onclick = () => selectOption(displayText, option.regionName);
+                        dropdown.appendChild(item);
+                    });
+                }
+
+                // Only show the dropdown if there are valid options
+                dropdown.style.display = filteredOptions?.length > 0 ? 'block' : 'none';
+            })
+            .catch(error => console.error("Error fetching options:", error));
+    } else {
+        dropdown.style.display = 'none';
+    }
 }
+
 
 function selectOption(displayText, regionName) {
     searchBar.value = displayText; // Update search bar with selected option
@@ -249,16 +267,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("sendButton");
     const messageContainer = document.getElementById("message-container");
 
+
     if (messageContainer) {
         // Automatically scroll to the bottom after the page reloads
         scrollToBottom();
 
         // Automatically fetch messages every 4 seconds
-        setInterval(() => {
-            fetchMessages().then(() => {
-                scrollToBottom(); // Ensure the view scrolls after messages are fetched
-            });
-        }, 4000);
+        setInterval(() => { fetchMessages() }, 4000);
 
         // Use event delegation for heart icon clicks
         messageContainer.addEventListener("click", (event) => {
@@ -312,13 +327,58 @@ document.addEventListener("DOMContentLoaded", () => {
         sendButton?.addEventListener("click", sendMessage);
     }
 
-    // Function to fetch messages and update the container
+    
+    function fetchMessages() {
+        return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Replace with actual chat name
+            .then(response => response.json())
+            .then(messages => {
+                const messageContainer = document.getElementById("message-container");
+    
+                // Only proceed if messageContainer is not null
+                if (messageContainer) {
+                    messageContainer.innerHTML = ""; // Clear current messages
+    
+                    messages.forEach(msg => {
+                        const postDiv = document.createElement("div");
+                        postDiv.className = "post";
+    
+                        postDiv.innerHTML = `
+                            <div class="infoPost">
+                                <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
+                                <div class="txtInfoPost">
+                                    <h3>${msg.sender}</h3>
+                                    <h4>${msg.time_elapsed}</h4>
+                                </div>
+                            </div>
+                            <div class="message">
+                                <p>${msg.message}</p>
+                            </div>
+                            <div class="msg-coeur-container" data-message-id="${msg.message_id}">
+                                ${msg.user_liked
+                                    ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
+                                    : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
+                                }
+                                <p>${msg.number_of_likes}</p>
+                            </div>
+                        `;
+    
+                        messageContainer.appendChild(postDiv);
+                    });
+                }
+            })
+            .catch(error => console.error("Erreur lors de la récupération des messages :", error));
+    }
+    
+
+  /*  // Function to fetch messages and update the container
     function fetchMessages() {
         return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Replace "ChatNamePlaceholder" with the actual chat name
             .then(response => response.json())
             .then(messages => {
                 const messageContainer = document.getElementById("message-container");
                 messageContainer.innerHTML = ""; // Clear current messages
+
+                if (messageContainer) {
     
                 messages.forEach(msg => {
                     const postDiv = document.createElement("div");
@@ -349,50 +409,38 @@ document.addEventListener("DOMContentLoaded", () => {
                     messageContainer.appendChild(postDiv);
                 });
             })
+
             .catch(error => console.error("Erreur lors de la récupération des messages :", error));
-    }
+    }*/
     
 
-    // Function to handle heart icon clicks (likes)
-    function heartMsg(heartIcon) {
-        console.log("Heart icon clicked!");
-
-        // Locate the container with the data-message-id attribute
-        const msgContainer = heartIcon.closest(".msg-coeur-container");
-        const messageId = msgContainer?.getAttribute("data-message-id"); // Get the message ID from the container
-
-        if (messageId) {
-            // Log the message ID for debugging
-            console.log(`Message ID: ${messageId}`);
-
-            // Optional: Toggle heart icon state
-            const isLiked = heartIcon.src.includes("coeur_rouge.png");
-            heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
-
-            // Send the like status to the server
-            fetch("/like-message", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ message_id: parseInt(messageId, 10), liked: !isLiked }),
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Failed to update like status on the server.");
-                    }
-                    return response.json();
+        function heartMsg(heartIcon) {
+            const msgContainer = heartIcon.closest(".msg-coeur-container");
+            const messageId = msgContainer?.getAttribute("data-message-id"); 
+            const likeCountElement = msgContainer?.querySelector("p"); 
+        
+            if (messageId && likeCountElement) {
+                const isLiked = heartIcon.src.includes("coeur_rouge.png");
+                heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
+        
+                // Adjust the like count
+                likeCountElement.textContent = parseInt(likeCountElement.textContent, 10) + (isLiked ? -1 : 1);
+        
+                fetch("/like-message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message_id: parseInt(messageId, 10), liked: !isLiked }),
                 })
-                .then((data) => {
-                    console.log(`Like status updated for message ${messageId}:`, data);
-                })
-                .catch((error) => {
+                .then(response => response.json())
+                .catch(error => {
                     console.error("Error updating like status:", error);
                 });
-        } else {
-            console.error("Message ID not found for the clicked heart icon.");
+            }
         }
-    }
+        
+
 
     // Function to scroll to the bottom of the message container
     function scrollToBottom() {
@@ -420,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Add event listener for Enter key in the search bar
-    searchBar.addEventListener("keydown", (event) => {
+    /*searchBar.addEventListener("keydown", (event) => {
         if (event.key === "Enter") { // Check for "Enter" key press
             event.preventDefault(); // Prevent form submission or default behavior
             redirectToRegion();
@@ -428,15 +476,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Add event listener for search icon click
-    searchIcon.addEventListener("click", redirectToRegion);
+    searchIcon.addEventListener("click", redirectToRegion);*/
+
+    if (searchBar) {
+        searchBar.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") { // Check for "Enter" key press
+                event.preventDefault(); // Prevent form submission or default behavior
+                redirectToRegion();
+            }
+        });
+
+        searchIcon.addEventListener("click", redirectToRegion);
+    }
 });
 
 function selectRegion(regionName) {
-    console.log(`You clicked on region: ${regionName}`); // Debugging
     fetch(`/region?name=${regionName}`, { method: 'GET' })
         .then(response => {
             if (response.ok) {
-                console.log(`Region ${regionName} successfully selected`); // Debugging
                 window.location.href = "/welcome";
             } else {
                 console.error("Failed to select region:", response.statusText);
@@ -469,7 +526,7 @@ function PopupFils() {
         document.getElementById("btnAjouterFil").src = "static/img/moin.png"
     }
 }
-
+/*
 function fetchChats(region) {
 fetch(`/fetch-chats?region=${region}`)
 .then(response => response.json())
@@ -527,7 +584,71 @@ fetch(`/fetch-chats?region=${region}`)
     });
 })
 .catch(error => console.error("Error fetching chats:", error));
+}*/
+
+function fetchChats(region) {
+    fetch(`/fetch-chats?region=${region}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatList = document.getElementById("chat-list");
+
+            // Only proceed if chatList is not null
+            if (chatList) {
+                chatList.innerHTML = ""; // Clear current chats
+
+                // Handle case when no chats are available
+                if (!data.Chats || data.Chats.length === 0) {
+                    const noChatsMessage = document.createElement("p");
+                    noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
+                    chatList.appendChild(noChatsMessage);
+                    return;
+                }
+
+                // Display Principal Chat
+                if (data.MainChat) {
+                    const principalChat = document.createElement("div");
+                    principalChat.className = "principal-chat";
+                    principalChat.innerHTML = `
+                        <h3>Principal Chat</h3>
+                        <p>Name: ${data.MainChat.Name}</p>
+                        <p>Description: ${data.MainChat.Descri}</p>
+                        <p>Messages: ${data.MainChat.MessageCount}</p>
+                        <p>Total Likes: ${data.MainChat.TotalLikes}</p>
+                        <img src="${data.MainChat.ImageURL}" alt="Region Image">
+                    `;
+                    chatList.appendChild(principalChat);
+                }
+
+                // Display User Chats
+                const userChatsTitle = document.createElement("h3");
+                userChatsTitle.textContent = "User Chats";
+                chatList.appendChild(userChatsTitle);
+
+                data.Chats.forEach(chat => {
+                    const listItem = document.createElement("li");
+                    listItem.className = "chat-item";
+
+                    listItem.innerHTML = `
+                        <button>${chat.Name} (${chat.Creator})</button>
+                        <p>Description: ${chat.Descri}</p>
+                        <p>Messages: ${chat.MessageCount}</p>
+                        <p>Total Likes: ${chat.TotalLikes}</p>
+                        <img src="${chat.PhotoURL}" alt="Creator Image">
+                    `;
+
+                    // Event listener for chat selection
+                    const button = listItem.querySelector("button");
+                    button.addEventListener("click", () => {
+                        selectChat(chat.Name); // Function for handling chat selection
+                    });
+
+                    chatList.appendChild(listItem);
+                });
+            }
+        })
+        .catch(error => console.error("Error fetching chats:", error));
 }
+
 
 function createChat() {
     const chatTitle = document.getElementById("chatTitle").value.trim();
@@ -560,3 +681,8 @@ function createChat() {
             alert("Une erreur s'est produite lors de la création du chat.");
         });
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchChats("{{.Region}}");
+});

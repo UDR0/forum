@@ -482,10 +482,6 @@ func UpdateAvatar(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec(`UPDATE User SET PHOTO_URL = ? WHERE USERNAME = ?;`,
 		data.Avatar, username)
 
-	// Simulate storing the avatar URL (e.g., in a database)
-	// Example: storeAvatarInDatabase(data.Avatar)
-
-	// Respond with a success message
 	response := map[string]string{
 		"message": "Avatar mis à jour avec succès !",
 	}
@@ -1018,9 +1014,6 @@ GROUP BY
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
 		}
-	} else {
-		http.Error(w, "No main chat found", http.StatusNotFound)
-		return
 	}
 
 	// Fetch user chats with total likes and liked status
@@ -1263,9 +1256,6 @@ GROUP BY
 			http.Error(w, "Failed to scan main chat data", http.StatusInternalServerError)
 			return
 		}
-	} else {
-		http.Error(w, "No main chat found", http.StatusNotFound)
-		return
 	}
 
 	// Fetch user chats with total likes and user liked status

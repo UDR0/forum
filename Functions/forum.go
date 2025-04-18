@@ -292,7 +292,7 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
         FROM chats c
         LEFT JOIN messages m ON c.name = m.chat_name
         LEFT JOIN User u ON c.creator = u.USERNAME
-        WHERE c.creator = ? -- Only chats created by the connected user
+        WHERE c.creator = ? 
         GROUP BY c.name, c.descri, u.PHOTO_URL, u.USERNAME;
     `
 	rowsChats, err := db.Query(queryChats, username)
@@ -324,24 +324,19 @@ func ProfilPage(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch chats liked by the user
 	queryLikedChats := `
-       SELECT 
-    c.name, 
-    COUNT(m.id) AS message_count, 
-    c.descri, 
-    CASE 
-        WHEN c.principal = 1 THEN r.REGION_IMG_URL 
-        ELSE u.PHOTO_URL 
-    END AS PHOTO_URL, 
-    c.creator AS creator
-FROM chats c
-LEFT JOIN messages m ON c.name = m.chat_name
-LEFT JOIN Chat_Liked cl ON c.name = cl.chatID
-LEFT JOIN User u ON c.creator = u.USERNAME
-LEFT JOIN Region r ON c.region = r.REGION_NAME
-WHERE cl.Username = 'sara' AND cl.liked = TRUE
-GROUP BY c.name, c.descri, c.creator, r.REGION_IMG_URL, u.PHOTO_URL;
-
-
+        SELECT 
+    	c.name, COUNT(m.id) AS message_count, c.descri, 
+    	CASE 
+        	WHEN c.principal = 1 THEN r.REGION_IMG_URL 
+        	ELSE u.PHOTO_URL 
+    	END AS PHOTO_URL, c.creator AS creator
+		FROM chats c
+		LEFT JOIN messages m ON c.name = m.chat_name
+		LEFT JOIN Chat_Liked cl ON c.name = cl.chatID
+		LEFT JOIN User u ON c.creator = u.USERNAME
+		LEFT JOIN Region r ON c.region = r.REGION_NAME
+		WHERE cl.Username = ? AND cl.liked = TRUE
+		GROUP BY c.name, c.descri, c.creator, r.REGION_IMG_URL, u.PHOTO_URL;
     `
 	rowsLikedChats, err := db.Query(queryLikedChats, username)
 	if err != nil {

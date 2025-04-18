@@ -180,6 +180,10 @@ function sauverModifications() {
 }
 
 
+function changeavatar(newSrc){
+    document.getElementById("photo_url").value = newSrc;
+}
+
 // ------------------- Pop-up for Additional Features ---------------------------//
 function updateAvatar(avatarURL) {
     fetch('/updateAvatar', {

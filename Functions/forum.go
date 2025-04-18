@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"regexp"
-	"strings"
 	"text/template"
 	"time"
 
@@ -144,13 +143,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		renderError(w, "CreerCompte", "Erreur lors du chiffrement du mot de passe.")
 		return
-	}
-
-	// Utilisez l'URL de l'avatar choisi ou une URL de photo par défaut
-	if photoURL == "" {
-		photoURL = "static/img/avatar/avatarFemme1.png"
-	} else {
-		photoURL = strings.TrimPrefix(photoURL, "http://localhost:8080/")
 	}
 
 	biographie := ""
@@ -1064,10 +1056,10 @@ LEFT JOIN (
         chatID
 ) like_counts ON c.name = like_counts.chatID
 LEFT JOIN 
-    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = 'sara'
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
 WHERE 
     c.principal = FALSE 
-    AND c.region = 'Hauts-de-France'
+    AND c.region = ?
 GROUP BY 
     c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `
@@ -1309,10 +1301,10 @@ LEFT JOIN (
         chatID
 ) like_counts ON c.name = like_counts.chatID
 LEFT JOIN 
-    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = 'sara'
+    Chat_Liked cl ON c.name = cl.chatID AND cl.Username = ?
 WHERE 
     c.principal = FALSE 
-    AND c.region = 'Hauts-de-France'
+    AND c.region = ?
 GROUP BY 
     c.name, c.descri, u.PHOTO_URL, u.USERNAME, like_counts.total_likes, cl.liked;
     `

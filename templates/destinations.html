@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
         <!-- Navigation -->
@@ -76,7 +76,7 @@
         <!-- Barre de recherche -->
         <div class="search-bar">
             <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
-            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+            <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown"></div>
 
@@ -92,9 +92,9 @@
                 {{if $.IsConnected}}
                 <div class="destination-coeur-container" data-region="{{.RegionName}}">
                     {{if .RegionLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+                    <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="destination-coeur">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    <img src="static/img/icon/coeur.png" alt="Like" class="destination-coeur">
                     {{end}}
                 </div>
                 {{end}}

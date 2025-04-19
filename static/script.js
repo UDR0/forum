@@ -19,7 +19,7 @@ document.querySelectorAll(".destination-region-popular", ".filPrincipal-region")
 });
 
 document.querySelectorAll('.destination-coeur-container').forEach(container => {
-    container.addEventListener("click", function(event) {
+    container.addEventListener("click", function (event) {
         event.stopPropagation(); // Prevent parent element click
         event.preventDefault(); // Prevent default action
 
@@ -43,35 +43,35 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ region: regionName, liked }),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update like status on the server.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(`Server response:`, data); // Log successful server response
-        })
-        .catch(error => {
-            console.error('Error communicating with the server:', error);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update like status on the server.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Server response:`, data); // Log successful server response
+            })
+            .catch(error => {
+                console.error('Error communicating with the server:', error);
 
-            // Revert the heart icon if the request fails
-            img.src = liked ? 'static/img/icon/coeur.png' : 'static/img/icon/coeur_rouge.png';
-        });
+                // Revert the heart icon if the request fails
+                img.src = liked ? 'static/img/icon/coeur.png' : 'static/img/icon/coeur_rouge.png';
+            });
     });
 });
 
 
 document.querySelectorAll('.chat-coeur-container').forEach(container => {
-    container.addEventListener("click", function(event) {
+    container.addEventListener("click", function (event) {
         event.stopPropagation();
         event.preventDefault();
         const img = this.querySelector('.chat-coeur');
         const chatName = this.getAttribute('data-chat'); // Get region name
-        
+
         // Determine liked status
         const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
-        
+
         // Toggle heart icon
         if (liked) {
             img.src = 'static/img/icon/coeur_rouge.png'; // Change to red heart
@@ -89,13 +89,13 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
             },
             body: JSON.stringify({ region: chatName, liked }),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(`Server response:`, data); // Log server's response
-        })
-        .catch(error => {
-            console.error('Error communicating with the server:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log(`Server response:`, data); // Log server's response
+            })
+            .catch(error => {
+                console.error('Error communicating with the server:', error);
+            });
     });
 });
 
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        
+
 
         // Fonction qui envoi un message
         function sendMessage() {
@@ -315,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Ajoute un évènnement d'écoute sur la touche Entrer
         messageInput?.addEventListener("keydown", (event) => {
             if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault(); 
+                event.preventDefault();
                 sendMessage();
             }
         });
@@ -324,16 +324,14 @@ document.addEventListener("DOMContentLoaded", () => {
         sendButton?.addEventListener("click", sendMessage);
     }
 
-
-    // Fonction pour récupérer les messages depuis le serveur
     function fetchMessages() {
         return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Remplace par le nom réel du chat
             .then(response => response.json())
             .then(messages => {
                 const messageContainer = document.getElementById("message-container");
 
-                // Continue avec la fonction si seulement le contenu de messageContainer n'est pas null
-                if (messageContainer) {
+                // Vérifie que messageContainer existe et que messages n'est pas null ou undefined
+                if (messageContainer && Array.isArray(messages)) {
                     messageContainer.innerHTML = ""; // Efface les messages actuels avant d'afficher les nouveaux
 
                     messages.forEach(msg => {
@@ -341,24 +339,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         postDiv.className = "post";
 
                         postDiv.innerHTML = `
-                            <div class="infoPost">
-                                <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
-                                <div class="txtInfoPost">
-                                    <h3>${msg.sender}</h3>
-                                    <h4>${msg.time_elapsed}</h4>
-                                </div>
+                        <div class="infoPost">
+                            <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
+                            <div class="txtInfoPost">
+                                <h3>${msg.sender}</h3>
+                                <h4>${msg.time_elapsed}</h4>
                             </div>
-                            <div class="message">
-                                <p>${msg.message}</p>
-                            </div>
-                            <div class="msg-coeur-container" data-message-id="${msg.message_id}">
-                                ${msg.user_liked
-                                ? `<img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">`
-                                : `<img src="static/img/coeur.png" alt="Like" class="msg-like">`
+                        </div>
+                        <div class="message">
+                            <p>${msg.message}</p>
+                        </div>
+                        <div class="msg-coeur-container" data-message-id="${msg.message_id}">
+                            ${msg.user_liked
+                                ? `<img src="static/img/icon/coeur_rouge.png" alt="Liked" class="msg-like">`
+                                : `<img src="static/img/icon/coeur.png" alt="Like" class="msg-like">`
                             }
-                                <p>${msg.number_of_likes}</p>
-                            </div>
-                        `;
+                            <p>${msg.number_of_likes}</p>
+                        </div>
+                    `;
 
                         messageContainer.appendChild(postDiv);
                     });
@@ -376,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (messageId && likeCountElement) {
             const isLiked = heartIcon.src.includes("coeur_rouge.png");
-            heartIcon.src = isLiked ? "static/img/coeur.png" : "static/img/coeur_rouge.png";
+            heartIcon.src = isLiked ? "static/img/icon/coeur.png" : "static/img/icon/coeur_rouge.png";
 
             // Met à jour visuellement le nombre de likes
             likeCountElement.textContent = parseInt(likeCountElement.textContent, 10) + (isLiked ? -1 : 1);
@@ -401,9 +399,6 @@ document.addEventListener("DOMContentLoaded", () => {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 
-    // Récupérer les messages dès le chargement de la page
-    fetchMessages();
-
     // Function qui redirige vers une région
     function redirectToRegion() {
         const searchValue = searchBar.value.trim(); // Prend les valeurs de la searchbar
@@ -419,8 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (searchBar) { // La recherche va se faire losque l'utilisateur utilise la touche Entrée ou appuie sur le bouton
         searchBar.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") { 
-                event.preventDefault(); 
+            if (event.key === "Enter") {
+                event.preventDefault();
                 redirectToRegion();
             }
         });
@@ -432,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fonction pour sélectionner une région spécifique via une requête GET
 function selectRegion(regionName) {
-    fetch(`/region?name=${regionName}`, { method: 'GET' }) 
+    fetch(`/region?name=${regionName}`, { method: 'GET' })
         .then(response => {
             if (response.ok) {
                 window.location.href = "/welcome"; // Redirige vers la page de fils de discussions après sélection de la région
@@ -462,76 +457,14 @@ function PopupFils() {
 
     if (popupFils.style.display === "flex") {
         document.getElementById("popupAjouterFil").style.display = "none";
-        document.getElementById("btnAjouterFil").src = "static/img/ajouter.png"
+        document.getElementById("btnAjouterFil").src = "static/img/icon/ajouter.png"
     } else {
         document.getElementById("popupAjouterFil").style.display = "flex";
-        document.getElementById("btnAjouterFil").src = "static/img/moin.png"
+        document.getElementById("btnAjouterFil").src = "static/img/icon/moins.png"
     }
 }
 
-// Fonction pour récupérer les chats disponibles dans une région spécifique
-function fetchChats(region) {
-    fetch(`/fetch-chats?region=${region}`)
-        .then(response => response.json())
-        .then(data => {
-            const chatList = document.getElementById("chat-list");
 
-            if (chatList) { // Vérifie que chatList existe avant de poursuivre
-                chatList.innerHTML = ""; 
-
-                // Le cas où aucun chat n'est disponible
-                if (!data.Chats || data.Chats.length === 0) {
-                    const noChatsMessage = document.createElement("p");
-                    noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
-                    chatList.appendChild(noChatsMessage);
-                    return;
-                }
-
-                // Affiche le chat principal
-                if (data.MainChat) {
-                    const principalChat = document.createElement("div");
-                    principalChat.className = "principal-chat";
-                    principalChat.innerHTML = `
-                        <h3>Principal Chat</h3>
-                        <p>Name: ${data.MainChat.Name}</p>
-                        <p>Description: ${data.MainChat.Descri}</p>
-                        <p>Messages: ${data.MainChat.MessageCount}</p>
-                        <p>Total Likes: ${data.MainChat.TotalLikes}</p>
-                        <img src="${data.MainChat.ImageURL}" alt="Region Image">
-                    `;
-                    chatList.appendChild(principalChat);
-                }
-
-                // Affiche les chats créés par les utilisateurs
-                const userChatsTitle = document.createElement("h3");
-                userChatsTitle.textContent = "User Chats";
-                chatList.appendChild(userChatsTitle);
-
-                // Parcourt la liste des chats et les affiche dynamiquement
-                data.Chats.forEach(chat => {
-                    const listItem = document.createElement("li");
-                    listItem.className = "chat-item";
-
-                    listItem.innerHTML = `
-                        <button>${chat.Name} (${chat.Creator})</button>
-                        <p>Description: ${chat.Descri}</p>
-                        <p>Messages: ${chat.MessageCount}</p>
-                        <p>Total Likes: ${chat.TotalLikes}</p>
-                        <img src="${chat.PhotoURL}" alt="Creator Image">
-                    `;
-
-                    // Ajoute un écouteur d'événements pour sélectionner un chat lorsqu'il est cliqué
-                    const button = listItem.querySelector("button");
-                    button.addEventListener("click", () => {
-                        selectChat(chat.Name);
-                    });
-
-                    chatList.appendChild(listItem);
-                });
-            }
-        })
-        .catch(error => console.error("Error fetching chats:", error));
-}
 
 // Fonction pour créer un nouveau chat
 function createChat() {
@@ -565,11 +498,28 @@ function createChat() {
         });
 }
 
-// Exécute la récupération des chats lors du chargement de la page
-document.addEventListener("DOMContentLoaded", function () {
-    fetchChats("{{.Region}}");
-});
 
 
+/////////////////////////// Chat //////////////////////////
 
+function adjustHeight(textarea) {
+    // Calculer la hauteur du texte en fonction du contenu
+    const scrollHeight = textarea.scrollHeight;
+    const minHeight = 30;  // Hauteur minimale (en pixels, équivalent à environ 1 ligne)
+    const maxHeight = 50;  // Hauteur maximale (en pixels, équivalent à environ 3 lignes)
 
+    // Appliquer la hauteur du textarea en fonction du contenu
+    if (scrollHeight <= maxHeight) {
+        // Si la hauteur du texte est inférieure à la hauteur maximale, ajuster la hauteur
+        textarea.style.height = scrollHeight + 'px';
+    } else {
+        // Si la hauteur dépasse la hauteur maximale, on applique un scroll
+        textarea.style.height = maxHeight + 'px';
+        textarea.style.overflowY = 'auto'; // Activer le scroll vertical
+    }
+
+    // Ne pas descendre sous la hauteur minimale
+    if (textarea.value == "") {
+        textarea.style.height = 1.5 + 'em';
+    }
+}

@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
         <!-- Navigation -->
@@ -74,9 +74,9 @@
                 <div class="msg-coeur-container" data-message-id="{{.MessageID}}">
                     <p>{{.NumberOfLikes}}</p>
                     {{if .UserLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">
+                    <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="msg-like">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="msg-like">
+                    <img src="static/img/icon/coeur.png" alt="Like" class="msg-like">
                     {{end}}
                 </div>
 
@@ -88,35 +88,10 @@
         </div>
     </section>
 
-        <div class="conainerWritePost">
-            <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
-            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
-        </div>
-
-    <script>
-        function adjustHeight(textarea) {
-    // Calculer la hauteur du texte en fonction du contenu
-    const scrollHeight = textarea.scrollHeight;
-    const minHeight = 30;  // Hauteur minimale (en pixels, équivalent à environ 1 ligne)
-    const maxHeight = 50;  // Hauteur maximale (en pixels, équivalent à environ 3 lignes)
-
-    // Appliquer la hauteur du textarea en fonction du contenu
-    if (scrollHeight <= maxHeight) {
-        // Si la hauteur du texte est inférieure à la hauteur maximale, ajuster la hauteur
-        textarea.style.height = scrollHeight + 'px';
-    } else {
-        // Si la hauteur dépasse la hauteur maximale, on applique un scroll
-        textarea.style.height = maxHeight + 'px';
-        textarea.style.overflowY = 'auto'; // Activer le scroll vertical
-    }
-
-    // Ne pas descendre sous la hauteur minimale
-    if (textarea.value == "") {
-        textarea.style.height = 1.5 + 'em';
-    }
-}
-
-    </script>    
+    <div class="conainerWritePost">
+        <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
+        <img src="static/img/icon/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
+    </div>  
     <script src="static/script.js"></script>
 </body>
 

@@ -32,7 +32,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
 
@@ -63,36 +63,36 @@
             <div class="ConteneurCreerCompte">
                 <form id="creerCompteForm" action="/CreerCompte" method="post" onsubmit="return validateForm()">
                     <div class="photo">
-                        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
+                        <img src="../static/img/avatar/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
                     </div>
                     <a href="#" class="changerAvatar" name="photo_url" onclick="openPopupProfil()">Changer d'Avatar</a>
 
                     <h4>Email</h4>
                     <div class="ConteneurEmail">
                         <input type="text" id="email" name="email" placeholder="nom@email.com" required>
-                        <img src="/static/img/email.png" alt="Icône email">
+                        <img src="/static/img/icon/email.png" alt="Icône email">
                     </div>
 
                     <h4>Pseudo</h4>
                     <div class="ConteneurPseudo">
                         <input type="text" id="pseudo" name="pseudo" placeholder="Votre Pseudo" required>
-                        <img src="/static/img/utilisateur.png" alt="Icône utilisateur">
+                        <img src="/static/img/icon/utilisateur.png" alt="Icône utilisateur">
                     </div>
 
                     <h4>Mot de passe</h4>
                     <div class="ConteneurMotDePasse">
                         <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Votre mot de passe"
                             required>
-                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                        <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
                     </div>
                     <div class="ConteneurMotDePasse">
                         <input type="password" id="confirme_mot_de_passe" name="confirme_mot_de_passe"
                             placeholder="Confirmer votre mot de passe" required>
-                        <img src="/static/img/cadenas.png" alt="Icône cadenas">
+                        <img src="/static/img/icon/cadenas.png" alt="Icône cadenas">
                     </div>
 
                     <!-- Champ caché pour stocker l'URL de l'avatar choisi -->
-                    <input type="hidden" id="photo_url" name="photo_url" value="../static/img/photoProfil.png">
+                    <input type="hidden" id="photo_url" name="photo_url" value="../static/img/avatar/photoProfil.png">
 
                     <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
 
@@ -109,7 +109,7 @@
 
     <!-- Pop-up pour modifier la photo de profil -->
     <div id="popup-profil" class="popup">
-        <img src="../static/img/fondAvatar.png" class="fondAvatar">
+        <img src="../static/img/fond/fondAvatar.png" class="fondAvatar">
         <h1>Choisissez votre Avatar</h1>
         <div class="imgAvatar">
             <div class="femme">

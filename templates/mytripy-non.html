@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
     </header>
@@ -81,10 +81,10 @@
 
         <div class="search-bar">
             <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
-            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+            <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown">
-            <img src="../static/img/outil.png">
+            <img src="../static/img/icon/outil.png">
         </div>
 
         <!-- MAP France -->
@@ -169,14 +169,14 @@
             <div class="image-voyage-container">
                 <h1>Explorez la France</h1>
                 <a href="/destinations" class="btn-link-voyage">Je découvre</a>
-                <img src="static/img/image-voyage-4.jpg" alt="voyage" class="image-voyage">
+                <img src="static/img/voyage/image-voyage-4.jpg" alt="voyage" class="image-voyage">
             </div>
 
             <div class="image-travail-container">
                 <h1>Rejoins-nous</h1>
                 <p>Échange, découvre, voyage</p>
                 <a href="/SeConnecter" class="btn-link-travail">Je me connecte</a>
-                <img src="static/img/travail.jpg" alt="voyage" class="image-travail">
+                <img src="static/img/icon/travail.jpg" alt="voyage" class="image-travail">
             </div>
         </div>
 
@@ -195,9 +195,9 @@
                 {{if $.IsConnected}}
                 <div class="destination-coeur-container" data-region="{{.RegionName}}">
                     {{if .RegionLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="destination-coeur">
+                    <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="destination-coeur">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="destination-coeur">
+                    <img src="static/img/icon/coeur.png" alt="Like" class="destination-coeur">
                     {{end}}
                 </div>
                 {{end}}
@@ -210,19 +210,19 @@
         <h3 class="titre-description">Avec MyTripy, découvrez et partagez la France</h3>
         <div class="description-container">
             <div class="description">
-                <img src="static/img/website.png" alt="Découverte">
+                <img src="static/img/illustration/website.png" alt="Découverte">
                 <h4>Partage d’expériences</h4>
                 <p>Partage tes expériences et découvre les meilleurs endroits à visiter en France.</p>
             </div>
 
             <div class="description">
-                <img src="static/img/network.png" alt="Découverte">
+                <img src="static/img/illustration/network.png" alt="Découverte">
                 <h4>Communauté interactive</h4>
                 <p>Échange avec la communauté : conseils, avis, et photos pour enrichir ton voyage.</p>
             </div>
 
             <div class="description">
-                <img src="static/img/guides_bons_plans.png" alt="Découverte">
+                <img src="static/img/illustration/guides_bons_plans.png" alt="Découverte">
                 <h4>Guides et bons plans</h4>
                 <p>Accède aux bons plans : itinéraires, activités et hébergements pour un voyage réussi.</p>
             </div>

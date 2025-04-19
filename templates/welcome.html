@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
     </header>
@@ -82,7 +82,7 @@
         <!-- Barre de recherche  (non so se metterla perché cerca le regioni soltanto non i chat, oppure faccio in modo che cerchi i post quando sono su questa regione)-->
         <div class="search-bar">
             <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
-            <button id="search-icon" class="search-icon"><img src="static/img/loupe.png" alt="Icone recherche"></button>
+            <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown"></div>
 
@@ -104,15 +104,15 @@
                         {{if $.IsConnected}}
                         <div class="chat-coeur-container" data-chat="{{.MainChat.Name}}">
                             {{if .MainChat.UserLiked}}
-                                <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                                <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="chat-coeur">
                             {{else}}
-                                <img src="static/img/coeurGris.png" alt="Like" class="chat-coeur">
+                                <img src="static/img/icon/coeurGris.png" alt="Like" class="chat-coeur">
                             {{end}}
                             <p>{{.MainChat.TotalLikes}}</p>
                         </div>
                         {{end}}
                     <div class="discussionFil">
-                        <img src="static/img/messager.png" alt="discussion">
+                        <img src="static/img/icon/messager.png" alt="discussion">
                         <p>{{.MainChat.MessageCount}}</p>
                     </div>
                 </div>
@@ -121,12 +121,12 @@
 
         {{if .IsConnected}}
         <div class="ajouterBtn">
-            <img src="../static/img/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
+            <img src="../static/img/icon/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
         </div>
         {{end}}
 
         <div class="popupAjouterFil" id="popupAjouterFil">
-            <img src="/static/img/fondPopupFil.png">
+            <img src="/static/img/fond/fondPopupFil.png">
             <h3>Nouveau Fil</h3>
             <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil" required>
             <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil"
@@ -137,25 +137,6 @@
             </div>
             <button onclick="createChat()">Créer</button>
         </div>
-
-        <!--       
-         <div class="popupAjouterFil" id="popupAjouterFil">
-            <img src="/static/img/fondPopupFil.png">
-            <h3>Nouveau Fils</h3>
-            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil"> 
-            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil"> 
-            <div class="paramFil">
-                <h4>Region Selectionnée</h4>
-                <select class="menuDeroulantFils">
-                    <option>Département</option>
-                    <option>Département 1</option>
-                    <option>Département 2</option>
-                    <option>Département 3</option>
-                </select>
-            </div>
-            <button>Créer</button>
-        </div>
-    -->
     <div class="discussion">
         {{range .Chats}}
         <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
@@ -176,15 +157,15 @@
                 {{if $.IsConnected}}
                     <div class="chat-coeur-container" data-chat="{{.Name}}">
                     {{if .UserLiked}}
-                        <img src="static/img/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                        <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="chat-coeur">
                     {{else}}
-                        <img src="static/img/coeurGris.png" alt="Like" class="chat-coeur">
+                        <img src="static/img/icon/coeurGris.png" alt="Like" class="chat-coeur">
                     {{end}}
                     <p>{{.TotalLikes}}</p>
                     </div>
                 {{end}}
                 <div class="discussionFil">
-                    <img src="static/img/messager.png" alt="discussion">
+                    <img src="static/img/icon/messager.png" alt="discussion">
                     <p>{{.MessageCount}}</p>
                 </div>
             </div>

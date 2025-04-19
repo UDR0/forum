@@ -92,6 +92,31 @@
             <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
             <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
         </div>
+
+    <script>
+        function adjustHeight(textarea) {
+    // Calculer la hauteur du texte en fonction du contenu
+    const scrollHeight = textarea.scrollHeight;
+    const minHeight = 30;  // Hauteur minimale (en pixels, équivalent à environ 1 ligne)
+    const maxHeight = 50;  // Hauteur maximale (en pixels, équivalent à environ 3 lignes)
+
+    // Appliquer la hauteur du textarea en fonction du contenu
+    if (scrollHeight <= maxHeight) {
+        // Si la hauteur du texte est inférieure à la hauteur maximale, ajuster la hauteur
+        textarea.style.height = scrollHeight + 'px';
+    } else {
+        // Si la hauteur dépasse la hauteur maximale, on applique un scroll
+        textarea.style.height = maxHeight + 'px';
+        textarea.style.overflowY = 'auto'; // Activer le scroll vertical
+    }
+
+    // Ne pas descendre sous la hauteur minimale
+    if (textarea.value == "") {
+        textarea.style.height = 1.5 + 'em';
+    }
+}
+
+    </script>    
     <script src="static/script.js"></script>
 </body>
 

@@ -1,17 +1,25 @@
-FROM golang:1.24-alpine
+FROM golang:1.24.1
+RUN apt-get update && apt-get install -y gcc libc-dev
 
-RUN apk add --no-cache gcc musl-dev
 
+
+# Enable CGO for SQLite
 ENV CGO_ENABLED=1
 
+# Set working directory
 WORKDIR /app
+
+# Copy your application files into the container
 COPY . .
 
+# Build the Go application
 RUN go build -o forum
 
+# Expose the application port
 EXPOSE 8080
-CMD ["./forum"]
 
+# Command to run the application
+CMD ["./forum"]
 
 
 #docker build -t forum .

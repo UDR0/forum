@@ -33,7 +33,7 @@
 
         <!-- Menu Burger -->
         <button class="burger-menu" id="burger">
-            <img src="static/img/menu-black.png" alt="menu">
+            <img src="static/img/icon/menu-black.png" alt="menu">
         </button>
 
         <!-- Navigation -->
@@ -74,9 +74,9 @@
                 <div class="msg-coeur-container" data-message-id="{{.MessageID}}">
                     <p>{{.NumberOfLikes}}</p>
                     {{if .UserLiked}}
-                    <img src="static/img/coeur_rouge.png" alt="Liked" class="msg-like">
+                    <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="msg-like">
                     {{else}}
-                    <img src="static/img/coeur.png" alt="Like" class="msg-like">
+                    <img src="static/img/icon/coeur.png" alt="Like" class="msg-like">
                     {{end}}
                 </div>
 
@@ -88,10 +88,10 @@
         </div>
     </section>
 
-        <div class="conainerWritePost">
-            <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
-            <img src="static/img/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
-        </div>
+    <div class="conainerWritePost">
+        <textarea placeholder="Tapez votre Post..." class="inputPost" id="messageInput" oninput="adjustHeight(this)"></textarea>
+        <img src="static/img/icon/envoyer.png" alt="Icone d'envoi" class="iconSend" id="sendButton">
+    </div>  
     <script src="static/script.js"></script>
 </body>
 

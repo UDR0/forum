@@ -57,7 +57,6 @@ func main() {
 			session, _ := store.Get(r, "session")
 			session.Values["user"] = r.FormValue("username")
 			session.Save(r, w)
-			http.Redirect(w, r, "/profil", http.StatusFound)
 		} else {
 			renderTemplate(w, "SeConnecter", nil)
 		}
@@ -82,7 +81,6 @@ func main() {
 			renderTemplate(w, "SeConnecter", nil)
 		}
 	})
-	// http.HandleFunc("/MotDePasseOublie", forum.ForgotPasswordHandler)
 
 	http.HandleFunc("/profil", forum.ProfilPage)
 	http.HandleFunc("/updateProfile", forum.UpdateProfile)
@@ -105,7 +103,6 @@ func main() {
 	http.HandleFunc("/welcome", forum.FileDiscussion)
 	http.HandleFunc("/create-chat", forum.CreateChatHandler)
 	http.HandleFunc("/select-chat", forum.SelectChatHandler)
-	http.HandleFunc("/fetch-chats", forum.FetchChatsHandler)
 
 	http.HandleFunc("/chat_messages", forum.FilMessagesHandler)
 	http.HandleFunc("/send-message", forum.SendMessageHandler)

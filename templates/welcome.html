@@ -1,3 +1,187 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Forum de voyage - Partagez vos expériences et conseils sur les destinations de la France.">
+    <meta name="keywords" content="forum, voyage, destinations, partage, communauté">
+    <meta name="author" content="Matias, Sara, Samuel, William">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>MyTripy</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/styles-desktop.css" media="screen and (min-width: 1024px)">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <!-- Logo -->
+        <a href="/mytripy-non" class="logo">
+            <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
+            <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
+            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
+        </a>
+
+        <!-- Menu Burger -->
+        <button class="burger-menu" id="burger">
+            <img src="static/img/icon/menu-black.png" alt="menu">
+        </button>
+
+    </header>
+
+
+    <ul class="meta-ul">
+        <li class="meta-navigation">
+            <a class="meta-a" href="/mytripy-non">MyTripy</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="/destinations">Destinations</a>
+        </li>
+
+        <li class="meta-navigation">
+            <a class="meta-a" href="mailto:contact@voyagesympa.com?subject=Demande%20d'informations&body=Bonjour%2C%0AJe%20voudrais%20plus%20d'informations%20sur...">Contactez-nous</a>
+        </li>
+
+        {{if .IsConnected}}
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/profil">Mon Compte</a>
+        </li>
+
+        {{else}}
+
+        <li class="meta-navigation-btn-connexion">
+            <a class="btn" href="/SeConnecter">Se connecter</a>
+        </li>
+
+        <li class="meta-navigation-btn-creer-compte">
+            <a class="btn" href="/CreerCompte">Créer mon compte</a>
+        </li>
+
+        {{end}}
+
+    </ul>
+
+    </header>
+
+
+
+
+    <!-- Contenu principal -->
+    <section>
+        <!-- Barre de recherche  (non so se metterla perché cerca le regioni soltanto non i chat, oppure faccio in modo che cerchi i post quando sono su questa regione)-->
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
+            <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
+        </div>
+        <div id="dropdown" class="dropdown"></div>
+
+
+        <div class="discussion-principale">
+            <div class="discussion-cree" onclick="selectChat('{{.MainChat.Name}}')">
+                <div class="discussion-cree-info">
+                    <img src="{{.MainChat.ImageURL}}" alt="" class="discussion-cree-info-profil">
+
+                    <div class="discussion-cree-info-texte">
+                        <p class="discussion-cree-info-titre">{{.MainChat.Name}}</p>
+                        <p class="discussion-cree-info-nom">MyTripy</p>
+                    </div>
+                </div>
+
+                <p class="discussion-cree-descriptif">{{.MainChat.Descri}}</p>
+
+                <div class="discussion-cree-chat">
+                        {{if $.IsConnected}}
+                        <div class="chat-coeur-container" data-chat="{{.MainChat.Name}}">
+                            {{if .MainChat.UserLiked}}
+                                <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                            {{else}}
+                                <img src="static/img/icon/coeurGris.png" alt="Like" class="chat-coeur">
+                            {{end}}
+                            <p>{{.MainChat.TotalLikes}}</p>
+                        </div>
+                        {{end}}
+                    <div class="discussionFil">
+                        <img src="static/img/icon/messager.png" alt="discussion">
+                        <p>{{.MainChat.MessageCount}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{if .IsConnected}}
+        <div class="ajouterBtn">
+            <img src="../static/img/icon/ajouter.png" class="btnAjouterFil" id="btnAjouterFil" onclick="PopupFils()">
+        </div>
+        {{end}}
+
+        <div class="popupAjouterFil" id="popupAjouterFil">
+            <img src="/static/img/fond/fondPopupFil.png">
+            <h3>Nouveau Fil</h3>
+            <input id="chatTitle" placeholder="Entrez le Titre de votre nouveau Fil" class="nomFil" required>
+            <input id="chatDescription" placeholder="Entrez la Description de votre nouveau Fil" class="descriptionFil"
+                required>
+            <div class="paramFil">
+                <h4>{{.Region}}</h4>
+                <input id="regionField" type="hidden" value="{{.Region}}">
+            </div>
+            <button onclick="createChat()">Créer</button>
+        </div>
+    <div class="discussion">
+        {{range .Chats}}
+        <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
+            <div class="discussion-cree-info">
+                <img src="{{.PhotoURL}}" alt="user photo" class="discussion-cree-info-profil">
+
+                <div class="discussion-cree-info-texte">
+                    <p class="discussion-cree-info-titre">{{.Name}}</p>
+                    <p class="discussion-cree-info-nom">{{.Creator}}</p>
+                </div>
+            </div>
+
+            <p class="discussion-cree-descriptif">{{.Descri}}</p>
+
+
+
+            <div class="discussion-cree-chat">
+                {{if $.IsConnected}}
+                    <div class="chat-coeur-container" data-chat="{{.Name}}">
+                    {{if .UserLiked}}
+                        <img src="static/img/icon/coeur_rouge.png" alt="Liked" class="chat-coeur">
+                    {{else}}
+                        <img src="static/img/icon/coeurGris.png" alt="Like" class="chat-coeur">
+                    {{end}}
+                    <p>{{.TotalLikes}}</p>
+                    </div>
+                {{end}}
+                <div class="discussionFil">
+                    <img src="static/img/icon/messager.png" alt="discussion">
+                    <p>{{.MessageCount}}</p>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <p>Aucun chat personnalisé n'a encore été créé dans {{.Region}}. Créé en un maintenant!</p>
+        {{end}}
+    </div>
+
+
+    </section>
+    <script src="static/script.js"></script>
+</body>
+
+=======
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -306,4 +490,5 @@
     <script src="static/script.js"></script>
 </body>
 
+>>>>>>> 6c0ac1947bce57893d165fee60e3fe15f92a36db
 </html>

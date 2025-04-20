@@ -8,3 +8,6 @@ WORKDIR /root/
 
 COPY --from=builder /app/forum .
 CMD [ "./forum" ]
+
+#docker build -t forum .
+#docker run -v ${pwd}/forum.db:/app/forum.db -p 8080:8080 forum

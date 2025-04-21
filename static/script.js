@@ -7,19 +7,17 @@ burgerMenu.addEventListener("click", () => {
     navMenu.classList.toggle("active"); // Ajouter/retirer la classe 'active'
 });
 
-
-// Sélectionne tous les éléments qui ont les classes "destination-region-popular" et "filPrincipal-region"
 document.querySelectorAll(".destination-region-popular", ".filPrincipal-region").forEach((card) => {
-    card.addEventListener("click", function () { //  Écoute les événements pour le clic sur chaque élément
-        const targetUrl = card.getAttribute("data-link");  // Récupère l'URL cible à partir de l'attribut "data-link" de l'élément
+    card.addEventListener("click", function () {
+        const targetUrl = card.getAttribute("data-link");
         if (targetUrl) {
-            window.location.href = targetUrl; // Redirige la fenêtre actuelle vers l'URL
+            window.location.href = targetUrl;
         }
     });
 });
 
 document.querySelectorAll('.destination-coeur-container').forEach(container => {
-    container.addEventListener("click", function (event) {
+    container.addEventListener("click", function(event) {
         event.stopPropagation(); // Prevent parent element click
         event.preventDefault(); // Prevent default action
 
@@ -43,35 +41,35 @@ document.querySelectorAll('.destination-coeur-container').forEach(container => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ region: regionName, liked }),
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update like status on the server.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(`Server response:`, data); // Log successful server response
-            })
-            .catch(error => {
-                console.error('Error communicating with the server:', error);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update like status on the server.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Server response:`, data); // Log successful server response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
 
-                // Revert the heart icon if the request fails
-                img.src = liked ? 'static/img/icon/coeur.png' : 'static/img/icon/coeur_rouge.png';
-            });
+            // Revert the heart icon if the request fails
+            img.src = liked ? 'static/img/icon/coeur.png' : 'static/img/icon/coeur_rouge.png';
+        });
     });
 });
 
 
 document.querySelectorAll('.chat-coeur-container').forEach(container => {
-    container.addEventListener("click", function (event) {
+    container.addEventListener("click", function(event) {
         event.stopPropagation();
         event.preventDefault();
         const img = this.querySelector('.chat-coeur');
         const chatName = this.getAttribute('data-chat'); // Get region name
-
+        
         // Determine liked status
         const liked = !img.src.includes('coeur_rouge.png'); // True if red heart is being added
-
+        
         // Toggle heart icon
         if (liked) {
             img.src = 'static/img/icon/coeur_rouge.png'; // Change to red heart
@@ -89,13 +87,13 @@ document.querySelectorAll('.chat-coeur-container').forEach(container => {
             },
             body: JSON.stringify({ region: chatName, liked }),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(`Server response:`, data); // Log server's response
-            })
-            .catch(error => {
-                console.error('Error communicating with the server:', error);
-            });
+        .then(response => response.json())
+        .then(data => {
+            console.log(`Server response:`, data); // Log server's response
+        })
+        .catch(error => {
+            console.error('Error communicating with the server:', error);
+        });
     });
 });
 
@@ -167,23 +165,20 @@ function sauverModifications() {
             bio: nouvelleBio
         })
     })
-        .then(response => {
-            if (response.ok) {
-            } else {
-                console.error("Erreur lors de la mise à jour.");
-            }
-        })
-        .catch(error => {
-            console.error("Erreur de connexion :", error);
-        });
+    .then(response => {
+        if (response.ok) {
+            console.log("Mise à jour réussie !");
+        } else {
+            console.error("Erreur lors de la mise à jour.");
+        }
+    })
+    .catch(error => {
+        console.error("Erreur de connexion :", error);
+    });
 
     closePopupModif();
 }
 
-
-function changeavatar(newSrc) {
-    document.getElementById("photo_url").value = newSrc;
-}
 
 // ------------------- Pop-up for Additional Features ---------------------------//
 function updateAvatar(avatarURL) {
@@ -196,89 +191,79 @@ function updateAvatar(avatarURL) {
             avatar: avatarURL
         })
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Errore durante l\'aggiornamento dell\'avatar.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Ricarica la pagina
-            window.location.reload();
-        })
-        .catch(error => console.error("Errore:", error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Errore durante l\'aggiornamento dell\'avatar.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message);
+
+        // Ricarica la pagina
+        window.location.reload();
+    })
+    .catch(error => console.error("Errore:", error));
 }
 
 
+////////////////////////////////// SEARCHBAR ///////////////////////////////////////// Define functions globally
 
-// Fonction pour filtrer les suggestions dans le menu déroulant en fonction de la recherche de l'utilisateur
 function filterOptions() {
-    const dropdown = document.getElementById('dropdown');   // Récupère l'élément du menu déroulant
+    const dropdown = document.getElementById('dropdown');
     const searchBar = document.getElementById('searchBar');
     const input = searchBar.value.toLowerCase();
-    dropdown.innerHTML = '';  // Efface les résultats précédents du menu déroulant avant d'afficher les nouveaux
-
-    if (input.length >= 2) { // Effectue la recherche une fois que la saisie de l'utilisateur contient au moins 2 caractères 
-        fetch(`/search?q=${input}`)    // Envoie une requête au serveur pour récupérer les options filtrées
+    dropdown.innerHTML = ''; // Clear previous results
+    if (input.length >= 2) {
+        fetch(`/search?q=${input}`)
             .then(response => response.json())
             .then(filteredOptions => {
-                // Vérifie que filteredOptions est bien un tableau avant d'appliquer la boucle
-                if (filteredOptions && Array.isArray(filteredOptions)) {
-                    filteredOptions.forEach(option => {  // Parcourt chaque option filtrée et l'ajoute au menu déroulant
-                        const displayText = `${option.departmentName}, ${option.regionName}`;
-                        const item = document.createElement('div');
-                        item.textContent = displayText;
-                        item.className = 'dropdown-item';
-                        item.onclick = () => selectOption(displayText, option.regionName);
-                        dropdown.appendChild(item);
-                    });
-                }
-
-                // Affiche ou masque le menu déroulant en fonction de la présence d'options valides
-                dropdown.style.display = filteredOptions?.length > 0 ? 'block' : 'none';
-            })
-            .catch(error => console.error("Error fetching options:", error));
+                filteredOptions.forEach(option => {
+                    const displayText = `${option.departmentName}, ${option.regionName}`;
+                    const item = document.createElement('div');
+                    item.textContent = displayText;
+                    item.className = 'dropdown-item';
+                    item.onclick = () => selectOption(displayText, option.regionName);
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = filteredOptions.length > 0 ? 'block' : 'none';
+            });
     } else {
-        // Masque le menu déroulant si la recherche contient moins de 2 caractères
         dropdown.style.display = 'none';
     }
 }
 
-
 function selectOption(displayText, regionName) {
-    searchBar.value = displayText; // Met à jour la barre de recherche une fois que l'utilisateur a choisi une suggestion
+    searchBar.value = displayText; // Update search bar with selected option
     dropdown.style.display = 'none';
 }
 
-
-
-// Attend que la page html soit entièrement chargé avant d'exécuter le script
+// messages, searchbar
 document.addEventListener("DOMContentLoaded", () => {
-    // Récupère les éléments liés aux messages
+    // Message-related elements
     const messageInput = document.getElementById("messageInput");
     const sendButton = document.getElementById("sendButton");
     const messageContainer = document.getElementById("message-container");
 
-    // Récupère les éléments liés à la searchbar
-    const searchBar = document.getElementById("searchBar");
-    const searchIcon = document.getElementById("search-icon");
-
-
-
     if (messageContainer) {
-        scrollToBottom(); // Fait défiler automatiquement le conteneur des messages vers le bas après le rechargement de la page
+        // Automatically scroll to the bottom after the page reloads
+        scrollToBottom();
 
-        setInterval(() => { fetchMessages() }, 4000); // Récupère les messages automatiquement toutes les 4 secondes
+        // Automatically fetch messages every 4 seconds
+        setInterval(() => {
+            fetchMessages().then(() => {
+                scrollToBottom(); // Ensure the view scrolls after messages are fetched
+            });
+        }, 4000);
 
-        messageContainer.addEventListener("click", (event) => { // Ajoute un écouteur d'événements pour détecter le clic sur le coeur
+        // Use event delegation for heart icon clicks
+        messageContainer.addEventListener("click", (event) => {
             if (event.target.classList.contains("msg-like")) {
-                heartMsg(event.target); // Appel la fonction heartMsg 
+                heartMsg(event.target); // Call the heartMsg function
             }
         });
 
-
-
-        // Fonction qui envoi un message
+        // Function to send a message
         function sendMessage() {
             const message = messageInput.value.trim();
 
@@ -287,7 +272,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Envoi du message au serveur via une requête POST
             fetch("/send-message", {
                 method: "POST",
                 headers: {
@@ -299,46 +283,45 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!response.ok) {
                         throw new Error("Erreur lors de l'envoi du message.");
                     }
-                    messageInput.value = ""; // Efface la zone de texte après l'envoi
+                    messageInput.value = ""; // Clear the textarea after sending
 
-                    // Recharge les messages juste apres en avoir envoyé un
+                    // Reload messages immediately after sending a new one
                     return fetchMessages();
                 })
                 .then(() => {
-                    scrollToBottom(); // Assure le défilement après l'envoi du nouveau message
+                    scrollToBottom(); // Ensure scroll happens after new messages are appended
                 })
                 .catch(error => {
                     console.error("Erreur :", error);
                 });
         }
 
-        // Ajoute un évènnement d'écoute sur la touche Entrer
+        // Add event listener for Enter key
         messageInput?.addEventListener("keydown", (event) => {
             if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
+                event.preventDefault(); // Prevent adding a new line
                 sendMessage();
             }
         });
 
-        // Ajoute un évènnement d'écoute sur le bouton
+        // Add event listener for Send button
         sendButton?.addEventListener("click", sendMessage);
     }
 
+    // Function to fetch messages and update the container
     function fetchMessages() {
-        return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Remplace par le nom réel du chat
+        return fetch('/fetch-messages?chatname=ChatNamePlaceholder') // Replace "ChatNamePlaceholder" with the actual chat name
             .then(response => response.json())
             .then(messages => {
                 const messageContainer = document.getElementById("message-container");
-
-                // Vérifie que messageContainer existe et que messages n'est pas null ou undefined
-                if (messageContainer && Array.isArray(messages)) {
-                    messageContainer.innerHTML = ""; // Efface les messages actuels avant d'afficher les nouveaux
-
-                    messages.forEach(msg => {
-                        const postDiv = document.createElement("div");
-                        postDiv.className = "post";
-
-                        postDiv.innerHTML = `
+                messageContainer.innerHTML = ""; // Clear current messages
+    
+                messages.forEach(msg => {
+                    const postDiv = document.createElement("div");
+                    postDiv.className = "post";
+    
+                    // Dynamically create the HTML structure for each message
+                    postDiv.innerHTML = `
                         <div class="infoPost">
                             <img src="${msg.img_user}" class="photoProfil" alt="Photo de profil">
                             <div class="txtInfoPost">
@@ -357,29 +340,32 @@ document.addEventListener("DOMContentLoaded", () => {
                             <p>${msg.number_of_likes}</p>
                         </div>
                     `;
-
-                        messageContainer.appendChild(postDiv);
-                    });
-                }
+    
+                    // Append the new message to the container
+                    messageContainer.appendChild(postDiv);
+                });
             })
             .catch(error => console.error("Erreur lors de la récupération des messages :", error));
     }
+    
 
-
-    // Fonction pour gérer le like/unlike d'un message
+    // Function to handle heart icon clicks (likes)
     function heartMsg(heartIcon) {
-        const msgContainer = heartIcon.closest(".msg-coeur-container");
-        const messageId = msgContainer?.getAttribute("data-message-id");
-        const likeCountElement = msgContainer?.querySelector("p");
+        console.log("Heart icon clicked!");
 
-        if (messageId && likeCountElement) {
+        // Locate the container with the data-message-id attribute
+        const msgContainer = heartIcon.closest(".msg-coeur-container");
+        const messageId = msgContainer?.getAttribute("data-message-id"); // Get the message ID from the container
+
+        if (messageId) {
+            // Log the message ID for debugging
+            console.log(`Message ID: ${messageId}`);
+
+            // Optional: Toggle heart icon state
             const isLiked = heartIcon.src.includes("coeur_rouge.png");
             heartIcon.src = isLiked ? "static/img/icon/coeur.png" : "static/img/icon/coeur_rouge.png";
 
-            // Met à jour visuellement le nombre de likes
-            likeCountElement.textContent = parseInt(likeCountElement.textContent, 10) + (isLiked ? -1 : 1);
-
-            // Envoie le statut du like au serveur
+            // Send the like status to the server
             fetch("/like-message", {
                 method: "POST",
                 headers: {
@@ -387,122 +373,64 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ message_id: parseInt(messageId, 10), liked: !isLiked }),
             })
-                .then(response => response.json())
-                .catch(error => {
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to update like status on the server.");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(`Like status updated for message ${messageId}:`, data);
+                })
+                .catch((error) => {
                     console.error("Error updating like status:", error);
                 });
+        } else {
+            console.error("Message ID not found for the clicked heart icon.");
         }
     }
 
-    // Fonction pour faire défiler la boîte de messages vers le bas automatiquement
+    // Function to scroll to the bottom of the message container
     function scrollToBottom() {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 
-    // Function qui redirige vers une région
-    function redirectToRegion() {
-        const searchValue = searchBar.value.trim(); // Prend les valeurs de la searchbar
+    // Fetch messages on page load
+    fetchMessages();
 
-        // Regarde si la recherche est sous la forme "DepartmentName, RegionName"
+    // Handle search actions
+    const searchBar = document.getElementById("searchBar");
+    const searchIcon = document.getElementById("search-icon");
+
+    // Function to redirect to region
+    function redirectToRegion() {
+        const searchValue = searchBar.value.trim(); // Safely get the value from the search bar
+        
+        // Check if the input follows the expected format "DepartmentName, RegionName"
         if (searchValue.includes(',')) {
-            const regionName = searchValue.split(',')[1].trim(); // Prend le nom de la région après la virgule
-            window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Cherche la région
+            const regionName = searchValue.split(',')[1].trim(); // Extract region name after the comma
+            window.location.href = `/region?name=${encodeURIComponent(regionName)}`; // Navigate to the desired URL
         } else {
-            alert('Veuillez sélectionner une option valide !');
+            alert('Veuillez sélectionner une option valide !'); // Feedback for invalid input
         }
     }
 
-    if (searchBar) { // La recherche va se faire losque l'utilisateur utilise la touche Entrée ou appuie sur le bouton
-        searchBar.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                redirectToRegion();
-            }
-        });
+    // Add event listener for Enter key in the search bar
+    searchBar.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") { // Check for "Enter" key press
+            event.preventDefault(); // Prevent form submission or default behavior
+            redirectToRegion();
+        }
+    });
 
-        searchIcon.addEventListener("click", redirectToRegion);
-    }
-
+    // Add event listener for search icon click
+    searchIcon.addEventListener("click", redirectToRegion);
 });
-
-// Fonction pour sélectionner une région spécifique via une requête GET
-function selectRegion(regionName) {
-    fetch(`/region?name=${regionName}`, { method: 'GET' })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "/welcome"; // Redirige vers la page de fils de discussions après sélection de la région
-            } else {
-                console.error("Failed to select region:", response.statusText);
-            }
-        })
-        .catch(error => console.error("Error selecting region:", error));
-}
-
-// Fonction pour sélectionner un chat spécifique
-function selectChat(chatName) {
-    fetch(`/select-chat?chatname=${chatName}`)
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "/chat_messages"; // Redirige vers la page des messages du chat après sélection
-            } else {
-                console.error("Failed to select chat:", response.statusText);
-            }
-        })
-        .catch(error => console.error("Error selecting chat:", error));
-}
-
-function PopupFils() {
-    const popupFils = document.getElementById("popupAjouterFil");
-    const imageBtnFils = document.getElementById("btnAjouterFil");
-
-    if (popupFils.style.display === "flex") {
-        document.getElementById("popupAjouterFil").style.display = "none";
-        document.getElementById("btnAjouterFil").src = "static/img/icon/ajouter.png"
-    } else {
-        document.getElementById("popupAjouterFil").style.display = "flex";
-        document.getElementById("btnAjouterFil").src = "static/img/icon/moins.png"
-    }
-}
-
-
-
-// Fonction pour créer un nouveau chat
-function createChat() {
-    const chatTitle = document.getElementById("chatTitle").value.trim(); // Récupère le nom
-    const chatDescription = document.getElementById("chatDescription").value.trim(); // Récupère la description
-    const region = document.getElementById("regionField").value; // Récupère la région
-
-    if (!chatTitle || !region) {  // Vérifie que le titre et la région sont bien renseignés
-        alert("Le titre et la région sont obligatoires !");
-        return;
-    }
-
-    fetch("/create-chat", { // Envoie les données du chat au serveur 
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `chatname=${encodeURIComponent(chatTitle)}&description=${encodeURIComponent(chatDescription)}&region=${encodeURIComponent(region)}`
-    })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "/welcome"; // Redirige vers la page de fils de discussion après la création du chat
-            } else {
-                console.error("Failed to create chat:", response.statusText);
-                alert("Échec de la création du chat. Veuillez réessayer !");
-            }
-        })
-        .catch(error => {
-            console.error("Error creating chat:", error);
-            alert("Une erreur s'est produite lors de la création du chat.");
-        });
-}
-
-
 
 /////////////////////////// Chat //////////////////////////
 
 function adjustHeight(textarea) {
+
     // Calculer la hauteur du texte en fonction du contenu
     const scrollHeight = textarea.scrollHeight;
     const minHeight = 30;  // Hauteur minimale (en pixels, équivalent à environ 1 ligne)

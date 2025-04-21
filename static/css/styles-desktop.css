@@ -306,6 +306,10 @@
         width: 400px;
     }
 
+    .pseudo {
+        margin-top: 12%;
+    }
+
 
     /* ######################## Page : Se Connecter & Mot de passe oublie ######################## */
     .card-titre {

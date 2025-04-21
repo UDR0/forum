@@ -956,7 +956,8 @@ section h2 {
     font-family: "Open Sans", sans-serif;
     font-weight: 500;
     font-size: 18px;
-    margin-top: 15px;
+    margin-top: 17%;
+    color: rgb(0, 0, 0);
 }
 
 .bio {
@@ -981,7 +982,7 @@ section h2 {
     font-weight: 400;
     transition: color 0.3s;
     cursor: pointer;
-    margin-top: 85px;
+    margin-top: 2%;
 }
 
 .btn-modifier-bio {
@@ -1031,6 +1032,7 @@ section h2 {
     position: fixed;
     left: 50%;
     transform: translate(-50%);
+    top: 30%;
     background: #1E6091;
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
@@ -1038,7 +1040,6 @@ section h2 {
     width: 90%;
     max-width: 600px;
     z-index: 10000;
-    top: 30%;
 }
 
 .popup-modif h3, .popupAjouterFil h3 {

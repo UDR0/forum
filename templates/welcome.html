@@ -28,7 +28,6 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -81,14 +80,14 @@
     <section>
         <!-- Barre de recherche  (non so se metterla perché cerca le regioni soltanto non i chat, oppure faccio in modo che cerchi i post quando sono su questa regione)-->
         <div class="search-bar">
-            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()">
+            <input type="text" placeholder="Rechercher une destination..." id="searchBar" oninput="filterOptions()" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off">
             <button id="search-icon" class="search-icon"><img src="static/img/icon/loupe.png" alt="Icone recherche"></button>
         </div>
         <div id="dropdown" class="dropdown"></div>
 
 
         <div class="discussion-principale">
-            <div class="discussion-cree" onclick="selectChat('{{.MainChat.Name}}')">
+            <div class="discussion-cree" data-chat='{{.MainChat.Name}}' onclick="selectChat(this.dataset.chat)">
                 <div class="discussion-cree-info">
                     <img src="{{.MainChat.ImageURL}}" alt="" class="discussion-cree-info-profil">
 
@@ -137,6 +136,7 @@
             </div>
             <button onclick="createChat()">Créer</button>
         </div>
+
     <div class="discussion">
         {{range .Chats}}
         <div class="discussion-cree" onclick="selectChat('{{.Name}}')">
@@ -177,6 +177,132 @@
 
 
     </section>
+
+    <script>
+        function PopupFils() {
+            const popupFils = document.getElementById("popupAjouterFil");
+            const imageBtnFils = document.getElementById("btnAjouterFil");
+
+            if (popupFils.style.display === "flex") {
+                document.getElementById("popupAjouterFil").style.display = "none";
+                document.getElementById("btnAjouterFil").src = "static/img/icon/ajouter.png"
+            } else {
+                document.getElementById("popupAjouterFil").style.display = "flex";
+                document.getElementById("btnAjouterFil").src = "static/img/icon/moins.png"
+            }
+        }
+
+        function fetchChats(region) {
+    fetch(`/fetch-chats?region=${region}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatList = document.getElementById("chat-list");
+            chatList.innerHTML = ""; // Clear current chats
+
+            // Handle case when no chats are available
+            if (!data.Chats || data.Chats.length === 0) {
+                const noChatsMessage = document.createElement("p");
+                noChatsMessage.textContent = `No chats available in ${region}. Create one below!`;
+                chatList.appendChild(noChatsMessage);
+                return;
+            }
+
+            // Display Principal Chat
+            if (data.MainChat) {
+                const principalChat = document.createElement("div");
+                principalChat.className = "principal-chat";
+                principalChat.innerHTML = `
+                    <h3>Principal Chat</h3>
+                    <p>Name: ${data.MainChat.Name}</p>
+                    <p>Description: ${data.MainChat.Descri}</p>
+                    <p>Messages: ${data.MainChat.MessageCount}</p>
+                    <p>Total Likes: ${data.MainChat.TotalLikes}</p>
+                    <img src="${data.MainChat.ImageURL}" alt="Region Image">
+                `;
+                chatList.appendChild(principalChat);
+            }
+
+            // Display User Chats
+            const userChatsTitle = document.createElement("h3");
+            userChatsTitle.textContent = "User Chats";
+            chatList.appendChild(userChatsTitle);
+
+            data.Chats.forEach(chat => {
+                const listItem = document.createElement("li");
+                listItem.className = "chat-item";
+
+                listItem.innerHTML = `
+                    <button>${chat.Name} (${chat.Creator})</button>
+                    <p>Description: ${chat.Descri}</p>
+                    <p>Messages: ${chat.MessageCount}</p>
+                    <p>Total Likes: ${chat.TotalLikes}</p>
+                    <img src="${chat.PhotoURL}" alt="Creator Image">
+                `;
+
+                // Event listener for chat selection
+                const button = listItem.querySelector("button");
+                button.addEventListener("click", () => {
+                    selectChat(chat.Name); // Function for handling chat selection
+                });
+
+                chatList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error("Error fetching chats:", error));
+}
+
+
+        function selectChat(chatName) {
+            fetch(`/select-chat?chatname=${chatName}`)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
+                    } else {
+                        console.error("Failed to select chat:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting chat:", error));
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchChats("{{.Region}}");
+        });
+
+        function createChat() {
+            const chatTitle = document.getElementById("chatTitle").value.trim();
+            const chatDescription = document.getElementById("chatDescription").value.trim(); // Fetch description
+            const region = document.getElementById("regionField").value;
+
+            if (!chatTitle || !region) {
+                alert("Le titre et la région sont obligatoires !");
+                return;
+            }
+
+            // Send data via POST
+            fetch("/create-chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `chatname=${encodeURIComponent(chatTitle)}&description=${encodeURIComponent(chatDescription)}&region=${encodeURIComponent(region)}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/welcome"; // Redirect to welcome page
+                    } else {
+                        console.error("Failed to create chat:", response.statusText);
+                        alert("Échec de la création du chat. Veuillez réessayer !");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error creating chat:", error);
+                    alert("Une erreur s'est produite lors de la création du chat.");
+                });
+        }
+
+
+    </script>
     <script src="static/script.js"></script>
 </body>
 

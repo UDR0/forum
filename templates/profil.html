@@ -28,7 +28,6 @@
         <a href="/mytripy-non" class="logo">
             <img class="image_logo" src="static/img/logo/logo-mytripy-2.png" alt="MyTripy Logo">
             <img class="mytripy" src="static/img/logo/mytripy.png" alt="MyTripy">
-            <!-- <span class="text_logo">My<span>Trip</span>y</span> -->
         </a>
 
         <!-- Menu Burger -->
@@ -53,8 +52,6 @@
 
     </header>
 
-
-    <!-- Contenu principal -->
     <!-- Contenu principal -->
     <section>
         <div class="card">
@@ -65,6 +62,8 @@
                 <img src="{{.PhotoURL}}" id="photoProfil" onclick="openPopupProfil()">
             </div>
 
+            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
+
             <!-- Pseudo et Bio -->
             <p id="pseudo" class="pseudo">{{.Pseudo}}</p>
 
@@ -72,8 +71,6 @@
                 <h4>Bio</h4>
                 <p id="bio" class="bio">{{.Biography}}</p>
             </div>
-
-            <a class="btn-modifier-pseudo" onclick="openPopupModif()">Modifier profil</a>
 
             <!-- Régions Favorites -->
             <h3 class="titre-favorite-region">Régions favorites</h3>
@@ -107,12 +104,13 @@
                     <p class="discussion-cree-descriptif">{{.Description}}</p>
 
                     <div class="discussion-cree-chat">
-                        <img src="static/img/icon/messager.png" alt="discussion">
-                        <p>{{.MessageCount}}</p>
+                        <div class="discussionFil">
+                            <img src="static/img/icon/messager.png" alt="discussion">
+                            <p>{{.MessageCount}}</p>
+                        </div>
                     </div>
                 </div>
                 {{end}}
-            <!-- </div> -->
 
 
             <!-- Fil discussion Favorites -->
@@ -132,12 +130,13 @@
                     <p class="discussion-cree-descriptif">{{.Description}}</p>
 
                     <div class="discussion-cree-chat">
-                        <img src="static/img/icon/messager.png" alt="discussion">
-                        <p>{{.MessageCount}}</p>
+                        <div class="discussionFil">
+                            <img src="static/img/icon/messager.png" alt="discussion">
+                            <p>{{.MessageCount}}</p>
+                        </div>
                     </div>
                 </div>
                 {{end}}
-            <!-- </div> -->
             <a class="btn-deconnexion" href="/logout">Déconnexion</a>
         </div>
     </section>
@@ -187,8 +186,7 @@
         <h3>Modifier Profil</h3>
 
         <div class="modif">
-            <h4>Pseudo</h4>
-            <input type="text" id="nouveauPseudo" placeholder="Entrez un nouveau pseudo">
+            <p id="nouveauPseudo" class="nouveauPseudo"></p>
 
             <h4>Bio</h4>
             <textarea id="nouvelleBio" placeholder="Entrez une nouvelle bio"></textarea>
@@ -197,6 +195,34 @@
         <button onclick="sauverModifications()">Sauvegarder</button>
     </div>
 
+    <script>
+        function selectChat(chatName) {
+            fetch(`/select-chat?chatname=${chatName}`)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/chat_messages"; // Reindirizza alla pagina dei messaggi
+                    } else {
+                        console.error("Failed to select chat:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting chat:", error));
+        }
+
+        function selectRegion(regionName) {
+            console.log(`You clicked on region: ${regionName}`);
+            fetch(`/region?name=${regionName}`, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(`Region ${regionName} successfully selected`);
+                        window.location.href = "/welcome";
+                    } else {
+                        console.error("Failed to select region:", response.statusText);
+                    }
+                })
+                .catch(error => console.error("Error selecting region:", error));
+        }
+
+    </script>
     <script src="static/script.js"></script>
 </body>
 

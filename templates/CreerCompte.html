@@ -63,9 +63,9 @@
             <div class="ConteneurCreerCompte">
                 <form id="creerCompteForm" action="/CreerCompte" method="post" onsubmit="return validateForm()">
                     <div class="photo">
-                        <img src="../static/img/avatar/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
+                        <img src="../static/img/photoProfil.png" class="photoProfil" id="photoProfil" onclick="openPopupProfil()">
                     </div>
-                    <a href="#" class="changerAvatar" name="photo_url" onclick="openPopupProfil()">Changer d'Avatar</a>
+                    <a href="#" class="changerAvatar" onclick="openPopupProfil()">Changer d'Avatar</a>
 
                     <h4>Email</h4>
                     <div class="ConteneurEmail">
@@ -92,7 +92,7 @@
                     </div>
 
                     <!-- Champ caché pour stocker l'URL de l'avatar choisi -->
-                    <input type="hidden" id="photo_url" name="photo_url" value="../static/img/avatar/photoProfil.png">
+                    <input type="hidden" id="photo_url" name="photo_url" value="../static/img/photoProfil.png">
 
                     <div id="errorContainer" style="color: red;">{{.ErrorMessage}}</div>
 
@@ -113,26 +113,19 @@
         <h1>Choisissez votre Avatar</h1>
         <div class="imgAvatar">
             <div class="femme">
-                <img src="../static/img/avatar/avatarFemme1.png"
-                    onclick="changeavatar('../static/img/avatar/avatarFemme1.png')">
-                <img src="../static/img/avatar/avatarFemme2.png"
-                    onclick="changeavatar('../static/img/avatar/avatarFemme2.png')">
-                <img src="../static/img/avatar/avatarFemme3.png"
-                    onclick="changeavatar('../static/img/avatar/avatarFemme3.png')">
-                <img src="../static/img/avatar/avatarFemme4.png"
-                    onclick="changeavatar('../static/img/avatar/avatarFemme4.png')">
+                <img src="../static/img/avatar/avatarFemme1.png">
+                <img src="../static/img/avatar/avatarFemme2.png">
+                <img src="../static/img/avatar/avatarFemme3.png">
+                <img src="../static/img/avatar/avatarFemme4.png">
             </div>
             <div class="homme">
-                <img src="../static/img/avatar/avatarHomme1.png"
-                    onclick="changeavatar('../static/img/avatar/avatarHomme1.png')">
-                <img src="../static/img/avatar/avatarHomme2.png"
-                    onclick="changeavatar('../static/img/avatar/avatarHomme2.png')">
-                <img src="../static/img/avatar/avatarHomme3.png"
-                    onclick="changeavatar('../static/img/avatar/avatarHomme3.png')">
-                <img src="../static/img/avatar/avatarHomme4.png"
-                    onclick="changeavatar('../static/img/avatar/avatarHomme4.png')">
+                <img src="../static/img/avatar/avatarHomme1.png">
+                <img src="../static/img/avatar/avatarHomme2.png">
+                <img src="../static/img/avatar/avatarHomme3.png">
+                <img src="../static/img/avatar/avatarHomme4.png">
             </div>
         </div>
+    </div>
 
     <script src="static/script.js"></script>
 </body>

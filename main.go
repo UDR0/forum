@@ -103,6 +103,7 @@ func main() {
 	http.HandleFunc("/welcome", forum.FileDiscussion)
 	http.HandleFunc("/create-chat", forum.CreateChatHandler)
 	http.HandleFunc("/select-chat", forum.SelectChatHandler)
+	http.HandleFunc("/fetch-chats", forum.FetchChatsHandler)
 
 	http.HandleFunc("/chat_messages", forum.FilMessagesHandler)
 	http.HandleFunc("/send-message", forum.SendMessageHandler)

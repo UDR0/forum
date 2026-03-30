@@ -7,7 +7,7 @@ Un forum de voyage permettant aux utilisateurs de partager leurs expériences, p
 ## 📸 Aperçu
 
 <p align="center">
-  <img src="static/MyTripy.png" width="700">
+  <img src="static/MyTripy.pdf" width="700">
 </p>
 
 ---

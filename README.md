@@ -6,7 +6,7 @@ Un forum de voyage permettant aux utilisateurs de partager leurs expériences, p
 
 ## Aperçu
 
-![Aperçu du site](static/MyTripy.pdf)
+![Aperçu du site](static/MyTripy.png)
 
 ---
 

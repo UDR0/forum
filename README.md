@@ -4,9 +4,11 @@ Un forum de voyage permettant aux utilisateurs de partager leurs expériences, p
 
 ---
 
-## Aperçu
+## 📸 Aperçu
 
-![Aperçu du site](static/MyTripy.png)
+<p align="center">
+  <img src="static/MyTripy.png" width="700">
+</p>
 
 ---
 
